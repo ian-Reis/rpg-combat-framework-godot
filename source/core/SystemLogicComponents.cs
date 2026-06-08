@@ -9,15 +9,15 @@ using Data;
 namespace Components;
 
 [GlobalClass]
-public partial class SystemLogicComponents : Node, IPlayerStateContext
+public partial class SystemLogicComponents : Node, ISystemLogicContext
 {
     [ExportGroup("References")]
     [Export] public Node3D Pawn { get; set; }
+    [Export] public AnimationTree AnimationTree { get; set; }
 
     [ExportGroup("Stats")]
     [Export] public CharacterStats Stats { get; set; }
 
-    public AnimationTree AnimationTree => GetComponent<AnimationTree>();
     public AudioStreamPlayer3D SoundEffect => GetComponent<AudioStreamPlayer3D>();
     public StateMachineComponent StateMachineComponent => GetComponent<StateMachineComponent>();
 

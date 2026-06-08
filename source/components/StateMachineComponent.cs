@@ -13,17 +13,17 @@ public partial class StateMachineComponent : Node
     [Export] public State InitialState { get; set; }
     [Export] public State[] States { get; set; }
 
-    private IPlayerStateContext _context;
+    private ISystemLogicContext _context;
     private State _currentState;
     private readonly Dictionary<string, State> _statesMap = new();
 
     public override void _Ready()
     {
         base._Ready();
-        Setup(GetParent<IPlayerStateContext>());
+        Setup(GetParent<ISystemLogicContext>());
     }
 
-    private async void Setup(IPlayerStateContext context)
+    private async void Setup(ISystemLogicContext context)
     {
         try
         {

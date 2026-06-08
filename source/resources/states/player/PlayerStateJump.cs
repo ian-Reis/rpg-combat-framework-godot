@@ -8,12 +8,12 @@ namespace Resources.states;
 [GlobalClass]
 public partial class PlayerStateJump : PlayerState
 {
-    public override void Enter(IPlayerStateContext context)
+    public override void Enter(ISystemLogicContext context)
     {
         AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsJump, true);
     }
 
-    public override void PhysicsUpdate(IPlayerStateContext context, float delta)
+    public override void PhysicsUpdate(ISystemLogicContext context, float delta)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
 
@@ -24,7 +24,7 @@ public partial class PlayerStateJump : PlayerState
             StateMachineHelper.ChangeState(context, PlayerStateNames.Idle);
     }
 
-    public override void Exit(IPlayerStateContext context)
+    public override void Exit(ISystemLogicContext context)
     {
         AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsJump, false);
     }

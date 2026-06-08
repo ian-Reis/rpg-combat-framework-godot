@@ -1,17 +1,19 @@
-using System;
-using System.Data.SqlTypes;
 using System.Diagnostics;
 using Godot;
 using Helpers;
 
 namespace Components;
 
-[GlobalClass] public partial class InputRotateModelComponent : Node
+[GlobalClass]
+public partial class InputRotateModelComponent : Node
 {
     [Export] public Node3D Model { get; set; }
+    [Export] public float RotationSmoothness = 10f;
+    [Export] public float InputDeadZone = 0.1f;
+
     private SystemLogicComponents _systemLogicComponents;
 
-    public override void _EnterTree()
+    public override void _Ready()
     {
         _systemLogicComponents = GetParentOrNull<SystemLogicComponents>();
         Debug.Assert(_systemLogicComponents != null, "InputRotateModelComponent must be a child of SystemLogicComponents");
@@ -19,18 +21,15 @@ namespace Components;
 
     public override void _Process(double delta)
     {
-        if (Model is null) return;
-        if (_systemLogicComponents?.Pawn is not CharacterBody3D pawn) return;
+        if (Model == null) return;
 
-        var inputDir = MovementHelper.GetInputDirection();
-        if (inputDir.Length() > 0.1f)
-        {
-            float targetAngle = Mathf.Atan2(inputDir.X, inputDir.Y);
-            float currentAngle = Model.Rotation.Y;
-            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, 10f * (float)delta);
-            Model.Rotation = new Vector3(Model.Rotation.X, newAngle, Model.Rotation.Z);
+        Vector2 inputDir = MovementHelper.GetInputDirection();
+        if (inputDir.Length() <= InputDeadZone) return;
 
-            // GD.Print($"InputDir: {inputDir}, TargetAngle: {Mathf.RadToDeg(targetAngle)}, CurrentAngle: {Mathf.RadToDeg(currentAngle)}, NewAngle: {Mathf.RadToDeg(newAngle)}");
-        }
+        float targetAngle = Mathf.Atan2(inputDir.X, -inputDir.Y);
+        float currentAngle = Model.Rotation.Y;
+        float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, RotationSmoothness * (float)delta);
+
+        Model.Rotation = new Vector3(Model.Rotation.X, newAngle, Model.Rotation.Z);
     }
 }

@@ -8,12 +8,12 @@ namespace Resources.states;
 [GlobalClass]
 public partial class PlayerStateWalk : PlayerState
 {
-    public override void Enter(IPlayerStateContext context)
+    public override void Enter(ISystemLogicContext context)
     {
         AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsWalk, true);
     }
 
-    public override void PhysicsUpdate(IPlayerStateContext context, float delta)
+    public override void PhysicsUpdate(ISystemLogicContext context, float delta)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
 
@@ -29,7 +29,7 @@ public partial class PlayerStateWalk : PlayerState
         if (isRunning)  { StateMachineHelper.ChangeState(context, PlayerStateNames.Run);  return; }
     }
 
-    public override void Exit(IPlayerStateContext context)
+    public override void Exit(ISystemLogicContext context)
     {
         AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsWalk, false);
     }

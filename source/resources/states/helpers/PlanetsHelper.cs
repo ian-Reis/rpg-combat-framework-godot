@@ -7,7 +7,7 @@ namespace Helpers;
 
 public static class PlanetsHelper
 {
-    public static bool ChangedPlanet(IPlayerStateContext context)
+    public static bool ChangedPlanet(ISystemLogicContext context)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return false;
         Node3D currentPlanet = (Node3D)pawn.Get(EntityProps.CurrentPlanet);

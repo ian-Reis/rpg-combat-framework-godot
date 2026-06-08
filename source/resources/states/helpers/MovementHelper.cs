@@ -6,7 +6,7 @@ namespace Helpers;
 
 public static class MovementHelper
 {
-    public static void ApplyMovement(IPlayerStateContext context, float delta, bool ignoreAirControl = false, bool canRun = true)
+    public static void ApplyMovement(ISystemLogicContext context, float delta, bool ignoreAirControl = false, bool canRun = true)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
         if (context.Stats == null) return;

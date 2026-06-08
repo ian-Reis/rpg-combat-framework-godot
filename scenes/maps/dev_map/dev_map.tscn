@@ -17,6 +17,7 @@
 [ext_resource type="Image" uid="uid://bpn3f8n3sraiw" path="res://scenes/maps/dev_map/DevMap/Object_0_0_1.res" id="14_tcy7m"]
 [ext_resource type="Image" uid="uid://dipsbecp73h7u" path="res://scenes/maps/dev_map/DevMap/Foliage_0_0_0.res" id="14_x4ip2"]
 [ext_resource type="PackedScene" uid="uid://0vyhh5l1nser" path="res://scenes/entitys/player/player.tscn" id="16_wtj6i"]
+[ext_resource type="Texture2D" uid="uid://si2jge8e6tvc" path="res://assets/Texture Kenney Prototype/Dark/texture_01.png" id="18_mn1rq"]
 
 [sub_resource type="Sky" id="Sky_xrjhj"]
 sky_material = ExtResource("2_wx6wm")
@@ -30,9 +31,7 @@ ambient_light_sky_contribution = 0.933077
 ambient_light_energy = 0.0
 tonemap_mode = 3
 tonemap_exposure = 1.64
-sdfgi_enabled = true
 sdfgi_read_sky_light = false
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.0324
 volumetric_fog_albedo = Color(0.3468939, 0.19553328, 0.083809115, 1)
 volumetric_fog_sky_affect = 0.585
@@ -200,6 +199,14 @@ dof_blur_far_enabled = true
 dof_blur_far_distance = 6.0
 dof_blur_amount = 0.08
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1e2rc"]
+albedo_texture = ExtResource("18_mn1rq")
+uv1_scale = Vector3(100, 100, 100)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_x4ip2"]
+material = SubResource("StandardMaterial3D_1e2rc")
+size = Vector2(500, 500)
+
 [node name="DevMap" type="Node3D" unique_id=1170030567]
 
 [node name="Sky" type="Node3D" parent="." unique_id=1658069020]
@@ -241,6 +248,7 @@ textureSets = SubResource("TextureSetsResource_guxh8")
 objects = Array[ObjectResource]([SubResource("ObjectResource_dqj0r"), SubResource("ObjectResource_x4ip2")])
 terrainZones = SubResource("ZonesResource_5vi6x")
 physics_interpolation_mode = 2
+visible = false
 metadata/_edit_lock_ = false
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1381801742]
@@ -248,12 +256,7 @@ transform = Transform3D(0.62064165, 0, 0.78409445, 0, 1, 0, -0.78409445, 0, 0.62
 attributes = SubResource("CameraAttributesPractical_17hby")
 
 [node name="Player" parent="." unique_id=1391298614 instance=ExtResource("16_wtj6i")]
-transform = Transform3D(0.279695, 0, 0.96008885, 0, 1, 0, -0.96008885, 0, 0.279695, 14.368542, 0, 4.814158)
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
 
-[node name="ReflectionProbe" type="ReflectionProbe" parent="." unique_id=1173862963]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.179777, 0, 0.63183594)
-update_mode = 1
-blend_distance = 10.95
-size = Vector3(20, 20, 21.263672)
-interior = true
-enable_shadows = true
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=121866592]
+mesh = SubResource("PlaneMesh_x4ip2")

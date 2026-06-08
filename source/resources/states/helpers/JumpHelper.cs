@@ -6,7 +6,7 @@ namespace Helpers;
 
 public static class JumpHelper
 {
-    public static void ApplyJump(IPlayerStateContext context)
+    public static void ApplyJump(ISystemLogicContext context)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
 
@@ -14,7 +14,7 @@ public static class JumpHelper
             InstantiateJump(context);
     }
 
-    public static void JumpTravel(IPlayerStateContext context)
+    public static void JumpTravel(ISystemLogicContext context)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
 
@@ -32,7 +32,7 @@ public static class JumpHelper
         }
     }
 
-    public static void InstantiateJump(IPlayerStateContext context)
+    public static void InstantiateJump(ISystemLogicContext context)
     {
         if (!IsJumpValid(context, out CharacterBody3D pawn, out Node3D currentPlanet))
         {
@@ -48,7 +48,7 @@ public static class JumpHelper
         pawn.Velocity += upDirection * jumpForce;
     }
 
-    private static bool IsJumpValid(IPlayerStateContext context, out CharacterBody3D pawn, out Node3D currentPlanet)
+    private static bool IsJumpValid(ISystemLogicContext context, out CharacterBody3D pawn, out Node3D currentPlanet)
     {
         pawn = null;
         currentPlanet = null;

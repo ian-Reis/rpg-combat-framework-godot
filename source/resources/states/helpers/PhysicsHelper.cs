@@ -6,7 +6,7 @@ namespace Helpers;
 
 public static class PhysicsHelper
 {
-    public static void ApplyGravity(IPlayerStateContext context, float delta)
+    public static void ApplyGravity(ISystemLogicContext context, float delta)
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
 
