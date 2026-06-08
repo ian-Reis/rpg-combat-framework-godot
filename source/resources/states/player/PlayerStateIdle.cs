@@ -1,6 +1,6 @@
 using Godot;
 using Helpers;
-using Components;
+using Interfaces;
 using Constants;
 
 namespace Resources.states;
@@ -8,25 +8,25 @@ namespace Resources.states;
 [GlobalClass]
 public partial class PlayerStateIdle : PlayerState
 {
-    public override void Enter(SystemLogicComponents owner)
+    public override void Enter(IPlayerStateContext context)
     {
-        AnimationTreeHelper.SetTreeCondition(owner, AnimationParams.IsIdle, true);
+        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsIdle, true);
     }
 
-    public override void PhysicsUpdate(SystemLogicComponents owner, float delta)
+    public override void PhysicsUpdate(IPlayerStateContext context, float delta)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
 
-        JumpHelper.ApplyJump(owner);
-        JumpHelper.JumpTravel(owner);
+        JumpHelper.ApplyJump(context);
+        JumpHelper.JumpTravel(context);
         pawn.MoveAndSlide();
 
         if (MovementHelper.GetInputDirection().Length() > 0f)
-            StateMachineHelper.ChangeState(owner, PlayerStateNames.Walk);
+            StateMachineHelper.ChangeState(context, PlayerStateNames.Walk);
     }
 
-    public override void Exit(SystemLogicComponents owner)
+    public override void Exit(IPlayerStateContext context)
     {
-        AnimationTreeHelper.SetTreeCondition(owner, AnimationParams.IsIdle, false);
+        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsIdle, false);
     }
 }

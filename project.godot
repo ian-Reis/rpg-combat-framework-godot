@@ -27,6 +27,29 @@ enabled=PackedStringArray("res://addons/ultimate_placer/plugin.cfg")
 Player=""
 Entitys=""
 
+[input]
+
+forback={
+"deadzone": 0.2,
+"events": []
+}
+forward={
+"deadzone": 0.2,
+"events": []
+}
+right={
+"deadzone": 0.2,
+"events": []
+}
+left={
+"deadzone": 0.2,
+"events": []
+}
+jump={
+"deadzone": 0.2,
+"events": []
+}
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -34,8 +57,5 @@ Entitys=""
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-camera/depth_of_field/depth_of_field_bokeh_shape=2
-camera/depth_of_field/depth_of_field_bokeh_quality=3
-camera/depth_of_field/depth_of_field_use_jitter=true
 anti_aliasing/quality/screen_space_aa=2
 anti_aliasing/quality/use_taa=true

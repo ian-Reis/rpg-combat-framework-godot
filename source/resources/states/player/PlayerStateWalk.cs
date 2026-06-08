@@ -1,6 +1,6 @@
 using Godot;
 using Helpers;
-using Components;
+using Interfaces;
 using Constants;
 
 namespace Resources.states;
@@ -8,29 +8,29 @@ namespace Resources.states;
 [GlobalClass]
 public partial class PlayerStateWalk : PlayerState
 {
-    public override void Enter(SystemLogicComponents owner)
+    public override void Enter(IPlayerStateContext context)
     {
-        AnimationTreeHelper.SetTreeCondition(owner, AnimationParams.IsWalk, true);
+        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsWalk, true);
     }
 
-    public override void PhysicsUpdate(SystemLogicComponents owner, float delta)
+    public override void PhysicsUpdate(IPlayerStateContext context, float delta)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
 
-        JumpHelper.ApplyJump(owner);
-        MovementHelper.ApplyMovement(owner, delta);
+        JumpHelper.ApplyJump(context);
+        MovementHelper.ApplyMovement(context, delta);
         pawn.MoveAndSlide();
 
         var inputDir = MovementHelper.GetInputDirection();
         bool isMoving  = inputDir.Length() > 0f;
         bool isRunning = Input.IsActionPressed("run");
 
-        if (!isMoving)  { StateMachineHelper.ChangeState(owner, PlayerStateNames.Idle); return; }
-        if (isRunning)  { StateMachineHelper.ChangeState(owner, PlayerStateNames.Run);  return; }
+        if (!isMoving)  { StateMachineHelper.ChangeState(context, PlayerStateNames.Idle); return; }
+        if (isRunning)  { StateMachineHelper.ChangeState(context, PlayerStateNames.Run);  return; }
     }
 
-    public override void Exit(SystemLogicComponents owner)
+    public override void Exit(IPlayerStateContext context)
     {
-        AnimationTreeHelper.SetTreeCondition(owner, AnimationParams.IsWalk, false);
+        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsWalk, false);
     }
 }

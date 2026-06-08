@@ -1,21 +1,22 @@
 using Godot;
 using Components;
+using Interfaces;
 
 namespace Helpers;
 
 public static class MovementHelper
 {
-    public static void ApplyMovement(SystemLogicComponents owner, float delta, bool ignoreAirControl = false, bool canRun = true)
+    public static void ApplyMovement(IPlayerStateContext context, float delta, bool ignoreAirControl = false, bool canRun = true)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
-        if (owner.Stats == null) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
+        if (context.Stats == null) return;
 
         Vector2 inputDir = GetInputDirection();
         Vector3 velocity = pawn.Velocity;
 
         Vector3 up = pawn.UpDirection.Normalized();
 
-        SpringArm3D springArm = owner.GetComponent<CameraComponent>()?.SpringArm;
+        SpringArm3D springArm = context.GetComponent<CameraComponent>()?.SpringArm;
         Basis camBasis = springArm is not null
             ? springArm.GlobalTransform.Basis
             : pawn.GlobalTransform.Basis;
@@ -32,8 +33,8 @@ public static class MovementHelper
             : Vector3.Zero;
 
         float targetSpeed = canRun && Godot.Input.IsActionPressed("run")
-            ? owner.Stats.RunSpeed
-            : owner.Stats.WalkSpeed;
+            ? context.Stats.RunSpeed
+            : context.Stats.WalkSpeed;
 
         float verticalSpeed = velocity.Dot(up);
 

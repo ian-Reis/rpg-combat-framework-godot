@@ -9,25 +9,17 @@ using Data;
 namespace Components;
 
 [GlobalClass]
-public partial class SystemLogicComponents : Node,
-    IComponentOwner,
-    IHasAnimationTree,
-    IHasSoundEffect,
-    IHasStateMachineComponent
+public partial class SystemLogicComponents : Node, IPlayerStateContext
 {
     [ExportGroup("References")]
     [Export] public Node3D Pawn { get; set; }
-    [Export] public AnimationTree AnimationTree { get; set; }
-    [Export] public AudioStreamPlayer3D SoundEffect { get; set; }
-    [Export] public StateMachineComponent StateMachineComponent { get; set; }
 
     [ExportGroup("Stats")]
     [Export] public CharacterStats Stats { get; set; }
 
-    public float InputConsistencyFrames;
-    public Vector2 LastInputDir;
-    public Vector2 FacingDirection { get; set; } = Vector2.Down;
-    public bool CanJump { get; set; } = true;
+    public AnimationTree AnimationTree => GetComponent<AnimationTree>();
+    public AudioStreamPlayer3D SoundEffect => GetComponent<AudioStreamPlayer3D>();
+    public StateMachineComponent StateMachineComponent => GetComponent<StateMachineComponent>();
 
     private readonly Dictionary<Type, Node> _componentCache = new();
 

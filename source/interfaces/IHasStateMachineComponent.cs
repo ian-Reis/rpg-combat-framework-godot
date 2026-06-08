@@ -7,5 +7,5 @@ namespace Interfaces;
 
 public interface IHasStateMachineComponent
 {
-    StateMachineComponent StateMachineComponent { get; set; }
+    StateMachineComponent StateMachineComponent { get; }
 }

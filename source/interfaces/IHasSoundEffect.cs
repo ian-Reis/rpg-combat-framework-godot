@@ -5,5 +5,5 @@ namespace Interfaces;
 
 public interface IHasSoundEffect
 {
-    public AudioStreamPlayer3D SoundEffect { get; set; }
+    public AudioStreamPlayer3D SoundEffect { get; }
 }

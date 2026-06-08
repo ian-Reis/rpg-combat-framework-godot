@@ -1,14 +1,14 @@
 using Godot;
-using Components;
+using Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace Helpers;
 
 public static class PhysicsHelper
 {
-    public static void ApplyGravity(SystemLogicComponents owner, float delta)
+    public static void ApplyGravity(IPlayerStateContext context, float delta)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
 
         var velocity = pawn.Velocity;
         var gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");

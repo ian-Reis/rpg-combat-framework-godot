@@ -1,5 +1,5 @@
 using Godot;
-using Components;
+using Interfaces;
 
 namespace Resources.states;
 
@@ -8,13 +8,13 @@ public partial class State : Resource
 {
     [Export] public string StateName = "";
 
-    public virtual void Enter(SystemLogicComponents owner) { }
+    public virtual void Enter(IPlayerStateContext context) { }
 
-    public virtual void Exit(SystemLogicComponents owner) { }
+    public virtual void Exit(IPlayerStateContext context) { }
 
-    public virtual void Update(SystemLogicComponents owner, float delta) { }
+    public virtual void Update(IPlayerStateContext context, float delta) { }
 
-    public virtual void PhysicsUpdate(SystemLogicComponents owner, float delta) { }
+    public virtual void PhysicsUpdate(IPlayerStateContext context, float delta) { }
 
-    public virtual void HandleInput(SystemLogicComponents owner, InputEvent @event) { }
+    public virtual void HandleInput(IPlayerStateContext context, InputEvent @event) { }
 }

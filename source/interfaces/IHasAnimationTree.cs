@@ -5,5 +5,5 @@ namespace Interfaces;
 
 public interface IHasAnimationTree
 {
-    public AnimationTree AnimationTree { get; set; }
+    public AnimationTree AnimationTree { get; }
 }

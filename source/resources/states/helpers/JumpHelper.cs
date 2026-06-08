@@ -1,29 +1,29 @@
 using Godot;
-using Components;
 using Classes.statics;
+using Interfaces;
 
 namespace Helpers;
 
 public static class JumpHelper
 {
-    public static void ApplyJump(SystemLogicComponents owner)
+    public static void ApplyJump(IPlayerStateContext context)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
 
         if (Godot.Input.IsActionJustPressed("jump") && pawn.IsOnFloor())
-            InstantiateJump(owner);
+            InstantiateJump(context);
     }
 
-    public static void JumpTravel(SystemLogicComponents owner)
+    public static void JumpTravel(IPlayerStateContext context)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
 
         Node3D currentPlanet = (Node3D)pawn.Get(EntityProps.CurrentPlanet);
         if (currentPlanet == null) return;
 
         if (Godot.Input.IsActionPressed("jet"))
         {
-            float jumpForce = owner.Stats?.JumpForce ?? 8f;
+            float jumpForce = context.Stats?.JumpForce ?? 8f;
             Vector3 upDirection = (pawn.GlobalPosition - currentPlanet.GlobalPosition).Normalized();
 
             var radialVelocity = upDirection * pawn.Velocity.Dot(upDirection);
@@ -32,15 +32,15 @@ public static class JumpHelper
         }
     }
 
-    public static void InstantiateJump(SystemLogicComponents owner)
+    public static void InstantiateJump(IPlayerStateContext context)
     {
-        if (!IsJumpValid(owner, out CharacterBody3D pawn, out Node3D currentPlanet))
+        if (!IsJumpValid(context, out CharacterBody3D pawn, out Node3D currentPlanet))
         {
             GD.PrintErr("Jump not valid. Conditions not met.");
             return;
         }
 
-        float jumpForce = owner.Stats?.JumpForce ?? 8f;
+        float jumpForce = context.Stats?.JumpForce ?? 8f;
         Vector3 upDirection = (pawn.GlobalPosition - currentPlanet.GlobalPosition).Normalized();
 
         var radialVelocity = upDirection * pawn.Velocity.Dot(upDirection);
@@ -48,12 +48,12 @@ public static class JumpHelper
         pawn.Velocity += upDirection * jumpForce;
     }
 
-    private static bool IsJumpValid(SystemLogicComponents owner, out CharacterBody3D pawn, out Node3D currentPlanet)
+    private static bool IsJumpValid(IPlayerStateContext context, out CharacterBody3D pawn, out Node3D currentPlanet)
     {
         pawn = null;
         currentPlanet = null;
 
-        if (owner?.Pawn is not CharacterBody3D p || !p.IsOnFloor())
+        if (context?.Pawn is not CharacterBody3D p || !p.IsOnFloor())
             return false;
 
         currentPlanet = (Node3D)p.Get(EntityProps.CurrentPlanet);

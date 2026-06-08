@@ -1,6 +1,6 @@
 using Godot;
 using Helpers;
-using Components;
+using Interfaces;
 using Constants;
 
 namespace Resources.states;
@@ -8,25 +8,24 @@ namespace Resources.states;
 [GlobalClass]
 public partial class PlayerStateJump : PlayerState
 {
-    public override void Enter(SystemLogicComponents owner)
+    public override void Enter(IPlayerStateContext context)
     {
-        owner.CanJump = true;
-        AnimationTreeHelper.SetTreeCondition(owner, AnimationParams.IsJump, true);
+        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsJump, true);
     }
 
-    public override void PhysicsUpdate(SystemLogicComponents owner, float delta)
+    public override void PhysicsUpdate(IPlayerStateContext context, float delta)
     {
-        if (owner?.Pawn is not CharacterBody3D pawn) return;
+        if (context?.Pawn is not CharacterBody3D pawn) return;
 
-        MovementHelper.ApplyMovement(owner, delta, ignoreAirControl: false, canRun: false);
+        MovementHelper.ApplyMovement(context, delta, ignoreAirControl: false, canRun: false);
         pawn.MoveAndSlide();
 
         if (pawn.IsOnFloor())
-            StateMachineHelper.ChangeState(owner, PlayerStateNames.Idle);
+            StateMachineHelper.ChangeState(context, PlayerStateNames.Idle);
     }
 
-    public override void Exit(SystemLogicComponents owner)
+    public override void Exit(IPlayerStateContext context)
     {
-        AnimationTreeHelper.SetTreeCondition(owner, AnimationParams.IsJump, false);
+        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsJump, false);
     }
 }
