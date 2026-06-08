@@ -21,7 +21,18 @@ public partial class PlayerStateWalkJump : PlayerState
         pawn.MoveAndSlide();
 
         if (pawn.IsOnFloor())
-            StateMachineHelper.ChangeState(context, PlayerStateNames.Idle);
+        {
+            var inputDir = MovementHelper.GetInputDirection();
+            bool isMoving = inputDir.Length() > 0f;
+            bool isRunning = Input.IsActionPressed("run");
+
+            if (!isMoving)
+                StateMachineHelper.ChangeState(context, PlayerStateNames.Idle);
+            else if (isRunning)
+                StateMachineHelper.ChangeState(context, PlayerStateNames.Run);
+            else
+                StateMachineHelper.ChangeState(context, PlayerStateNames.Walk);
+        }
     }
 
     public override void Exit(ISystemLogicContext context)

@@ -8,9 +8,8 @@ public partial class CameraComponent : Node
 {
     [Export] public Camera3D Camera { get; set; }
     [Export] public SpringArm3D SpringArm { get; set; }
-    [Export] public Node3D FollowTarget { get; set; }
     [Export] public float MouseSensitivity = 0.3f;
-    [Export] public float MaxVerticalAngle = 60f;
+    [Export] public float MaxVerticalAngle = 80f;
     [Export] public float MinVerticalAngle = -30f;
     [Export] public float FollowSmoothness = 10f;
     [Export] public float RotationSmoothness = 15f;
@@ -24,14 +23,9 @@ public partial class CameraComponent : Node
     private float _targetYaw = 0f;
     private float _targetDistance;
 
-    private SystemLogicComponents _systemLogicComponents;
-
     public override void _Ready()
     {
-        _systemLogicComponents = GetParentOrNull<SystemLogicComponents>();
-        Debug.Assert(_systemLogicComponents != null, "CameraComponent must be a child of SystemLogicComponents");
-
-        FollowTarget ??= _systemLogicComponents?.Pawn as Node3D;
+        _targetDistance = MinZoom;
 
         if (SpringArm != null)
             SpringArm.SpringLength = MinZoom;
@@ -56,14 +50,12 @@ public partial class CameraComponent : Node
 
     public override void _Process(double delta)
     {
-        if (FollowTarget == null || SpringArm == null) return;
+        if (SpringArm == null) return;
 
         float dt = (float)delta;
 
         _pitch = Mathf.Lerp(_pitch, _targetPitch, RotationSmoothness * dt);
         _yaw = Mathf.Lerp(_yaw, _targetYaw, RotationSmoothness * dt);
-
-        SpringArm.GlobalPosition = SpringArm.GlobalPosition.Lerp(FollowTarget.GlobalPosition, FollowSmoothness * dt);
 
         SpringArm.Rotation = new Vector3(
             Mathf.DegToRad(_pitch),

@@ -17,6 +17,7 @@ public partial class PlayerStateTravel : PlayerState
     {
         if (context?.Pawn is not CharacterBody3D pawn) return;
 
+        JumpHelper.ApplyJump(context);
         JumpHelper.JumpTravel(context);
         pawn.MoveAndSlide();
 
