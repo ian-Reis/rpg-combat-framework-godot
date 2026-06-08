@@ -11,7 +11,6 @@ config_version=5
 [application]
 
 config/name="Combat Framework"
-run/main_scene="uid://byss8w2yvl07v"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -37,9 +36,7 @@ Entitys=""
 rendering_device/driver.windows="d3d12"
 camera/depth_of_field/depth_of_field_bokeh_shape=2
 camera/depth_of_field/depth_of_field_bokeh_quality=3
-environment/ssao/quality=4
-environment/ssil/quality=4
-anti_aliasing/quality/msaa_3d=2
-scaling_3d/mode=2
-environment/subsurface_scattering/subsurface_scattering_quality=3
-anti_aliasing/quality/use_taa=true
+camera/depth_of_field/depth_of_field_use_jitter=true
+anti_aliasing/quality/msaa_3d=3
+scaling_3d/mode=1
+scaling_3d/scale=2.0
