@@ -11,12 +11,17 @@ config_version=5
 [application]
 
 config/name="Combat Framework"
-config/features=PackedStringArray("4.7", "Forward Plus")
+run/main_scene="uid://byss8w2yvl07v"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
 
 project/assembly_name="Combat Framework"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/ultimate_placer/plugin.cfg")
 
 [global_group]
 
@@ -30,3 +35,11 @@ Entitys=""
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+camera/depth_of_field/depth_of_field_bokeh_shape=2
+camera/depth_of_field/depth_of_field_bokeh_quality=3
+environment/ssao/quality=4
+environment/ssil/quality=4
+anti_aliasing/quality/msaa_3d=2
+scaling_3d/mode=2
+environment/subsurface_scattering/subsurface_scattering_quality=3
+anti_aliasing/quality/use_taa=true
