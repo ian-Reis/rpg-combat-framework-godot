@@ -9,15 +9,20 @@ using Interfaces;
 namespace Components;
 
 [GlobalClass]
-public partial class StateMachineComponent : Node
+public partial class StateMachineComponent : Node, IHasAnimationTree
 {
+    [ExportGroup("References")]
+    [Export] public AnimationTree AnimationTree { get; set; }
+
     [ExportGroup("States")]
     [Export] public State InitialState { get; set; }
     [Export] public State[] States { get; set; }
 
-    private ISystemLogicContext _context;
-    private State _currentState;
+    public ISystemLogicContext systemLogicContext { get; private set;}
+    
     private readonly Dictionary<string, State> _statesMap = new();
+    
+    private State _currentState;
     private bool _isReady = false;
 
     public override void _Ready()
@@ -37,7 +42,7 @@ public partial class StateMachineComponent : Node
     {
         try
         {
-            _context = context;
+            systemLogicContext = context;
 
             if (States == null || States.Length == 0)
             {
@@ -57,7 +62,7 @@ public partial class StateMachineComponent : Node
                 _statesMap[state.StateName] = state;
             }
 
-            await ToSignal(_context as Node, Node.SignalName.Ready);
+            await ToSignal(systemLogicContext as Node, Node.SignalName.Ready);
 
             ChangeState(InitialState.StateName);
             _isReady = true;
@@ -70,7 +75,7 @@ public partial class StateMachineComponent : Node
 
     public void ChangeState(string newStateName)
     {
-        if (_context == null)
+        if (systemLogicContext == null)
         {
             GD.PrintErr("[StateMachineComponent] Context is null, cannot change state");
             return;
@@ -88,27 +93,27 @@ public partial class StateMachineComponent : Node
             return;
         }
 
-        _currentState?.Exit(_context);
+        _currentState?.Exit(this);
         _currentState = newState;
         GD.Print($"[StateMachine] → {newStateName}");
-        _currentState.Enter(_context);
+        _currentState.Enter(this);
     }
 
     public override void _Process(double delta)
     {
         if (!_isReady || _currentState == null) return;
-        _currentState.Update(_context, (float)delta);
+        _currentState.Update(this, (float)delta);
     }
 
     public override void _PhysicsProcess(double delta)
     {
         if (!_isReady || _currentState == null) return;
-        _currentState.PhysicsUpdate(_context, (float)delta);
+        _currentState.PhysicsUpdate(this, (float)delta);
     }
 
     public override void _Input(InputEvent @event)
     {
         if (!_isReady || _currentState == null) return;
-        _currentState.HandleInput(_context, @event);
+        _currentState.HandleInput(this, @event);
     }
 }
