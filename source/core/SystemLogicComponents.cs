@@ -13,7 +13,6 @@ public partial class SystemLogicComponents : Node, ISystemLogicContext
 {
     [ExportGroup("References")]
     [Export] public Node3D Pawn { get; set; }
-    [Export] public AnimationTree AnimationTree { get; set; }
 
     [ExportGroup("Stats")]
     [Export] public CharacterStats Stats { get; set; }
