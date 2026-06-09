@@ -2,31 +2,33 @@ using Godot;
 using Helpers;
 using Interfaces;
 using Constants;
+using Components;
 
 namespace Resources.states;
 
 [GlobalClass]
 public partial class PlayerStateIdle : PlayerState
 {
-    public override void Enter(ISystemLogicContext context)
+    public override void Enter(StateMachineComponent stateMachineComponent)
     {
-        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsIdle, true);
+        AnimationTreeHelper.SetTreeCondition(stateMachineComponent, AnimationParams.IsIdle, true);
     }
 
-    public override void PhysicsUpdate(ISystemLogicContext context, float delta)
+    public override void PhysicsUpdate(StateMachineComponent stateMachineComponent, float delta)
     {
-        if (context?.Pawn is not CharacterBody3D pawn) return;
-
-        JumpHelper.ApplyJump(context);
-        JumpHelper.JumpTravel(context);
+        if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext context) return;
+        
+        var pawn = context.Pawn as CharacterBody3D;
+        // JumpHelper.ApplyJump(stateMachineComponent);
+        // JumpHelper.JumpTravel(stateMachineComponent);
         pawn.MoveAndSlide();
 
         if (MovementHelper.GetInputDirection().Length() > 0f)
-            StateMachineHelper.ChangeState(context, PlayerStateNames.Walk);
+            stateMachineComponent.ChangeState(PlayerStateNames.Walk);
     }
 
-    public override void Exit(ISystemLogicContext context)
+    public override void Exit(StateMachineComponent stateMachineComponent)
     {
-        AnimationTreeHelper.SetTreeCondition(context, AnimationParams.IsIdle, false);
+        AnimationTreeHelper.SetTreeCondition(stateMachineComponent, AnimationParams.IsIdle, false);
     }
 }
