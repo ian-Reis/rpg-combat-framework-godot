@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Godot;
 
 namespace Components;
@@ -6,38 +5,55 @@ namespace Components;
 [GlobalClass]
 public partial class CameraComponent : Node
 {
+    [ExportGroup("References")]
     [Export] public Camera3D Camera { get; set; }
     [Export] public SpringArm3D SpringArm { get; set; }
+
+    [ExportGroup("Mouse")]
     [Export] public float MouseSensitivity = 0.3f;
+    [Export] public bool CaptureMouseOnReady = true;
+
+    [ExportGroup("Vertical Angles")]
     [Export] public float MaxVerticalAngle = 80f;
     [Export] public float MinVerticalAngle = -30f;
-    [Export] public float FollowSmoothness = 10f;
-    [Export] public float RotationSmoothness = 15f;
+
+    [ExportGroup("Zoom")]
     [Export] public float MinZoom = 2f;
     [Export] public float MaxZoom = 10f;
     [Export] public float ZoomSpeed = 1f;
+    [Export] public float ZoomSmoothness = 10f;
+
+    [ExportGroup("Rotation")]
+    [Export] public float RotationSmoothness = 15f;
 
     private float _pitch = 0f;
     private float _yaw = 0f;
     private float _targetPitch = 0f;
     private float _targetYaw = 0f;
-    private float _targetDistance;
+    private float _targetZoom;
 
     public override void _Ready()
     {
-        _targetDistance = MinZoom;
+        if (SpringArm == null)
+        {
+            GD.PrintErr("[CameraComponent] SpringArm not assigned!");
+            return;
+        }
 
-        if (SpringArm != null)
-            SpringArm.SpringLength = MinZoom;
+        _targetZoom = MinZoom;
+        SpringArm.SpringLength = MinZoom;
 
         if (Camera != null)
             Camera.Current = true;
+
+        if (CaptureMouseOnReady)
+            Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
-            HandleMouseInput(mouseMotion);
+            HandleMouseLook(mouseMotion);
 
         if (@event is InputEventMouseButton mouseButton && Input.MouseMode == Input.MouseModeEnum.Captured)
             HandleZoom(mouseButton);
@@ -55,29 +71,29 @@ public partial class CameraComponent : Node
         float dt = (float)delta;
 
         _pitch = Mathf.Lerp(_pitch, _targetPitch, RotationSmoothness * dt);
-        _yaw = Mathf.Lerp(_yaw, _targetYaw, RotationSmoothness * dt);
+        _yaw   = Mathf.Lerp(_yaw,   _targetYaw,   RotationSmoothness * dt);
 
         SpringArm.Rotation = new Vector3(
             Mathf.DegToRad(_pitch),
             Mathf.DegToRad(_yaw),
-            0
+            0f
         );
 
-        SpringArm.SpringLength = Mathf.Lerp(SpringArm.SpringLength, _targetDistance, FollowSmoothness * dt);
+        SpringArm.SpringLength = Mathf.Lerp(SpringArm.SpringLength, _targetZoom, ZoomSmoothness * dt);
     }
 
-    private void HandleMouseInput(InputEventMouseMotion mouseMotion)
+    private void HandleMouseLook(InputEventMouseMotion mouseMotion)
     {
-        _targetYaw -= mouseMotion.Relative.X * MouseSensitivity;
+        _targetYaw   -= mouseMotion.Relative.X * MouseSensitivity;
         _targetPitch -= mouseMotion.Relative.Y * MouseSensitivity;
-        _targetPitch = Mathf.Clamp(_targetPitch, MinVerticalAngle, MaxVerticalAngle);
+        _targetPitch  = Mathf.Clamp(_targetPitch, MinVerticalAngle, MaxVerticalAngle);
     }
 
     private void HandleZoom(InputEventMouseButton mouseButton)
     {
         if (mouseButton.ButtonIndex == MouseButton.WheelUp)
-            _targetDistance = Mathf.Max(MinZoom, _targetDistance - ZoomSpeed);
+            _targetZoom = Mathf.Max(MinZoom, _targetZoom - ZoomSpeed);
         else if (mouseButton.ButtonIndex == MouseButton.WheelDown)
-            _targetDistance = Mathf.Min(MaxZoom, _targetDistance + ZoomSpeed);
+            _targetZoom = Mathf.Min(MaxZoom, _targetZoom + ZoomSpeed);
     }
 }
