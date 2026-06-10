@@ -21,7 +21,7 @@ project/assembly_name="Combat Framework"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/ultimate_placer/plugin.cfg")
+enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg", "res://addons/ultimate_placer/plugin.cfg")
 
 [global_group]
 
@@ -67,5 +67,23 @@ run={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 rendering_device/driver.windows="d3d12"
-anti_aliasing/quality/msaa_3d=2
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+lights_and_shadows/directional_shadow/16_bits=false
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=1
+lights_and_shadows/positional_shadow/atlas_16_bits=false
+environment/ssao/quality=0
+environment/ssil/quality=0
+anti_aliasing/screen_space_roughness_limiter/enabled=false
+scaling_3d/mode=2
+environment/glow/upscale_mode=0
+environment/screen_space_reflection/half_size=false
+environment/subsurface_scattering/subsurface_scattering_quality=0
+global_illumination/sdfgi/probe_ray_count=0
+global_illumination/sdfgi/frames_to_converge=0
+global_illumination/sdfgi/frames_to_update_lights=0
+environment/volumetric_fog/use_filter=0
+anti_aliasing/quality/use_taa=true
+lights_and_shadows/positional_shadow/atlas_size=2048
