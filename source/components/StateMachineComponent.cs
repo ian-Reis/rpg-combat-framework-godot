@@ -15,14 +15,14 @@ public partial class StateMachineComponent : Node, IHasAnimationTree
     [Export] public AnimationTree AnimationTree { get; set; }
 
     [ExportGroup("States")]
-    [Export] public State InitialState { get; set; }
-    [Export] public State[] States { get; set; }
+    [Export] public LogicState InitialState { get; set; }
+    [Export] public LogicState[] States { get; set; }
 
     public ISystemLogicContext systemLogicContext { get; private set;}
     
-    private readonly Dictionary<string, State> _statesMap = new();
+    private readonly Dictionary<string, LogicState> _statesMap = new();
     
-    private State _currentState;
+    private LogicState _currentState;
     private bool _isReady = false;
 
     public override void _Ready()
