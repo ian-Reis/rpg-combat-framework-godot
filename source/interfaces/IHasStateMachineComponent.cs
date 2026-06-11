@@ -5,7 +5,7 @@ using Components;
 // ReSharper disable once CheckNamespace
 namespace Interfaces;
 
-public interface IHasStateMachineComponent
+public interface IHasLogicStateMachineComponent
 {
-    StateMachineComponent StateMachineComponent { get; }
+    LogicStateMachineComponent LogicStateMachineComponent { get; }
 }
