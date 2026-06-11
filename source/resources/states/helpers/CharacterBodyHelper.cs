@@ -8,7 +8,7 @@ public static class CharacterBodyHelper
 {
     // ── Movement ──────────────────────────────────────────────────────────────
 
-    public static void ApplyMovement(CharacterBody3D pawn, ISystemLogicContext context, bool canRun = true)
+    public static void ApplyMovement(CharacterBody3D pawn, ISystemLogicContext context, float delta, bool canRun = true)
     {
         if (context.Stats == null) return;
 
@@ -35,8 +35,17 @@ public static class CharacterBodyHelper
             ? context.Stats.RunSpeed
             : context.Stats.WalkSpeed;
 
+        bool isGrounded = pawn.IsOnFloor();
+        float accel = hasInput
+            ? (isGrounded ? context.Stats.Acceleration    : context.Stats.AirAcceleration)
+            : (isGrounded ? context.Stats.Deceleration    : context.Stats.AirDeceleration);
+
+        Vector3 target        = moveDir * targetSpeed;
+        Vector3 currentHoriz  = GetHorizontalVelocity(pawn);
+        Vector3 newHoriz      = currentHoriz.MoveToward(target, accel * delta);
+
         float verticalSpeed = pawn.Velocity.Dot(up);
-        pawn.Velocity = moveDir * targetSpeed + up * verticalSpeed;
+        pawn.Velocity = newHoriz + up * verticalSpeed;
     }
 
     // ── Physics ───────────────────────────────────────────────────────────────
