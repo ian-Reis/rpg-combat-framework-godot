@@ -87,3 +87,18 @@ global_illumination/sdfgi/frames_to_update_lights=0
 environment/volumetric_fog/use_filter=0
 anti_aliasing/quality/use_taa=true
 lights_and_shadows/positional_shadow/atlas_size=2048
+
+[shader_globals]
+
+wind_intensity={
+"type": "float",
+"value": 1.0
+}
+wind_direction={
+"type": "vec3",
+"value": Vector3(1, 0, 0)
+}
+player_position={
+"type": "vec3",
+"value": Vector3(0, 0, 0)
+}
