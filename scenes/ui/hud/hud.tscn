@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://ccu53n8u02if3"]
+
+[ext_resource type="Shader" uid="uid://c4men4br8lv67" path="res://shaders/comic_canvasitem.gdshader" id="1_bngdn"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qao66"]
+shader = ExtResource("1_bngdn")
+shader_parameter/Speed = 0.5
+shader_parameter/LineLength = 2.0
+shader_parameter/LineColor = Color(1, 1, 1, 1)
+shader_parameter/Softness = 0.1
+shader_parameter/Weirdness = 0.1
+shader_parameter/Radius = 1.3
+shader_parameter/Freq = 10.0
+
+[sub_resource type="Gradient" id="Gradient_as3gr"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ax4tw"]
+gradient = SubResource("Gradient_as3gr")
+
+[node name="HUD" type="CanvasLayer" unique_id=1860327492]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=285591694]
+material = SubResource("ShaderMaterial_qao66")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_ax4tw")
+metadata/_edit_use_anchors_ = true
