@@ -41,7 +41,17 @@ public static class CharacterBodyHelper
 
     // ── Physics ───────────────────────────────────────────────────────────────
 
-    public static void MoveAndSlide(CharacterBody3D pawn) => pawn.MoveAndSlide();
+    public static void MoveAndSlide(CharacterBody3D pawn, float pushForce = 5f)
+    {
+        pawn.MoveAndSlide();
+
+        for (int i = 0; i < pawn.GetSlideCollisionCount(); i++)
+        {
+            var collision = pawn.GetSlideCollision(i);
+            if (collision.GetCollider() is RigidBody3D rb)
+                rb.ApplyImpulse(-collision.GetNormal() * pushForce, collision.GetPosition() - rb.GlobalPosition);
+        }
+    }
 
     public static void ApplyGravity(CharacterBody3D pawn, float gravity, float delta)
     {
