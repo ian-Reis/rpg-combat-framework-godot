@@ -8,11 +8,20 @@ public static class PhysicsHelper
 {
     public static void ApplyGravity(ISystemLogicContext context, float delta)
     {
-        if (context?.Pawn is not CharacterBody3D pawn) return;
-
-        var velocity = pawn.Velocity;
         var gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
-        velocity.Y -= gravity * delta;
-        pawn.Velocity = velocity;
+
+        switch (context?.Pawn)
+        {
+            case CharacterBody3D charBody:
+                var velocity = charBody.Velocity;
+                velocity.Y -= gravity * delta;
+                charBody.Velocity = velocity;
+                break;
+
+            case RigidBody3D rigidBody when rigidBody.GravityScale == 0f:
+                // Only apply manually when Godot's built-in gravity is disabled on this body.
+                RigidBodyHelper.ApplyCustomGravity(rigidBody, gravity, delta);
+                break;
+        }
     }
 }
