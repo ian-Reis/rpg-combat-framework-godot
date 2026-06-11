@@ -5,7 +5,7 @@ using Interfaces;
 namespace Resources.states;
 
 [GlobalClass]
-public partial class State : Resource
+public partial class LogicState : Resource
 {
     [Export] public string StateName = "";
 

@@ -8,7 +8,7 @@ using Components;
 namespace Resources.states;
 
 [GlobalClass]
-public partial class PlayerStateIdle : PlayerState
+public partial class LogicStateIdle : LogicState
 {
     public override void Enter(StateMachineComponent stateMachineComponent) { }
 
@@ -21,7 +21,7 @@ public partial class PlayerStateIdle : PlayerState
         MovementHandler.MoveAndSlide(context);
 
         if (InputHelper.GetInputDirection().Length() > 0f)
-            stateMachineComponent.ChangeState(PlayerStateNames.Walk);
+            stateMachineComponent.ChangeState(LogicStateNames.Walk);
     }
 
     public override void Exit(StateMachineComponent stateMachineComponent) { }

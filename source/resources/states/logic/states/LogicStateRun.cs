@@ -8,7 +8,7 @@ using Components;
 namespace Resources.states;
 
 [GlobalClass]
-public partial class PlayerStateRun : PlayerState
+public partial class LogicStateRun : LogicState
 {
     public override void Enter(StateMachineComponent stateMachineComponent) { }
 
@@ -26,8 +26,8 @@ public partial class PlayerStateRun : PlayerState
         bool isMoving  = inputDir.Length() > 0f;
         bool isRunning = Input.IsActionPressed("run");
 
-        if (!isMoving)  { StateMachineHelper.ChangeState(stateMachineComponent, PlayerStateNames.Idle); return; }
-        if (!isRunning) { StateMachineHelper.ChangeState(stateMachineComponent, PlayerStateNames.Walk); return; }
+        if (!isMoving)  { StateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
+        if (!isRunning) { StateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Walk); return; }
     }
 
     public override void Exit(StateMachineComponent stateMachineComponent) { }
