@@ -10,9 +10,9 @@ namespace Resources.states;
 [GlobalClass]
 public partial class LogicStateRun : LogicState
 {
-    public override void Enter(StateMachineComponent stateMachineComponent) { }
+    public override void Enter(LogicStateMachineComponent stateMachineComponent) { }
 
-    public override void PhysicsUpdate(StateMachineComponent stateMachineComponent  , float delta)
+    public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent  , float delta)
     {
 
        if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext logicContext) return;
@@ -26,9 +26,9 @@ public partial class LogicStateRun : LogicState
         bool isMoving  = inputDir.Length() > 0f;
         bool isRunning = Input.IsActionPressed("run");
 
-        if (!isMoving)  { StateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
-        if (!isRunning) { StateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Walk); return; }
+        if (!isMoving)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
+        if (!isRunning) { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Walk); return; }
     }
 
-    public override void Exit(StateMachineComponent stateMachineComponent) { }
+    public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
 }

@@ -10,9 +10,9 @@ namespace Resources.states;
 [GlobalClass]
 public partial class LogicStateIdle : LogicState
 {
-    public override void Enter(StateMachineComponent stateMachineComponent) { }
+    public override void Enter(LogicStateMachineComponent stateMachineComponent) { }
 
-    public override void PhysicsUpdate(StateMachineComponent stateMachineComponent, float delta)
+    public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent, float delta)
     {
         if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext context) return;
 
@@ -24,5 +24,5 @@ public partial class LogicStateIdle : LogicState
             stateMachineComponent.ChangeState(LogicStateNames.Walk);
     }
 
-    public override void Exit(StateMachineComponent stateMachineComponent) { }
+    public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
 }

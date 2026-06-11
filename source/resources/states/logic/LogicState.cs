@@ -9,13 +9,13 @@ public partial class LogicState : Resource
 {
     [Export] public string StateName = "";
 
-    public virtual void Enter(StateMachineComponent stateMachineComponent) { }
+    public virtual void Enter(LogicStateMachineComponent stateMachineComponent) { }
 
-    public virtual void Exit(StateMachineComponent stateMachineComponent) { }
+    public virtual void Exit(LogicStateMachineComponent stateMachineComponent) { }
 
-    public virtual void Update(StateMachineComponent stateMachineComponent, float delta) { }
+    public virtual void Update(LogicStateMachineComponent stateMachineComponent, float delta) { }
 
-    public virtual void PhysicsUpdate(StateMachineComponent stateMachineComponent, float delta) { }
+    public virtual void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent, float delta) { }
 
-    public virtual void HandleInput(StateMachineComponent stateMachineComponent, InputEvent @event) { }
+    public virtual void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event) { }
 }
