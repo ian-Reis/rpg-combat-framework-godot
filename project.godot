@@ -15,13 +15,17 @@ run/main_scene="uid://o36shgtm0iiy"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+PhantomCameraManager="*uid://duq6jhf6unyis"
+
 [dotnet]
 
 project/assembly_name="Combat Framework"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg", "res://addons/ultimate_placer/plugin.cfg")
+enabled=PackedStringArray("res://addons/mtoon/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/ultimate_placer/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [global_group]
 
