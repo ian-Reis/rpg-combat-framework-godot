@@ -1,6 +1,5 @@
 using Godot;
 using Classes.statics;
-using Helpers;
 using Interfaces;
 
 namespace Handlers;
@@ -10,75 +9,40 @@ public static class JumpHandler
     public static void ApplyJump(ISystemLogicContext context)
     {
         if (!Input.IsActionJustPressed("jump")) return;
+        if (context?.Pawn is not CharacterBody3D charBody) return;
+        if (!charBody.IsOnFloor()) return;
 
-        float jumpForce = context.Stats?.JumpForce ?? 8f;
-
-        switch (context?.Pawn)
-        {
-            case CharacterBody3D charBody when charBody.IsOnFloor():
-                InstantiateCharacterJump(charBody, context, jumpForce);
-                break;
-            case RigidBody3D rigidBody when RigidBodyHelper.IsGrounded(rigidBody):
-                RigidBodyHelper.ApplyJump(rigidBody, jumpForce);
-                break;
-        }
+        InstantiateJump(charBody, context);
     }
 
     public static void JumpTravel(ISystemLogicContext context)
     {
         if (!Input.IsActionPressed("jet")) return;
+        if (context?.Pawn is not CharacterBody3D charBody) return;
+
+        Node3D planet = (Node3D)charBody.Get(EntityProps.CurrentPlanet);
+        if (planet == null) return;
 
         float jumpForce = context.Stats?.JumpForce ?? 8f;
-
-        switch (context?.Pawn)
-        {
-            case CharacterBody3D charBody:
-            {
-                Node3D planet = (Node3D)charBody.Get(EntityProps.CurrentPlanet);
-                if (planet == null) return;
-
-                Vector3 up = (charBody.GlobalPosition - planet.GlobalPosition).Normalized();
-                charBody.Velocity -= up * charBody.Velocity.Dot(up);
-                charBody.Velocity += up * jumpForce;
-                break;
-            }
-            case RigidBody3D rigidBody:
-            {
-                Node3D planet = (Node3D)rigidBody.Get(EntityProps.CurrentPlanet);
-                if (planet == null) return;
-
-                Vector3 up = (rigidBody.GlobalPosition - planet.GlobalPosition).Normalized();
-                RigidBodyHelper.ApplyDirectionalImpulse(rigidBody, up, jumpForce);
-                break;
-            }
-        }
+        Vector3 up = (charBody.GlobalPosition - planet.GlobalPosition).Normalized();
+        charBody.Velocity -= up * charBody.Velocity.Dot(up);
+        charBody.Velocity += up * jumpForce;
     }
 
     public static void InstantiateJump(ISystemLogicContext context)
     {
-        float jumpForce = context.Stats?.JumpForce ?? 8f;
-
-        switch (context?.Pawn)
-        {
-            case CharacterBody3D charBody:
-                InstantiateCharacterJump(charBody, context, jumpForce);
-                break;
-            case RigidBody3D rigidBody:
-                RigidBodyHelper.ApplyJump(rigidBody, jumpForce);
-                break;
-            default:
-                GD.PrintErr("[JumpHandler] Jump not valid. Conditions not met.");
-                break;
-        }
+        if (context?.Pawn is not CharacterBody3D charBody) return;
+        InstantiateJump(charBody, context);
     }
 
-    private static void InstantiateCharacterJump(CharacterBody3D pawn, ISystemLogicContext context, float jumpForce)
+    private static void InstantiateJump(CharacterBody3D pawn, ISystemLogicContext context)
     {
-        Node3D currentPlanet = (Node3D)pawn.Get(EntityProps.CurrentPlanet);
-        if (currentPlanet == null) return;
+        Node3D planet = (Node3D)pawn.Get(EntityProps.CurrentPlanet);
+        if (planet == null) return;
 
-        Vector3 upDirection = (pawn.GlobalPosition - currentPlanet.GlobalPosition).Normalized();
-        pawn.Velocity -= upDirection * pawn.Velocity.Dot(upDirection);
-        pawn.Velocity += upDirection * jumpForce;
+        float jumpForce = context.Stats?.JumpForce ?? 8f;
+        Vector3 up = (pawn.GlobalPosition - planet.GlobalPosition).Normalized();
+        pawn.Velocity -= up * pawn.Velocity.Dot(up);
+        pawn.Velocity += up * jumpForce;
     }
 }
