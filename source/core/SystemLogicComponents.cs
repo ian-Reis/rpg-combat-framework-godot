@@ -18,7 +18,7 @@ public partial class SystemLogicComponents : Node, ISystemLogicContext
     [Export] public CharacterStats Stats { get; set; }
 
     public AudioStreamPlayer3D SoundEffect => GetComponent<AudioStreamPlayer3D>();
-    public StateMachineComponent StateMachineComponent => GetComponent<StateMachineComponent>();
+    public LogicStateMachineComponent LogicStateMachineComponent => GetComponent<LogicStateMachineComponent>();
     public AnimationStateMachineComponent AnimationStateMachineComponent => GetComponent<AnimationStateMachineComponent>();
 
     private readonly Dictionary<Type, Node> _componentCache = new();
