@@ -1,6 +1,6 @@
-using Godot;
 using Helpers;
 using Interfaces;
+using Godot;
 
 namespace Handlers;
 
@@ -28,5 +28,4 @@ public static class MovementHandler
             CharacterBodyHelper.MoveAndSlide(pawn);
     }
 
-    public static Vector2 GetInputDirection() => Input.GetVector("left", "right", "forward", "forback");
 }
