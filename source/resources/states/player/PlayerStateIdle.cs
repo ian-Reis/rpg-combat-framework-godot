@@ -10,21 +10,19 @@ namespace Resources.states;
 [GlobalClass]
 public partial class PlayerStateIdle : PlayerState
 {
-    public override void Enter(StateMachineComponent stateMachineComponent)
-    {
-        AnimationTreeHelper.SetTreeCondition(stateMachineComponent, AnimationParams.IsIdle, true);
-    }
+    public override void Enter(StateMachineComponent stateMachineComponent) { }
 
     public override void PhysicsUpdate(StateMachineComponent stateMachineComponent, float delta)
     {
         if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext context) return;
 
-        // JumpHelper.ApplyJump(context);
-        // JumpHelper.JumpTravel(context);
+        // JumpHandler.ApplyJump(context);
+        // JumpHandler.JumpTravel(context);
 
         switch (context.Pawn)
         {
             case CharacterBody3D:
+                PhysicsHandler.ApplyGravity(context, delta);
                 MovementHandler.MoveAndSlide(context);
                 break;
             case RigidBody3D rigidBody:
@@ -32,12 +30,9 @@ public partial class PlayerStateIdle : PlayerState
                 break;
         }
 
-        if (MovementHandler.GetInputDirection().Length() > 0f)
+        if (InputHelper.GetInputDirection().Length() > 0f)
             stateMachineComponent.ChangeState(PlayerStateNames.Walk);
     }
 
-    public override void Exit(StateMachineComponent stateMachineComponent)
-    {
-        AnimationTreeHelper.SetTreeCondition(stateMachineComponent, AnimationParams.IsIdle, false);
-    }
+    public override void Exit(StateMachineComponent stateMachineComponent) { }
 }
