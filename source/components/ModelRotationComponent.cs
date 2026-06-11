@@ -24,14 +24,12 @@ namespace Components;
         Vector2 inputDir = InputHelper.GetInputDirection();
         if (inputDir.Length() < 0.1f) return;
 
-        Node3D pawn = _owner.Pawn;
+        if (_owner.Pawn is not CharacterBody3D pawn) return;
 
         SpringArm3D cam = (SpringArm3D)pawn.Get(EntityProps.SpringArm);
         if (cam == null) return;
 
-        Vector3 up = pawn is CharacterBody3D charBody
-            ? charBody.UpDirection.Normalized()
-            : pawn.GlobalTransform.Basis.Y.Normalized();
+        Vector3 up = pawn.UpDirection.Normalized();
 
         Vector3 forward = -cam.Transform.Basis.Z;
         Vector3 right   =  cam.Transform.Basis.X;
