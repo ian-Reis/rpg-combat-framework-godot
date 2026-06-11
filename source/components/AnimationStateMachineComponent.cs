@@ -98,29 +98,15 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
     private AnimationSnapshot BuildSnapshot(float delta)
     {
-        bool isGrounded;
-        float horizontalSpeed;
-        float verticalVelocity;
+        if (Context.Pawn is not CharacterBody3D charBody) return default;
 
-        switch (Context.Pawn)
-        {
-            case CharacterBody3D charBody:
-                isGrounded      = CharacterBodyHelper.IsOnFloor(charBody);
-                horizontalSpeed = CharacterBodyHelper.GetHorizontalSpeed(charBody);
-                verticalVelocity = charBody.Velocity.Y;
-                break;
-            case RigidBody3D rigidBody:
-                isGrounded       = RigidBodyHelper.IsGrounded(rigidBody);
-                horizontalSpeed  = RigidBodyHelper.GetHorizontalSpeed(rigidBody);
-                verticalVelocity = rigidBody.LinearVelocity.Y;
-                break;
-            default:
-                return default;
-        }
+        bool  isGrounded     = CharacterBodyHelper.IsOnFloor(charBody);
+        float horizontalSpeed = CharacterBodyHelper.GetHorizontalSpeed(charBody);
+        float verticalVelocity = charBody.Velocity.Y;
 
         _timeInAir = isGrounded ? 0f : _timeInAir + delta;
 
-        float runSpeed      = Context.Stats?.RunSpeed ?? 6f;
+        float runSpeed        = Context.Stats?.RunSpeed ?? 6f;
         float normalizedSpeed = runSpeed > 0f ? Mathf.Clamp(horizontalSpeed / runSpeed, 0f, 1f) : 0f;
 
         return new AnimationSnapshot
