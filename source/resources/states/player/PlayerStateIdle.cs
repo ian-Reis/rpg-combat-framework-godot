@@ -16,19 +16,9 @@ public partial class PlayerStateIdle : PlayerState
     {
         if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext context) return;
 
-        // JumpHandler.ApplyJump(context);
-        // JumpHandler.JumpTravel(context);
-
-        switch (context.Pawn)
-        {
-            case CharacterBody3D:
-                PhysicsHandler.ApplyGravity(context, delta);
-                MovementHandler.MoveAndSlide(context);
-                break;
-            case RigidBody3D rigidBody:
-                RigidBodyHelper.BrakeHorizontal(rigidBody, 0f, 15f * delta);
-                break;
-        }
+        PhysicsHandler.ApplyGravity(context, delta);
+        MovementHandler.ApplyMovement(context, delta);
+        MovementHandler.MoveAndSlide(context);
 
         if (InputHelper.GetInputDirection().Length() > 0f)
             stateMachineComponent.ChangeState(PlayerStateNames.Walk);
