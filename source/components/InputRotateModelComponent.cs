@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Godot;
+using Handlers;
 using Helpers;
 
 namespace Components;
@@ -27,7 +28,7 @@ public partial class InputRotateModelComponent : Node
     {
         if (Model == null) return;
 
-        Vector2 inputDir = MovementHelper.GetInputDirection();
+        Vector2 inputDir = MovementHandler.GetInputDirection();
         if (inputDir.Length() <= InputDeadZone) return;
 
         if (InvertY)
