@@ -8,7 +8,7 @@ public static class MovementHandler
     public static void ApplyMovement(ISystemLogicContext context, float delta, bool ignoreAirControl = false, bool canRun = true)
     {
         if (context?.Pawn is not Godot.CharacterBody3D charBody) return;
-        CharacterBodyHelper.ApplyMovement(charBody, context, canRun);
+        CharacterBodyHelper.ApplyMovement(charBody, context, delta, canRun);
     }
 
     public static void MoveAndSlide(ISystemLogicContext context, float pushForce = 5f)
