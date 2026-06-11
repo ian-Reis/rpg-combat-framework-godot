@@ -1,4 +1,5 @@
 using Godot;
+using Handlers;
 using Helpers;
 using Interfaces;
 using Constants;
@@ -19,14 +20,11 @@ public partial class PlayerStateRun : PlayerState
 
        if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext logicContext) return;
 
-        var pawn = logicContext.Pawn as CharacterBody3D;
-        if (pawn == null) return;
-
         JumpHelper.ApplyJump(logicContext);
-        MovementHelper.ApplyMovement(logicContext, delta);
-        pawn.MoveAndSlide();
+        MovementHandler.ApplyMovement(logicContext, delta);
+        MovementHandler.MoveAndSlide(logicContext);
 
-        var inputDir = MovementHelper.GetInputDirection();
+        var inputDir = MovementHandler.GetInputDirection();
         bool isMoving  = inputDir.Length() > 0f;
         bool isRunning = Input.IsActionPressed("run");
 
