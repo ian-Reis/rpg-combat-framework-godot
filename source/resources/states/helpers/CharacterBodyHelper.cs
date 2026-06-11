@@ -1,6 +1,5 @@
 using Godot;
 using Components;
-using Handlers;
 using Interfaces;
 
 namespace Helpers;
@@ -13,7 +12,7 @@ public static class CharacterBodyHelper
     {
         if (context.Stats == null) return;
 
-        Vector2 inputDir = MovementHandler.GetInputDirection();
+        Vector2 inputDir = InputHelper.GetInputDirection();
         Vector3 up       = pawn.UpDirection.Normalized();
 
         SpringArm3D springArm = context.GetComponent<CameraComponent>()?.SpringArm;

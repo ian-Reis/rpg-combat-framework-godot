@@ -1,6 +1,5 @@
 using Godot;
 using Components;
-using Handlers;
 using Interfaces;
 
 namespace Helpers;
@@ -11,7 +10,7 @@ public static class RigidBodyHelper
 
     public static Vector3 GetWorldMoveDirection(RigidBody3D body, ISystemLogicContext context)
     {
-        Vector2 inputDir = MovementHandler.GetInputDirection();
+        Vector2 inputDir = InputHelper.GetInputDirection();
         if (inputDir.Length() < 0.1f) return Vector3.Zero;
 
         SpringArm3D springArm = context.GetComponent<CameraComponent>()?.SpringArm;
