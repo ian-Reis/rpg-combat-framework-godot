@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using Godot;
-using Helpers;
 
 namespace Components;
 
@@ -21,21 +20,13 @@ public partial class JumpComponent : Node
     public override void _PhysicsProcess(double delta)
     {
         if (_systemLogicComponents?.Stats == null) return;
+        if (_systemLogicComponents.Pawn is not CharacterBody3D character) return;
 
         float dt = (float)delta;
-
-        switch (_systemLogicComponents.Pawn)
-        {
-            case CharacterBody3D character:
-                ProcessCharacterJump(character, dt);
-                break;
-            case RigidBody3D rigidBody:
-                ProcessRigidBodyJump(rigidBody, dt);
-                break;
-        }
+        ProcessJump(character, dt);
     }
 
-    private void ProcessCharacterJump(CharacterBody3D character, float dt)
+    private void ProcessJump(CharacterBody3D character, float dt)
     {
         var  velocity  = character.Velocity;
         bool isOnFloor = character.IsOnFloor();
@@ -60,36 +51,6 @@ public partial class JumpComponent : Node
             velocity.Y *= _systemLogicComponents.Stats.CutJumpFactor;
             _isJumping = false;
             character.Velocity = velocity;
-        }
-    }
-
-    private void ProcessRigidBodyJump(RigidBody3D rigidBody, float dt)
-    {
-        bool isGrounded = RigidBodyHelper.IsGrounded(rigidBody);
-
-        if (Input.IsActionJustPressed("jump") && isGrounded)
-        {
-            RigidBodyHelper.ApplyJump(rigidBody, _systemLogicComponents.Stats.JumpForce);
-            _isJumping = true;
-            _jumpTimer = _systemLogicComponents.Stats.JumpHoldTime;
-        }
-
-        // Mantém força ascendente enquanto segura o botão (jump hold)
-        if (Input.IsActionPressed("jump") && _isJumping && _jumpTimer > 0f)
-        {
-            rigidBody.ApplyCentralForce(Vector3.Up * _systemLogicComponents.Stats.JumpForce * 0.5f);
-            _jumpTimer -= dt;
-        }
-
-        if (Input.IsActionJustReleased("jump"))
-        {
-            if (rigidBody.LinearVelocity.Y > 0f)
-                rigidBody.LinearVelocity = new Vector3(
-                    rigidBody.LinearVelocity.X,
-                    rigidBody.LinearVelocity.Y * _systemLogicComponents.Stats.CutJumpFactor,
-                    rigidBody.LinearVelocity.Z
-                );
-            _isJumping = false;
         }
     }
 }
