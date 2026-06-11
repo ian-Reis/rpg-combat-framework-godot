@@ -1,7 +1,7 @@
 using Godot;
 using Components;
 using Classes.statics;
-using Handlers;
+using Helpers;
 
 namespace Components;
 
@@ -21,7 +21,7 @@ namespace Components;
         if (_owner?.Pawn == null) return;
         if (Model == null) return;
 
-        Vector2 inputDir = MovementHandler.GetInputDirection();
+        Vector2 inputDir = InputHelper.GetInputDirection();
         if (inputDir.Length() < 0.1f) return;
 
         Node3D pawn = _owner.Pawn;
