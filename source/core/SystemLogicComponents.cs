@@ -35,4 +35,12 @@ public partial class SystemLogicComponents : Node, ISystemLogicContext
 
         return found;
     }
+
+    // Called by Area3D components (HurtboxComponent, HitboxComponent) that live
+    // deeper in the scene tree and cannot be found by GetChildren().OfType<T>().
+    public void RegisterComponent(Node component)
+    {
+        if (component == null) return;
+        _componentCache[component.GetType()] = component;
+    }
 }
