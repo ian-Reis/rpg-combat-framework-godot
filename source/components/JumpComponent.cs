@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Godot;
+using Classes.statics;
 
 namespace Components;
 
@@ -9,48 +10,68 @@ public partial class JumpComponent : Node
     private float _jumpTimer = 0f;
     private bool  _isJumping = false;
 
-    private SystemLogicComponents _systemLogicComponents;
+    private SystemLogicComponents _owner;
 
     public override void _Ready()
     {
-        _systemLogicComponents = GetParentOrNull<SystemLogicComponents>();
-        Debug.Assert(_systemLogicComponents != null, "JumpComponent must be a child of SystemLogicComponents");
+        _owner = GetParentOrNull<SystemLogicComponents>();
+        Debug.Assert(_owner != null, "JumpComponent must be a child of SystemLogicComponents");
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_systemLogicComponents?.Stats == null) return;
-        if (_systemLogicComponents.Pawn is not CharacterBody3D character) return;
+        if (_owner?.Stats == null) return;
+        if (_owner.Pawn is not CharacterBody3D character) return;
 
         float dt = (float)delta;
         ProcessJump(character, dt);
+        ProcessJumpTravel(character, dt);
     }
 
     private void ProcessJump(CharacterBody3D character, float dt)
     {
-        var  velocity  = character.Velocity;
-        bool isOnFloor = character.IsOnFloor();
+        Vector3 up        = GetUpDirection(character);
+        float   vertSpeed = character.Velocity.Dot(up);
+        bool    isOnFloor = character.IsOnFloor();
 
         if (Input.IsActionJustPressed("jump") && isOnFloor)
         {
-            velocity.Y = _systemLogicComponents.Stats.JumpForce;
+            character.Velocity -= up * vertSpeed;
+            character.Velocity += up * _owner.Stats.JumpForce;
             _isJumping = true;
-            _jumpTimer = _systemLogicComponents.Stats.JumpHoldTime;
-            character.Velocity = velocity;
+            _jumpTimer = _owner.Stats.JumpHoldTime;
         }
 
         if (Input.IsActionPressed("jump") && _isJumping && _jumpTimer > 0f)
         {
-            velocity.Y -= _systemLogicComponents.Stats.Gravity * dt;
+            character.Velocity += up * _owner.Stats.Gravity * dt;
             _jumpTimer -= dt;
-            character.Velocity = velocity;
         }
 
-        if (Input.IsActionJustReleased("jump") && character.Velocity.Y > 0f)
+        if (Input.IsActionJustReleased("jump") && character.Velocity.Dot(up) > 0f)
         {
-            velocity.Y *= _systemLogicComponents.Stats.CutJumpFactor;
+            float vert = character.Velocity.Dot(up);
+            character.Velocity -= up * vert;
+            character.Velocity += up * vert * _owner.Stats.CutJumpFactor;
             _isJumping = false;
-            character.Velocity = velocity;
         }
+    }
+
+    private void ProcessJumpTravel(CharacterBody3D character, float dt)
+    {
+        if (!Input.IsActionPressed("jet")) return;
+
+        Vector3 up = GetUpDirection(character);
+        character.Velocity -= up * character.Velocity.Dot(up);
+        character.Velocity += up * _owner.Stats.JumpForce;
+    }
+
+    private static Vector3 GetUpDirection(CharacterBody3D character)
+    {
+        var planet = character.Get(EntityProps.CurrentPlanet).As<Node3D>();
+        if (planet != null)
+            return (character.GlobalPosition - planet.GlobalPosition).Normalized();
+
+        return character.UpDirection.Normalized();
     }
 }
