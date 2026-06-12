@@ -28,6 +28,12 @@ public partial class LogicStateIdle : LogicState
     {
         if (@event.IsActionPressed("attack"))
             stateMachineComponent.ChangeState(LogicStateNames.Attack);
+
+        if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
+            stateMachineComponent.ChangeState(LogicStateNames.Dodge);
+
+        if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
+            stateMachineComponent.ChangeState(LogicStateNames.Block);
     }
 
     public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
