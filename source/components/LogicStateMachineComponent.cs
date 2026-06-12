@@ -13,13 +13,15 @@ public partial class LogicStateMachineComponent : Node, IHasAnimationTree
 {
     [ExportGroup("References")]
     [Export] public AnimationTree AnimationTree { get; set; }
+    [Export] public string PlaybackPath { get; set; } = "parameters/playback";
 
     [ExportGroup("States")]
     [Export] public LogicState InitialState { get; set; }
     [Export] public LogicState[] States { get; set; }
 
-    public ISystemLogicContext systemLogicContext { get; private set;}
-    
+    public ISystemLogicContext systemLogicContext { get; private set; }
+    public string CurrentStateName { get; private set; } = "";
+
     private readonly Dictionary<string, LogicState> _statesMap = new();
     
     private LogicState _currentState;
@@ -95,6 +97,7 @@ public partial class LogicStateMachineComponent : Node, IHasAnimationTree
 
         _currentState?.Exit(this);
         _currentState = newState;
+        CurrentStateName = newStateName;
         GD.Print($"[LogicStateMachineComponent] → {newStateName}");
         _currentState.Enter(this);
     }
