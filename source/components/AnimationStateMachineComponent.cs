@@ -11,6 +11,8 @@ namespace Components;
 [GlobalClass]
 public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 {
+    [Signal] public delegate void StateChangedEventHandler(string from, string to);
+
     [ExportGroup("References")]
     [Export] public AnimationTree AnimationTree { get; set; }
     [Export] public string PlaybackPath { get; set; } = "parameters/playback";
@@ -83,11 +85,13 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
             return;
         }
 
+        string previous = CurrentStateName;
         _currentState?.Exit(this);
         _currentState = newState;
         CurrentStateName = newStateName;
         GD.Print($"[AnimationSM] → {newStateName}");
         _currentState.Enter(this);
+        EmitSignal(SignalName.StateChanged, previous, newStateName);
     }
 
     public override void _Process(double delta)
