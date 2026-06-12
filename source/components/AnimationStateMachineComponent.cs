@@ -13,6 +13,7 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 {
     [ExportGroup("References")]
     [Export] public AnimationTree AnimationTree { get; set; }
+    [Export] public string PlaybackPath { get; set; } = "parameters/playback";
 
     [ExportGroup("States")]
     [Export] public AnimationState InitialState { get; set; }
@@ -20,6 +21,7 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
     public ISystemLogicContext Context { get; private set; }
     public AnimationSnapshot CurrentSnapshot { get; private set; }
+    public string CurrentStateName { get; private set; } = "";
 
     private readonly Dictionary<string, AnimationState> _statesMap = new();
     private AnimationState _currentState;
@@ -83,6 +85,7 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
         _currentState?.Exit(this);
         _currentState = newState;
+        CurrentStateName = newStateName;
         GD.Print($"[AnimationSM] → {newStateName}");
         _currentState.Enter(this);
     }
@@ -94,6 +97,24 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
         float dt = (float)delta;
         CurrentSnapshot = BuildSnapshot(dt);
         _currentState.Update(this, CurrentSnapshot, dt);
+    }
+
+    private Basis GetMoveBasis(CharacterBody3D charBody)
+    {
+        Vector3 up = charBody.UpDirection.Normalized();
+
+        SpringArm3D springArm = Context.GetComponent<CameraComponent>()?.SpringArm;
+        if (springArm == null)
+            return charBody.GlobalTransform.Basis;
+
+        Vector3 camForward = -springArm.GlobalTransform.Basis.Z;
+        Vector3 camRight   =  springArm.GlobalTransform.Basis.X;
+
+        Vector3 forward = (camForward - up * camForward.Dot(up)).Normalized();
+        Vector3 right   = (camRight   - up * camRight.Dot(up)).Normalized();
+        Vector3 newUp   = right.Cross(forward).Normalized();
+
+        return new Basis(right, newUp, -forward);
     }
 
     private AnimationSnapshot BuildSnapshot(float delta)
@@ -111,12 +132,13 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
         return new AnimationSnapshot
         {
-            HorizontalSpeed  = horizontalSpeed,
-            NormalizedSpeed  = normalizedSpeed,
-            VerticalVelocity = verticalVelocity,
-            IsGrounded       = isGrounded,
-            HasInput         = Helpers.InputHelper.GetInputDirection().Length() > 0.1f,
-            TimeInAir        = _timeInAir,
+            HorizontalSpeed    = horizontalSpeed,
+            NormalizedSpeed    = normalizedSpeed,
+            VerticalVelocity   = verticalVelocity,
+            IsGrounded         = isGrounded,
+            HasInput           = Helpers.InputHelper.GetInputDirection().Length() > 0.1f,
+            TimeInAir          = _timeInAir,
+            RootMotionVelocity = Helpers.AnimationTreeHelper.GetRootMotionVelocity(this, GetMoveBasis(charBody), delta),
         };
     }
 }
