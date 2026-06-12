@@ -12,4 +12,6 @@ public static class LogicStateNames
     public const string Airborne = "airborne";
     public const string Hit      = "hit";
     public const string Death    = "death";
+    public const string Dodge    = "dodge";
+    public const string Block    = "block";
 }
