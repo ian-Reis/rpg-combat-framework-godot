@@ -1,6 +1,7 @@
 using Godot;
 using Components;
 using Interfaces;
+using Data;
 
 namespace Helpers;
 
@@ -31,9 +32,10 @@ public static class CharacterBodyHelper
             ? (right * inputDir.X + forward * -inputDir.Y).Normalized()
             : Vector3.Zero;
 
-        float targetSpeed = canRun && Input.IsActionPressed("run")
+        float speedMult   = context.GetComponent<StatusEffectComponent>()?.GetSpeedMultiplier() ?? 1f;
+        float targetSpeed = (canRun && Input.IsActionPressed("run")
             ? context.Stats.RunSpeed
-            : context.Stats.WalkSpeed;
+            : context.Stats.WalkSpeed) * speedMult;
 
         bool isGrounded = pawn.IsOnFloor();
         float accel = hasInput
