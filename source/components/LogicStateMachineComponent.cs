@@ -11,6 +11,8 @@ namespace Components;
 [GlobalClass]
 public partial class LogicStateMachineComponent : Node
 {
+    [Signal] public delegate void StateChangedEventHandler(string from, string to);
+
     [ExportGroup("States")]
     [Export] public LogicState InitialState { get; set; }
     [Export] public LogicState[] States { get; set; }
@@ -91,11 +93,13 @@ public partial class LogicStateMachineComponent : Node
             return;
         }
 
+        string previous = CurrentStateName;
         _currentState?.Exit(this);
         _currentState = newState;
         CurrentStateName = newStateName;
         GD.Print($"[LogicStateMachineComponent] → {newStateName}");
         _currentState.Enter(this);
+        EmitSignal(SignalName.StateChanged, previous, newStateName);
     }
 
     public override void _Process(double delta)
@@ -115,4 +119,7 @@ public partial class LogicStateMachineComponent : Node
         if (!_isReady || _currentState == null) return;
         _currentState.HandleInput(this, @event);
     }
+
+    public LogicState GetState(string name)
+        => _statesMap.TryGetValue(name, out var s) ? s : null;
 }

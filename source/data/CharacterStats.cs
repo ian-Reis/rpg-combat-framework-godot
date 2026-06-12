@@ -22,6 +22,9 @@ public partial class CharacterStats : Resource
     [Export] public float JumpHoldTime  = 0.2f;
     [Export] public float CutJumpFactor = 0.5f;
 
+    [ExportGroup("Health")]
+    [Export] public float MaxHealth = 100f;
+
     [ExportGroup("Physics")]
     [Export] public float Gravity = 9.8f;
     
