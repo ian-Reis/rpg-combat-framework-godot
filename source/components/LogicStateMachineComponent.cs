@@ -9,12 +9,8 @@ using Interfaces;
 namespace Components;
 
 [GlobalClass]
-public partial class LogicStateMachineComponent : Node, IHasAnimationTree
+public partial class LogicStateMachineComponent : Node
 {
-    [ExportGroup("References")]
-    [Export] public AnimationTree AnimationTree { get; set; }
-    [Export] public string PlaybackPath { get; set; } = "parameters/playback";
-
     [ExportGroup("States")]
     [Export] public LogicState InitialState { get; set; }
     [Export] public LogicState[] States { get; set; }
