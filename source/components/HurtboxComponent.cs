@@ -86,6 +86,14 @@ public partial class HurtboxComponent : Area3D
         while (node != null)
         {
             if (node is SystemLogicComponents slc) return slc;
+
+            // SystemLogicComponents may be a sibling branch (e.g. child of CharacterBody3D
+            // alongside the Model subtree). Check this ancestor's children before going higher.
+            foreach (var child in node.GetChildren())
+            {
+                if (child is SystemLogicComponents slc2) return slc2;
+            }
+
             node = node.GetParent();
         }
         return null;
