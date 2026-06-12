@@ -64,6 +64,7 @@
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="61_ttrqx"]
 [ext_resource type="Script" uid="uid://x7jcterjapb7" path="res://source/resources/states/logic/states/LogicStateRun.cs" id="62_g3kab"]
 [ext_resource type="Script" uid="uid://cr6h83keps8v5" path="res://source/components/AttackRotateModelComponent.cs" id="62_ttrqx"]
+[ext_resource type="Script" uid="uid://cqybgm2cwfpo" path="res://source/components/HealthComponent.cs" id="64_46wpw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i11yy"]
 radius = 0.18310547
@@ -11814,7 +11815,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("../../SlashA1:material_override:shader_parameter/progress")
+tracks/0/path = NodePath("../SlashA1:material_override:shader_parameter/progress")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -11826,7 +11827,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("../../SlashA1:mesh:orientation")
+tracks/1/path = NodePath("../SlashA1:mesh:orientation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -11838,7 +11839,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("../../SlashA1:mesh:size")
+tracks/2/path = NodePath("../SlashA1:mesh:size")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -11850,7 +11851,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("../../SlashA1:rotation")
+tracks/3/path = NodePath("../SlashA1:rotation")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -11862,7 +11863,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("../../SlashB1:material_override:shader_parameter/progress")
+tracks/4/path = NodePath("../SlashB1:material_override:shader_parameter/progress")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -20147,6 +20148,50 @@ _data = {
 &"Zombie_Walk_Fwd": ExtResource("50_p21m2")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tebje"]
+render_priority = 0
+shader = ExtResource("32_7sowx")
+shader_parameter/progress = 0.0
+shader_parameter/derive_progress = 0.0
+shader_parameter/ease_progress = 0.0
+shader_parameter/time_scale = 0.96999997831856
+shader_parameter/anim_rot_amt = 0.999999977648
+shader_parameter/base_noise = SubResource("NoiseTexture2D_tebje")
+shader_parameter/width_gradient_mask = SubResource("GradientTexture1D_g3kab")
+shader_parameter/length_gradient_mask = SubResource("GradientTexture1D_46wpw")
+shader_parameter/highlight = SubResource("GradientTexture1D_ttrqx")
+shader_parameter/zoom = 0.6
+shader_parameter/rotate_all = 360.0
+shader_parameter/emission_strength = 1.0
+shader_parameter/mix_strength = 1.0
+shader_parameter/color_lookup = SubResource("GradientTexture1D_pyblu")
+
+[sub_resource type="QuadMesh" id="QuadMesh_vom6f"]
+size = Vector2(2.845, 3.17)
+orientation = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u8oud"]
+render_priority = 0
+shader = ExtResource("32_7sowx")
+shader_parameter/progress = 0.0
+shader_parameter/derive_progress = 0.0
+shader_parameter/ease_progress = 0.0
+shader_parameter/time_scale = 0.96999997831856
+shader_parameter/anim_rot_amt = 1.0
+shader_parameter/base_noise = SubResource("NoiseTexture2D_tebje")
+shader_parameter/width_gradient_mask = SubResource("GradientTexture1D_g3kab")
+shader_parameter/length_gradient_mask = SubResource("GradientTexture1D_46wpw")
+shader_parameter/highlight = SubResource("GradientTexture1D_ttrqx")
+shader_parameter/zoom = 0.6
+shader_parameter/rotate_all = 268.0000039935216
+shader_parameter/emission_strength = 1.0
+shader_parameter/mix_strength = 1.0
+shader_parameter/color_lookup = SubResource("GradientTexture1D_pyblu")
+
+[sub_resource type="QuadMesh" id="QuadMesh_mbuaw"]
+size = Vector2(2.845, 3.17)
+orientation = 1
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tebje"]
 animation = &"Pistol_Idle"
 use_custom_timeline = true
@@ -20284,51 +20329,13 @@ nodes/Animation/node = SubResource("AnimationNodeAnimation_tebje")
 nodes/Animation/position = Vector2(-176, 784)
 node_connections = [&"output", 0, &"locomotion"]
 
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ttrqx"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 0.01
+dof_blur_far_transition = 4.55
+dof_blur_amount = 0.02
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_ttrqx"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tebje"]
-render_priority = 0
-shader = ExtResource("32_7sowx")
-shader_parameter/progress = 0.0
-shader_parameter/derive_progress = 0.0
-shader_parameter/ease_progress = 0.0
-shader_parameter/time_scale = 0.96999997831856
-shader_parameter/anim_rot_amt = 0.999999977648
-shader_parameter/base_noise = SubResource("NoiseTexture2D_tebje")
-shader_parameter/width_gradient_mask = SubResource("GradientTexture1D_g3kab")
-shader_parameter/length_gradient_mask = SubResource("GradientTexture1D_46wpw")
-shader_parameter/highlight = SubResource("GradientTexture1D_ttrqx")
-shader_parameter/zoom = 0.6
-shader_parameter/rotate_all = 360.0
-shader_parameter/emission_strength = 1.0
-shader_parameter/mix_strength = 1.0
-shader_parameter/color_lookup = SubResource("GradientTexture1D_pyblu")
-
-[sub_resource type="QuadMesh" id="QuadMesh_vom6f"]
-size = Vector2(2.845, 3.17)
-orientation = 1
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_u8oud"]
-render_priority = 0
-shader = ExtResource("32_7sowx")
-shader_parameter/progress = 0.0
-shader_parameter/derive_progress = 0.0
-shader_parameter/ease_progress = 0.0
-shader_parameter/time_scale = 0.96999997831856
-shader_parameter/anim_rot_amt = 1.0
-shader_parameter/base_noise = SubResource("NoiseTexture2D_tebje")
-shader_parameter/width_gradient_mask = SubResource("GradientTexture1D_g3kab")
-shader_parameter/length_gradient_mask = SubResource("GradientTexture1D_46wpw")
-shader_parameter/highlight = SubResource("GradientTexture1D_ttrqx")
-shader_parameter/zoom = 0.6
-shader_parameter/rotate_all = 268.0000039935216
-shader_parameter/emission_strength = 1.0
-shader_parameter/mix_strength = 1.0
-shader_parameter/color_lookup = SubResource("GradientTexture1D_pyblu")
-
-[sub_resource type="QuadMesh" id="QuadMesh_mbuaw"]
-size = Vector2(2.845, 3.17)
-orientation = 1
 
 [sub_resource type="Resource" id="Resource_a05hw"]
 script = ExtResource("2_bgrq0")
@@ -20404,12 +20411,6 @@ script = ExtResource("61_g3kab")
 StateName = "attack"
 metadata/_custom_type_script = "uid://c4h6udmm33qeg"
 
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ttrqx"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 0.01
-dof_blur_far_transition = 4.55
-dof_blur_amount = 0.02
-
 [sub_resource type="Resource" id="Resource_0ote4"]
 script = ExtResource("61_ttrqx")
 duration = 0.5
@@ -20448,8 +20449,8 @@ bones/1/name = "Hips"
 bones/1/parent = 0
 bones/1/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9167, -0.05010003)
 bones/1/enabled = true
-bones/1/position = Vector3(0.004865725, 0.8741587, -0.087457776)
-bones/1/rotation = Quaternion(-0.039068256, -0.115924686, -0.004563306, 0.99247897)
+bones/1/position = Vector3(-0.0006479021, 0.87170106, -0.08690616)
+bones/1/rotation = Quaternion(-0.043284643, -0.11590424, -0.0050557954, 0.9923039)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/name = "Spine"
 bones/2/parent = 1
@@ -20463,49 +20464,49 @@ bones/3/parent = 2
 bones/3/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12309997, 0.015199981)
 bones/3/enabled = true
 bones/3/position = Vector3(0, 0.12309997, 0.015199981)
-bones/3/rotation = Quaternion(0.099358365, 0.000114463925, 0.00025019082, 0.9950517)
+bones/3/rotation = Quaternion(0.0856376, 0.000110838875, 0.00025757152, 0.9963263)
 bones/3/scale = Vector3(1, 1, 1)
 bones/4/name = "UpperChest"
 bones/4/parent = 3
 bones/4/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14120016, -0.004500025)
 bones/4/enabled = true
 bones/4/position = Vector3(0, 0.14120016, -0.004500025)
-bones/4/rotation = Quaternion(0.099358395, 0.0003261622, 0.00024341892, 0.9950516)
+bones/4/rotation = Quaternion(0.08563764, 0.00031500548, 0.00025101204, 0.9963263)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/name = "Neck"
 bones/5/parent = 4
 bones/5/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17280002, -0.005600037)
 bones/5/enabled = true
 bones/5/position = Vector3(0, 0.17280002, -0.005600037)
-bones/5/rotation = Quaternion(-0.09935828, -0.00022066015, -0.0002573831, 0.99505174)
+bones/5/rotation = Quaternion(-0.085637696, -0.00021319948, -0.00026307505, 0.9963263)
 bones/5/scale = Vector3(1, 1, 1)
 bones/6/name = "Head"
 bones/6/parent = 5
 bones/6/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.081100024, 0.0155999875)
 bones/6/enabled = true
 bones/6/position = Vector3(0, 0.081100024, 0.0155999875)
-bones/6/rotation = Quaternion(0.070643365, 0.09577825, 0.007217728, 0.99286664)
+bones/6/rotation = Quaternion(0.05244907, 0.09532804, 0.011779225, 0.99399346)
 bones/6/scale = Vector3(1, 1, 1)
 bones/7/name = "LeftShoulder"
 bones/7/parent = 4
 bones/7/rest = Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, 0.0188, 0.14310004, 0.07629998)
 bones/7/enabled = true
 bones/7/position = Vector3(0.0188, 0.14310004, 0.07629998)
-bones/7/rotation = Quaternion(0.4932798, 0.5246357, 0.52818096, -0.44995257)
+bones/7/rotation = Quaternion(0.4976045, 0.52312386, 0.52950394, -0.4453727)
 bones/7/scale = Vector3(1, 1, 1)
 bones/8/name = "LeftUpperArm"
 bones/8/parent = 7
 bones/8/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.13680005, 0.17309996, -0.01710007)
 bones/8/enabled = true
 bones/8/position = Vector3(-0.13680005, 0.17309996, -0.01710007)
-bones/8/rotation = Quaternion(-0.04398136, 0.82054204, -0.56980807, 0.009759787)
+bones/8/rotation = Quaternion(-0.030342335, 0.8227583, -0.56749773, 0.00972025)
 bones/8/scale = Vector3(1, 1, 1)
 bones/9/name = "LeftLowerArm"
 bones/9/parent = 8
 bones/9/rest = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0.004699965, 0.27440003, 3.769936e-08)
 bones/9/enabled = true
 bones/9/position = Vector3(0.004699965, 0.27440003, 3.769936e-08)
-bones/9/rotation = Quaternion(0.18706395, -0.6627937, 0.1868063, 0.700582)
+bones/9/rotation = Quaternion(0.1620346, -0.67724454, 0.16741788, 0.69789386)
 bones/9/scale = Vector3(1, 1, 1)
 bones/10/name = "LeftHand"
 bones/10/parent = 9
@@ -20659,21 +20660,21 @@ bones/31/parent = 4
 bones/31/rest = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -0.0188, 0.14310004, 0.07629998)
 bones/31/enabled = true
 bones/31/position = Vector3(-0.0188, 0.14310004, 0.07629998)
-bones/31/rotation = Quaternion(0.5454255, -0.47319672, -0.47582373, -0.5021831)
+bones/31/rotation = Quaternion(0.5496537, -0.47221076, -0.47663826, -0.4977085)
 bones/31/scale = Vector3(1, 1, 1)
 bones/32/name = "RightUpperArm"
 bones/32/parent = 31
 bones/32/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.13680005, 0.17309996, -0.01710007)
 bones/32/enabled = true
 bones/32/position = Vector3(0.13680005, 0.17309996, -0.01710007)
-bones/32/rotation = Quaternion(0.07426118, 0.8221819, -0.5642773, -0.009665006)
+bones/32/rotation = Quaternion(0.07983851, 0.8231126, -0.5621555, -0.009628757)
 bones/32/scale = Vector3(1, 1, 1)
 bones/33/name = "RightLowerArm"
 bones/33/parent = 32
 bones/33/rest = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.004699971, 0.2744, 1.6425727e-07)
 bones/33/enabled = true
 bones/33/position = Vector3(-0.004699971, 0.2744, 1.6425727e-07)
-bones/33/rotation = Quaternion(0.28959668, 0.55158806, -0.20840581, 0.7539573)
+bones/33/rotation = Quaternion(0.29055235, 0.5483335, -0.207109, 0.7563171)
 bones/33/scale = Vector3(1, 1, 1)
 bones/34/name = "RightHand"
 bones/34/parent = 33
@@ -20827,21 +20828,21 @@ bones/55/parent = 1
 bones/55/rest = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, 0.089, 0.015400031, 0.051499985)
 bones/55/enabled = true
 bones/55/position = Vector3(0.089, 0.015400031, 0.051499985)
-bones/55/rotation = Quaternion(-0.0007994566, 0.14050676, 0.9834598, -0.11429906)
+bones/55/rotation = Quaternion(-0.0008283479, 0.13921532, 0.98315483, -0.1184281)
 bones/55/scale = Vector3(1, 1, 1)
 bones/56/name = "LeftLowerLeg"
 bones/56/parent = 55
 bones/56/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.450581e-09, 0.40029997, -0.0027998893)
 bones/56/enabled = true
 bones/56/position = Vector3(-7.450581e-09, 0.40029997, -0.0027998893)
-bones/56/rotation = Quaternion(0.018600982, 0.97896177, -0.16978231, 0.111632995)
+bones/56/rotation = Quaternion(0.019264055, 0.97780025, -0.17690699, 0.11063282)
 bones/56/scale = Vector3(1, 1, 1)
 bones/57/name = "LeftFoot"
 bones/57/parent = 56
 bones/57/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, -7.218184e-09, 0.42809996, 0.034399886)
 bones/57/enabled = true
 bones/57/position = Vector3(-7.218184e-09, 0.42809996, 0.034399886)
-bones/57/rotation = Quaternion(-0.09471937, 0.7227922, -0.68451494, 0.006242676)
+bones/57/rotation = Quaternion(-0.09764979, 0.7200715, -0.68694925, 0.007890504)
 bones/57/scale = Vector3(1, 1, 1)
 bones/58/name = "LeftToes"
 bones/58/parent = 57
@@ -20862,21 +20863,21 @@ bones/60/parent = 1
 bones/60/rest = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, -0.089, 0.015400031, 0.051499985)
 bones/60/enabled = true
 bones/60/position = Vector3(-0.089, 0.015400031, 0.051499985)
-bones/60/rotation = Quaternion(0.00088620017, -0.090342835, 0.9878183, 0.12669852)
+bones/60/rotation = Quaternion(0.0009073849, -0.08923947, 0.98752546, 0.12972707)
 bones/60/scale = Vector3(1, 1, 1)
 bones/61/name = "RightLowerLeg"
 bones/61/parent = 60
 bones/61/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 7.450581e-09, 0.40029997, -0.0027998893)
 bones/61/enabled = true
 bones/61/position = Vector3(7.450581e-09, 0.40029997, -0.0027998893)
-bones/61/rotation = Quaternion(-0.040325448, 0.9266356, -0.11138193, -0.35681152)
+bones/61/rotation = Quaternion(-0.046235833, 0.9251216, -0.12727794, -0.35470068)
 bones/61/scale = Vector3(1, 1, 1)
 bones/62/name = "RightFoot"
 bones/62/parent = 61
 bones/62/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 7.683263e-09, 0.4280999, 0.034399875)
 bones/62/enabled = true
 bones/62/position = Vector3(7.683263e-09, 0.4280999, 0.034399875)
-bones/62/rotation = Quaternion(0.17126743, 0.6348924, -0.7533783, -0.00047198677)
+bones/62/rotation = Quaternion(0.17024425, 0.62656724, -0.76054305, 0.0022007308)
 bones/62/scale = Vector3(1, 1, 1)
 bones/63/name = "RightToes"
 bones/63/parent = 62
@@ -20900,12 +20901,12 @@ skin = SubResource("Skin_o3pnj")
 skeleton = NodePath("..")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Model/UAL1_Standard/Armature/GeneralSkeleton" unique_id=198762440]
-transform = Transform3D(0.11975404, -0.11330655, 0.9863164, 0.48271632, -0.861484, -0.15757509, 0.8675504, 0.49498132, -0.04847139, -0.2923335, 0.91585976, -0.16110697)
+transform = Transform3D(0.119447656, -0.117696315, 0.9858396, 0.53450537, -0.8291497, -0.1637518, 0.83668154, 0.5464962, -0.03613043, -0.29626006, 0.9071774, -0.14640209)
 bone_name = "RightHand"
 bone_idx = 34
 
 [node name="CheastBA" type="BoneAttachment3D" parent="Model/UAL1_Standard/Armature/GeneralSkeleton" unique_id=652064743]
-transform = Transform3D(0.98514354, -0.016522957, -0.17093587, -0.0042071203, 0.99274004, -0.120206594, 0.17168102, 0.1191399, 0.9779219, -0.0010058768, 1.1341684, -0.058712356)
+transform = Transform3D(0.98513484, -0.009867154, -0.17149909, -0.0047049755, 0.99642456, -0.084355615, 0.17171827, 0.083908565, 0.98156613, -0.0060100798, 1.1319506, -0.060311683)
 bone_name = "Chest"
 bone_idx = 3
 
@@ -20929,6 +20930,16 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Model/UAL1_Standard" unique_id=504958157]
 libraries/ = SubResource("AnimationLibrary_uejbb")
 
+[node name="SlashA1" type="MeshInstance3D" parent="Model" unique_id=228729536]
+transform = Transform3D(-0.90554106, -0.39800847, -0.14691426, 0.36049047, -0.90441567, 0.22820483, -0.22369914, 0.1536876, 0.96246487, 1.930164e-08, 0.9686109, 0.22078502)
+material_override = SubResource("ShaderMaterial_tebje")
+mesh = SubResource("QuadMesh_vom6f")
+
+[node name="SlashB1" type="MeshInstance3D" parent="Model" unique_id=1872095167]
+transform = Transform3D(-0.95605254, 0.28256136, -0.07824865, 0.27203405, 0.9544261, 0.12275104, 0.109367274, 0.09607009, -0.98934793, 0.07411578, 0.6332277, 0.37644756)
+material_override = SubResource("ShaderMaterial_u8oud")
+mesh = SubResource("QuadMesh_mbuaw")
+
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=1899933099]
 root_node = NodePath("../Model/UAL1_Standard")
 root_motion_track = NodePath("%GeneralSkeleton:Root")
@@ -20937,6 +20948,20 @@ tree_root = SubResource("AnimationNodeBlendTree_1o1yk")
 anim_player = NodePath("../Model/UAL1_Standard/AnimationPlayer")
 parameters/locomotion/conditions/IsSlideExit = false
 parameters/locomotion/blend/blend_position = 0.0
+
+[node name="HostPC" type="Camera3D" parent="." unique_id=1778393474]
+physics_interpolation_mode = 1
+transform = Transform3D(0.73143667, 0.053006724, 0.6798457, 0.230014, 0.91936725, -0.3191508, -0.64194536, 0.38981262, 0.66026664, 1.4344275, 0.76751906, 1.2316018)
+top_level = true
+attributes = SubResource("CameraAttributesPractical_ttrqx")
+current = true
+fov = 106.8
+
+[node name="PhantomCameraHost" type="Node" parent="HostPC" unique_id=535129462]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("47_7sowx")
+metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="SpringArm3D" type="SpringArm3D" parent="." unique_id=1733158321]
 transform = Transform3D(1, 0, 0, 0, 0.9702957, 0.2419219, 0, -0.2419219, 0.9702957, 0, 1.6663098, 0)
@@ -20947,16 +20972,6 @@ spring_length = 2.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 
 [node name="FootstepsSFX" type="AudioStreamPlayer3D" parent="." unique_id=69738513]
-
-[node name="SlashA1" type="MeshInstance3D" parent="." unique_id=228729536]
-transform = Transform3D(-0.90554106, -0.39800847, -0.14691427, 0.36049047, -0.9044157, 0.22820485, -0.22369914, 0.15368761, 0.9624649, 0, 0.9686109, -0.22078502)
-material_override = SubResource("ShaderMaterial_tebje")
-mesh = SubResource("QuadMesh_vom6f")
-
-[node name="SlashB1" type="MeshInstance3D" parent="." unique_id=1872095167]
-transform = Transform3D(0.95605254, -0.28256136, 0.07824856, 0.27203405, 0.9544261, 0.12275104, -0.10936719, -0.09607011, 0.98934793, -0.07411575, 0.6332277, -0.37644756)
-material_override = SubResource("ShaderMaterial_u8oud")
-mesh = SubResource("QuadMesh_mbuaw")
 
 [node name="SystemLogicComponents" type="Node" parent="." unique_id=1612080704 node_paths=PackedStringArray("Pawn")]
 script = ExtResource("1_ovxsj")
@@ -20980,9 +20995,8 @@ InitialState = SubResource("Resource_tebje")
 States = Array[Object]([SubResource("Resource_ffk06"), SubResource("Resource_g3kab"), SubResource("Resource_dyty0"), SubResource("Resource_ttrqx"), SubResource("Resource_pyblu"), SubResource("Resource_l56c6")])
 metadata/_custom_type_script = "uid://bfdwlktnkd2t3"
 
-[node name="LogicStateMachineComponent" type="Node" parent="SystemLogicComponents" unique_id=250811736 node_paths=PackedStringArray("AnimationTree")]
+[node name="LogicStateMachineComponent" type="Node" parent="SystemLogicComponents" unique_id=250811736]
 script = ExtResource("59_pyblu")
-AnimationTree = NodePath("../../AnimationTree")
 InitialState = SubResource("Resource_vom6f")
 States = Array[Object]([SubResource("Resource_5wvbs"), SubResource("Resource_38y3g"), SubResource("Resource_3mnn6"), SubResource("Resource_bi10i")])
 metadata/_custom_type_script = "uid://deak5rf4vqh6r"
@@ -21001,19 +21015,9 @@ SpringArm = NodePath("../../SpringArm3D")
 InvertY = true
 metadata/_custom_type_script = "uid://cr6h83keps8v5"
 
-[node name="HostPC" type="Camera3D" parent="." unique_id=1778393474]
-physics_interpolation_mode = 1
-transform = Transform3D(0.73313993, 0.05996353, 0.6774288, 0.19906154, 0.93355787, -0.2980673, -0.6502925, 0.353375, 0.67249215, 1.4267796, 0.8042494, 1.2432225)
-top_level = true
-attributes = SubResource("CameraAttributesPractical_ttrqx")
-current = true
-fov = 106.8
-
-[node name="PhantomCameraHost" type="Node" parent="HostPC" unique_id=535129462]
-process_priority = 300
-process_physics_priority = 300
-script = ExtResource("47_7sowx")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
+[node name="HealthComponent" type="Node" parent="SystemLogicComponents" unique_id=1701085941]
+script = ExtResource("64_46wpw")
+metadata/_custom_type_script = "uid://cqybgm2cwfpo"
 
 [node name="MainCombatPC" type="Node3D" parent="." unique_id=1769924732]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.76147807, 1.4316962, 1.541717)
