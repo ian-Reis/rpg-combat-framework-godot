@@ -7,8 +7,12 @@ namespace Components;
 [GlobalClass]
 public partial class JumpComponent : Node
 {
-    private float _jumpTimer = 0f;
-    private bool  _isJumping = false;
+    [Signal] public delegate void JumpedEventHandler();
+    [Signal] public delegate void LandedEventHandler();
+
+    private float _jumpTimer  = 0f;
+    private bool  _isJumping  = false;
+    private bool  _wasOnFloor = false;
 
     private SystemLogicComponents _owner;
 
@@ -23,16 +27,22 @@ public partial class JumpComponent : Node
         if (_owner?.Stats == null) return;
         if (_owner.Pawn is not CharacterBody3D character) return;
 
-        float dt = (float)delta;
-        ProcessJump(character, dt);
+        float dt        = (float)delta;
+        bool  isOnFloor = character.IsOnFloor();
+
+        if (isOnFloor && !_wasOnFloor)
+            EmitSignal(SignalName.Landed);
+
+        _wasOnFloor = isOnFloor;
+
+        ProcessJump(character, isOnFloor, dt);
         ProcessJumpTravel(character, dt);
     }
 
-    private void ProcessJump(CharacterBody3D character, float dt)
+    private void ProcessJump(CharacterBody3D character, bool isOnFloor, float dt)
     {
         Vector3 up        = GetUpDirection(character);
         float   vertSpeed = character.Velocity.Dot(up);
-        bool    isOnFloor = character.IsOnFloor();
 
         if (Input.IsActionJustPressed("jump") && isOnFloor)
         {
@@ -40,6 +50,7 @@ public partial class JumpComponent : Node
             character.Velocity += up * _owner.Stats.JumpForce;
             _isJumping = true;
             _jumpTimer = _owner.Stats.JumpHoldTime;
+            EmitSignal(SignalName.Jumped);
         }
 
         if (Input.IsActionPressed("jump") && _isJumping && _jumpTimer > 0f)
