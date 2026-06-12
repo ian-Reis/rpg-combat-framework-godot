@@ -4,23 +4,26 @@ using Helpers;
 using Interfaces;
 using Constants;
 using Components;
+using Data;
 
 namespace Resources.states;
 
 [GlobalClass]
 public partial class LogicStateAttack : LogicState
 {
-    [Export] public string   FirstAttackAnimState = "attack1";
-    [Export] public bool     UseRootMotion        = true;
-    [Export] public bool     LockMovement         = false;
+    [Export] public string     FirstAttackAnimState = "attack1";
+    [Export] public bool       UseRootMotion        = true;
+    [Export] public bool       LockMovement         = false;
+    [Export] public AttackData AttackData;
 
     // Logic states that are allowed to interrupt this attack mid-animation.
-    [Export] public string[] InterruptibleBy      = [];
+    [Export] public string[] InterruptibleBy = [];
 
     public override void Enter(LogicStateMachineComponent sm)
     {
         if (sm?.systemLogicContext is not ISystemLogicContext context) return;
         context.AnimationStateMachineComponent?.ChangeState(FirstAttackAnimState);
+        context.GetComponent<HitboxComponent>()?.Activate(AttackData);
     }
 
     public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
@@ -66,7 +69,11 @@ public partial class LogicStateAttack : LogicState
         }
     }
 
-    public override void Exit(LogicStateMachineComponent sm) { }
+    public override void Exit(LogicStateMachineComponent sm)
+    {
+        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+        context.GetComponent<HitboxComponent>()?.Deactivate();
+    }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
