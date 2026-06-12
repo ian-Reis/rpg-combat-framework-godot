@@ -29,5 +29,11 @@ public partial class LogicStateWalk : LogicState
         if (isRunning)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Run);  return; }
     }
 
+    public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
+    {
+        if (@event.IsActionPressed("attack"))
+            stateMachineComponent.ChangeState(LogicStateNames.Attack);
+    }
+
     public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
 }

@@ -17,7 +17,6 @@ public partial class LogicStateRun : LogicState
 
        if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext logicContext) return;
 
-        JumpHandler.ApplyJump(logicContext);
         PhysicsHandler.ApplyGravity(logicContext, delta);
         MovementHandler.ApplyMovement(logicContext, delta);
         MovementHandler.MoveAndSlide(logicContext);
@@ -28,6 +27,12 @@ public partial class LogicStateRun : LogicState
 
         if (!isMoving)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
         if (!isRunning) { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Walk); return; }
+    }
+
+    public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
+    {
+        if (@event.IsActionPressed("attack"))
+            stateMachineComponent.ChangeState(LogicStateNames.Attack);
     }
 
     public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
