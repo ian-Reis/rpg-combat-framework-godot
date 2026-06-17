@@ -1,0 +1,52 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://d0ddydl8t8f2r"]
+
+[ext_resource type="Script" uid="uid://chnffxlaqx5vo" path="res://source/ai/tasks/actions/bt_find_target_3d.gd" id="1_6pifu"]
+[ext_resource type="Script" uid="uid://b1afitwdbc5mc" path="res://source/ai/tasks/actions/bt_face_target_3d.gd" id="1_mvfek"]
+[ext_resource type="Script" uid="uid://cu2vh0ms75a8c" path="res://source/ai/tasks/conditions/bt_is_in_range_3d.gd" id="3_q0uha"]
+[ext_resource type="Script" uid="uid://v7acxbo40iih" path="res://source/ai/tasks/actions/bt_move_toward_target.gd" id="4_mvfek"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_ogu6i"]
+
+[sub_resource type="BTAction" id="BTAction_q0uha"]
+script = ExtResource("1_6pifu")
+target_key = &"player"
+use_detection_radius = false
+
+[sub_resource type="BTAction" id="BTAction_31jce"]
+script = ExtResource("1_mvfek")
+target_key = &"player"
+instant = true
+
+[sub_resource type="BTCondition" id="BTCondition_rruo1"]
+script = ExtResource("3_q0uha")
+target_key = &"player"
+
+[sub_resource type="BTAction" id="BTAction_6pifu"]
+script = ExtResource("4_mvfek")
+target_key = &"player"
+speed = 10.0
+
+[sub_resource type="BTSequence" id="BTSequence_mksup"]
+custom_name = "BTSequence"
+children = [SubResource("BTCondition_rruo1"), SubResource("BTAction_6pifu")]
+
+[sub_resource type="BTAction" id="BTAction_hsum2"]
+script = ExtResource("4_mvfek")
+target_key = &"player"
+speed = 50.0
+
+[sub_resource type="BTSelector" id="BTSelector_yoiy7"]
+custom_name = "BTSelector"
+children = [SubResource("BTSequence_mksup"), SubResource("BTAction_hsum2")]
+
+[sub_resource type="BTSequence" id="BTSequence_ogu6i"]
+custom_name = "BTSequence"
+children = [SubResource("BTAction_q0uha"), SubResource("BTAction_31jce"), SubResource("BTSelector_yoiy7")]
+
+[sub_resource type="BTSelector" id="BTSelector_3fo62"]
+custom_name = "BTSelector"
+children = [SubResource("BTSequence_ogu6i")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_ogu6i")
+root_task = SubResource("BTSelector_3fo62")
