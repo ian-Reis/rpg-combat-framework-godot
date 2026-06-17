@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://btiuj5d28uyt6"]
+
+[ext_resource type="Shader" uid="uid://dpk3x2t7ocl1n" path="res://shaders/toon.gdshader" id="1_cv5r3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_807wf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_35kcb"]
+render_priority = 0
+shader = ExtResource("1_cv5r3")
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+shader_parameter/use_stepped = true
+shader_parameter/steps = 3.0
+shader_parameter/step_smoothness = 0.0
+shader_parameter/shadow_tint = Color(0, 0, 0, 1)
+shader_parameter/shadow_tint_amount = 0.4
+shader_parameter/specular = 0.0
+shader_parameter/normal_strength = 0.0
+shader_parameter/use_rim = true
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/rim_amount = 2.0
+shader_parameter/rim_smoothness = 0.2
+shader_parameter/rim_mask_shadow = 1.0
+shader_parameter/rim_blend = 1.0
+shader_parameter/use_pattern = true
+shader_parameter/pattern_uv_mode = 2
+shader_parameter/pattern_tiling = 32.0
+shader_parameter/pattern_amount = 0.5
+shader_parameter/pattern_smoothness = 0.5
+shader_parameter/pattern_blend = 0.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_u4bgj"]
+
+[node name="Enemy" type="CharacterBody3D" unique_id=59942441]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=379247399]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_807wf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=243406171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("ShaderMaterial_35kcb")
+mesh = SubResource("CapsuleMesh_u4bgj")
