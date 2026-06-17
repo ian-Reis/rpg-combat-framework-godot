@@ -11,6 +11,7 @@ namespace Resources.states;
 public partial class LogicStateDodge : LogicState
 {
     [Export] public string DodgeAnimState = "dodge";
+    [Export] public bool   UseRootMotion  = true;
 
     public override void Enter(LogicStateMachineComponent sm)
     {
@@ -29,26 +30,54 @@ public partial class LogicStateDodge : LogicState
     {
         if (sm?.systemLogicContext is not ISystemLogicContext context) return;
 
-        var dodge = context.GetComponent<DodgeComponent>();
-        if (dodge == null || !dodge.IsDodging)
+        PhysicsHandler.ApplyGravity(context, delta);
+
+        if (UseRootMotion)
         {
-            sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
-                ? LogicStateNames.Walk
-                : LogicStateNames.Idle);
+            ApplyRootMotion(context);
+            MovementHandler.MoveAndSlide(context);
+
+            // Exit when the animation SM leaves the dodge state.
+            var animSM = context.AnimationStateMachineComponent;
+            if (animSM != null && animSM.CurrentStateName == DodgeAnimState) return;
+        }
+        else
+        {
+            var dodge = context.GetComponent<DodgeComponent>();
+            if (dodge == null || !dodge.IsDodging)
+            {
+                ExitToIdle(sm);
+                return;
+            }
+
+            if (context.Pawn is CharacterBody3D cb)
+            {
+                var dv = dodge.GetDodgeVelocity();
+                cb.Velocity = new Vector3(dv.X, cb.Velocity.Y, dv.Z);
+            }
+
+            MovementHandler.MoveAndSlide(context);
             return;
         }
 
-        if (context.Pawn is CharacterBody3D cb)
-        {
-            var dv = dodge.GetDodgeVelocity();
-            cb.Velocity = new Vector3(dv.X, cb.Velocity.Y, dv.Z);
-        }
-
-        PhysicsHandler.ApplyGravity(context, delta);
-        MovementHandler.MoveAndSlide(context);
+        ExitToIdle(sm);
     }
 
     public override void Exit(LogicStateMachineComponent sm) { }
+
+    private static void ApplyRootMotion(ISystemLogicContext context)
+    {
+        if (context.Pawn is not CharacterBody3D cb) return;
+        var rootVel = context.AnimationStateMachineComponent?.CurrentSnapshot.RootMotionVelocity ?? Vector3.Zero;
+        cb.Velocity = new Vector3(rootVel.X, cb.Velocity.Y, rootVel.Z);
+    }
+
+    private static void ExitToIdle(LogicStateMachineComponent sm)
+    {
+        sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
+            ? LogicStateNames.Walk
+            : LogicStateNames.Idle);
+    }
 
     private static Vector3 GetInputDirection(ISystemLogicContext context)
     {
