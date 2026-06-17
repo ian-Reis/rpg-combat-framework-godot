@@ -50,6 +50,15 @@ public static class AnimationTreeHelper
         return Mathf.Clamp(playback.GetCurrentPlayPosition() / length, 0f, 1f);
     }
 
+    // Returns the name of the node currently active in the AnimationTree StateMachine.
+    // Use this to detect "At End" transitions that the AnimTree drove natively —
+    // when GetCurrentNode() != state.StateName, the engine already moved on.
+    public static string GetCurrentNode(IHasAnimationTree context)
+    {
+        var playback = GetPlayback(context);
+        return playback?.GetCurrentNode() ?? string.Empty;
+    }
+
     // Tells the AnimationTree StateMachine to travel to a specific node (plays its animation).
     public static void Travel(IHasAnimationTree context, string stateName)
     {
