@@ -16,15 +16,15 @@ func _tick(_delta: float) -> int:
 	if not target is Node3D or not is_instance_valid(target):
 		return FAILURE
 
-	var pawn: Node3D = agent.pawn
+	var pawn: Node3D = agent.Pawn
 	if pawn == null:
 		return FAILURE
 
 	var check_range: float = range
 	if use_attack_range:
-		var brain = agent.brain_component
+		var brain = agent.BrainComponent
 		if brain != null:
-			check_range = brain.attack_range
+			check_range = brain.AttackRange
 
 	var dist: float = pawn.global_position.distance_to((target as Node3D).global_position)
 	return SUCCESS if dist <= check_range else FAILURE
