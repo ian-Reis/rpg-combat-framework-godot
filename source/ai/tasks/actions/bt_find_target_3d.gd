@@ -12,20 +12,20 @@ func _generate_name() -> String:
 	return "FindTarget3D [%s]" % target_group
 
 func _tick(_delta: float) -> int:
-	var pawn: Node3D = agent.pawn
+	var pawn: Node3D = agent.Pawn
 	if pawn == null:
 		return FAILURE
 
 	var max_dist: float = INF
 	if use_detection_radius:
-		var brain = agent.brain_component
+		var brain = agent.BrainComponent
 		if brain != null:
-			max_dist = brain.detection_radius
+			max_dist = brain.DetectionRadius
 
 	var nearest = null
 	var nearest_dist: float = INF
 
-	for t in get_tree().get_nodes_in_group(target_group):
+	for t in agent.get_tree().get_nodes_in_group(target_group):
 		if not t is Node3D or not is_instance_valid(t):
 			continue
 		var d: float = pawn.global_position.distance_to((t as Node3D).global_position)
