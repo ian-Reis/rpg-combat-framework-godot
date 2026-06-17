@@ -29,9 +29,10 @@ enabled=PackedStringArray("res://addons/mtoon/plugin.cfg", "res://addons/phantom
 
 [global_group]
 
+player=""
+entitys=""
+enemy=""
 Player=""
-Entitys=""
-Enemy=""
 
 [graph_dialogs]
 
@@ -125,6 +126,11 @@ block={
 3d_physics/layer_1="world"
 3d_physics/layer_2="hurtbox"
 3d_physics/layer_3="hitbox"
+
+[limbo_ai]
+
+behavior_tree/behavior_tree_default_dir="res://source/ai/tasks/actions"
+behavior_tree/user_task_dirs=PackedStringArray("res://ai/tasks", "res://source/ai/tasks/actions", "res://source/ai/tasks/conditions")
 
 [physics]
 
