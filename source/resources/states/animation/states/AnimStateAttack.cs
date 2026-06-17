@@ -28,9 +28,16 @@ public partial class AnimStateAttack : AnimationState
     public override void Update(AnimationStateMachineComponent sm, AnimationSnapshot snapshot, float delta)
     {
         if (!_comboQueued && CanChain(sm) && Input.IsActionJustPressed("attack"))
+        {
             _comboQueued = true;
+            // Request the next node immediately so the "At End" transition on the AnimTree
+            // goes to the combo attack instead of locomotion.
+            if (!string.IsNullOrEmpty(NextComboState))
+                AnimationTreeHelper.Travel(sm, NextComboState);
+        }
 
-        if (!AnimationTreeHelper.AnimationFinish(sm, EndThreshold)) return;
+        // AnimationTree drives the "At End" transition — detect when it moved on.
+        if (AnimationTreeHelper.GetCurrentNode(sm) == StateName) return;
 
         if (_comboQueued && !string.IsNullOrEmpty(NextComboState))
             sm.ChangeState(NextComboState);
