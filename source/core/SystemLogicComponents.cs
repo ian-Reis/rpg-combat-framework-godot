@@ -17,11 +17,17 @@ public partial class SystemLogicComponents : Node, ISystemLogicContext
     [ExportGroup("Stats")]
     [Export] public CharacterStats Stats { get; set; }
 
-    public AudioStreamPlayer3D            SoundEffect                   => GetComponent<AudioStreamPlayer3D>();
-    public LogicStateMachineComponent     LogicStateMachineComponent    => GetComponent<LogicStateMachineComponent>();
-    public AnimationStateMachineComponent AnimationStateMachineComponent => GetComponent<AnimationStateMachineComponent>();
-    public HealthComponent                HealthComponent               => GetComponent<HealthComponent>();
-    public BrainComponent                 BrainComponent                => GetComponent<BrainComponent>();
+    public AudioStreamPlayer3D            SoundEffect                    => GetComponent<AudioStreamPlayer3D>();
+    public LogicStateMachineComponent     LogicStateMachineComponent     => GetComponent<LogicStateMachineComponent>();
+    public AnimationStateMachineComponent AnimationStateMachineComponent  => GetComponent<AnimationStateMachineComponent>();
+    public HealthComponent                HealthComponent                => GetComponent<HealthComponent>();
+
+    // AI components
+    public BrainComponent                 BrainComponent                 => GetComponent<BrainComponent>();
+    public AIDetectionComponent           AIDetectionComponent           => GetComponent<AIDetectionComponent>();
+    public AIMemoryComponent              AIMemoryComponent              => GetComponent<AIMemoryComponent>();
+    public AIPatrolComponent              AIPatrolComponent              => GetComponent<AIPatrolComponent>();
+    public AIAlertComponent               AIAlertComponent               => GetComponent<AIAlertComponent>();
 
     private readonly Dictionary<Type, Node> _componentCache = new();
 
