@@ -10,7 +10,7 @@ func _generate_name() -> String:
 	return "IsHealthBelow [%.0f%%]" % (threshold * 100.0)
 
 func _tick(_delta: float) -> int:
-	var health = agent.health_component
+	var health = agent.HealthComponent
 	if health == null:
 		return FAILURE
-	return SUCCESS if health.normalized_health <= threshold else FAILURE
+	return SUCCESS if health.NormalizedHealth <= threshold else FAILURE
