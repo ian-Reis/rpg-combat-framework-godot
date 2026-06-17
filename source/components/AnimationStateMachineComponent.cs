@@ -107,18 +107,31 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
     {
         Vector3 up = charBody.UpDirection.Normalized();
 
+        Node3D model = Context.GetComponent<InputRotateModelComponent>()?.Model;
+        if (model != null)
+        {
+            Vector3 mFwd   = -model.GlobalTransform.Basis.Z;
+            Vector3 mRight =  model.GlobalTransform.Basis.X;
+
+            Vector3 forward = (mFwd   - up * mFwd.Dot(up)).Normalized();
+            Vector3 right   = (mRight - up * mRight.Dot(up)).Normalized();
+            Vector3 newUp   = right.Cross(forward).Normalized();
+
+            return new Basis(right, newUp, forward);
+        }
+
         SpringArm3D springArm = Context.GetComponent<CameraComponent>()?.SpringArm;
         if (springArm == null)
             return charBody.GlobalTransform.Basis;
 
-        Vector3 camForward = -springArm.GlobalTransform.Basis.Z;
-        Vector3 camRight   =  springArm.GlobalTransform.Basis.X;
+        Vector3 camFwd   = -springArm.GlobalTransform.Basis.Z;
+        Vector3 camRight =  springArm.GlobalTransform.Basis.X;
 
-        Vector3 forward = (camForward - up * camForward.Dot(up)).Normalized();
-        Vector3 right   = (camRight   - up * camRight.Dot(up)).Normalized();
-        Vector3 newUp   = right.Cross(forward).Normalized();
+        Vector3 fwdFlat   = (camFwd   - up * camFwd.Dot(up)).Normalized();
+        Vector3 rightFlat = (camRight - up * camRight.Dot(up)).Normalized();
+        Vector3 upFlat    = rightFlat.Cross(fwdFlat).Normalized();
 
-        return new Basis(right, newUp, -forward);
+        return new Basis(rightFlat, upFlat, -fwdFlat);
     }
 
     private AnimationSnapshot BuildSnapshot(float delta)
