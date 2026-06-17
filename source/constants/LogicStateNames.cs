@@ -14,4 +14,5 @@ public static class LogicStateNames
     public const string Death    = "death";
     public const string Dodge    = "dodge";
     public const string Block    = "block";
+    public const string AiChase  = "ai_chase";
 }
