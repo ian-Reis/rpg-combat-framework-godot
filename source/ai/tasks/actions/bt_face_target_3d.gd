@@ -17,7 +17,7 @@ func _tick(delta: float) -> int:
 	if not target is Node3D or not is_instance_valid(target):
 		return FAILURE
 
-	var pawn: Node3D = agent.pawn
+	var pawn: Node3D = agent.Pawn
 	if pawn == null:
 		return FAILURE
 
