@@ -1,42 +1,237 @@
 [gd_scene format=3 uid="uid://btiuj5d28uyt6"]
 
-[ext_resource type="Shader" uid="uid://dpk3x2t7ocl1n" path="res://shaders/toon.gdshader" id="1_cv5r3"]
+[ext_resource type="Script" uid="uid://csul773tt3ick" path="res://source/core/SystemLogicComponents.cs" id="2_807wf"]
+[ext_resource type="Script" uid="uid://cji1p6jp3h7wi" path="res://source/resources/states/logic/states/LogicStateAIBody.cs" id="3_aqm47"]
+[ext_resource type="Script" uid="uid://deak5rf4vqh6r" path="res://source/components/LogicStateMachineComponent.cs" id="46_0rcjk"]
+[ext_resource type="Script" uid="uid://cqybgm2cwfpo" path="res://source/components/HealthComponent.cs" id="48_2x158"]
+[ext_resource type="Script" uid="uid://c7vwk2f7vmohd" path="res://source/components/BrainComponent.cs" id="49_sbrh5"]
+[ext_resource type="Script" uid="uid://c660toxappm7j" path="res://source/resources/states/logic/states/LogicStateHit.cs" id="50_8u0xh"]
+[ext_resource type="Script" uid="uid://doowx1x1wgo41" path="res://source/components/HurtboxComponent.cs" id="50_r1iks"]
+[ext_resource type="BehaviorTree" uid="uid://d0ddydl8t8f2r" path="res://resources/limbo_ai/enemy_simple.tres" id="54_hftmh"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_807wf"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qva5h"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_35kcb"]
-render_priority = 0
-shader = ExtResource("1_cv5r3")
-shader_parameter/albedo_color = Color(1, 1, 1, 1)
-shader_parameter/use_stepped = true
-shader_parameter/steps = 3.0
-shader_parameter/step_smoothness = 0.0
-shader_parameter/shadow_tint = Color(0, 0, 0, 1)
-shader_parameter/shadow_tint_amount = 0.4
-shader_parameter/specular = 0.0
-shader_parameter/normal_strength = 0.0
-shader_parameter/use_rim = true
-shader_parameter/rim_color = Color(1, 1, 1, 1)
-shader_parameter/rim_amount = 2.0
-shader_parameter/rim_smoothness = 0.2
-shader_parameter/rim_mask_shadow = 1.0
-shader_parameter/rim_blend = 1.0
-shader_parameter/use_pattern = true
-shader_parameter/pattern_uv_mode = 2
-shader_parameter/pattern_tiling = 32.0
-shader_parameter/pattern_amount = 0.5
-shader_parameter/pattern_smoothness = 0.5
-shader_parameter/pattern_blend = 0.2
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tebje"]
+animation = &"Pistol_Idle"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_u4bgj"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_m04ej"]
+animation = &"Slide"
 
-[node name="Enemy" type="CharacterBody3D" unique_id=59942441]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0ote4"]
+animation = &"Slide_Exit"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=379247399]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7sowx"]
+animation = &"Slide_Start"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ttrqx"]
+animation = &"Sword_Regular_A_Rec"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_38y3g"]
+animation = &"Sword_Regular_B_Rec"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pyblu"]
+animation = &"Sword_Regular_A"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vom6f"]
+animation = &"Sword_Regular_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5wvbs"]
+animation = &"Sword_Regular_C"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_juyq1"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t5syd"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0k8p0"]
+animation = &"Sprint"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_vom6f"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_juyq1")
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource("AnimationNodeAnimation_t5syd")
+blend_point_1/pos = 0.08
+blend_point_2/node = SubResource("AnimationNodeAnimation_0k8p0")
+blend_point_2/pos = 1.0
+sync = true
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3mnn6"]
+animation = &"Shield_Dash_RM"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ttrqx"]
+xfade_time = 0.2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_46wpw"]
+advance_mode = 2
+advance_condition = &"IsSlideExit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5wvbs"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pyblu"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_g3kab"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ffk06"]
+
+[sub_resource type="Curve" id="Curve_ttrqx"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3mnn6"]
+xfade_time = 0.3
+xfade_curve = SubResource("Curve_ttrqx")
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dyty0"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2g186"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="Curve" id="Curve_46wpw"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_l56c6"]
+xfade_time = 0.5
+xfade_curve = SubResource("Curve_46wpw")
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="Curve" id="Curve_g3kab"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u8oud"]
+xfade_time = 0.5
+xfade_curve = SubResource("Curve_g3kab")
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="Curve" id="Curve_vom6f"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mbuaw"]
+xfade_time = 0.25
+xfade_curve = SubResource("Curve_vom6f")
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_m3s36"]
+"states/Slide 2/node" = SubResource("AnimationNodeAnimation_m04ej")
+"states/Slide 2/position" = Vector2(601.8403, 183.57886)
+states/Slide_Exit/node = SubResource("AnimationNodeAnimation_0ote4")
+states/Slide_Exit/position = Vector2(713.6227, 183.5162)
+states/Slide_Start/node = SubResource("AnimationNodeAnimation_7sowx")
+states/Slide_Start/position = Vector2(491.4403, 184.28418)
+states/Start/position = Vector2(200.8, 101.65121)
+states/att1rec/node = SubResource("AnimationNodeAnimation_ttrqx")
+states/att1rec/position = Vector2(347.248, -51.126877)
+states/att2rec/node = SubResource("AnimationNodeAnimation_38y3g")
+states/att2rec/position = Vector2(448.98398, -51.32097)
+states/attack1/node = SubResource("AnimationNodeAnimation_pyblu")
+states/attack1/position = Vector2(346.8, -105.783134)
+states/attack2/node = SubResource("AnimationNodeAnimation_vom6f")
+states/attack2/position = Vector2(448.47995, -105.53171)
+states/attack3/node = SubResource("AnimationNodeAnimation_5wvbs")
+states/attack3/position = Vector2(547.68, -106.31195)
+states/blend/node = SubResource("AnimationNodeBlendSpace1D_vom6f")
+states/blend/position = Vector2(352.00003, 99.884796)
+states/dodge/node = SubResource("AnimationNodeAnimation_3mnn6")
+states/dodge/position = Vector2(347.27805, 185.14735)
+transitions = ["Slide_Start", "Slide 2", SubResource("AnimationNodeStateMachineTransition_ttrqx"), "Slide 2", "Slide_Exit", SubResource("AnimationNodeStateMachineTransition_46wpw"), "Start", "blend", SubResource("AnimationNodeStateMachineTransition_5wvbs"), "blend", "attack1", SubResource("AnimationNodeStateMachineTransition_pyblu"), "attack1", "attack2", SubResource("AnimationNodeStateMachineTransition_g3kab"), "attack2", "attack3", SubResource("AnimationNodeStateMachineTransition_ffk06"), "attack3", "blend", SubResource("AnimationNodeStateMachineTransition_3mnn6"), "attack1", "att1rec", SubResource("AnimationNodeStateMachineTransition_dyty0"), "attack2", "att2rec", SubResource("AnimationNodeStateMachineTransition_2g186"), "att1rec", "blend", SubResource("AnimationNodeStateMachineTransition_l56c6"), "att2rec", "blend", SubResource("AnimationNodeStateMachineTransition_u8oud"), "dodge", "blend", SubResource("AnimationNodeStateMachineTransition_mbuaw")]
+graph_offset = Vector2(97, 27)
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_icy35"]
+graph_offset = Vector2(-315.38635, 225.17981)
+nodes/output/position = Vector2(480, 528)
+nodes/locomotion/node = SubResource("AnimationNodeStateMachine_m3s36")
+nodes/locomotion/position = Vector2(-208, 432)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_tebje")
+nodes/Animation/position = Vector2(-176, 784)
+node_connections = [&"output", 0, &"locomotion"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0xx5w"]
+
+[sub_resource type="Resource" id="Resource_2jbmx"]
+script = ExtResource("3_aqm47")
+StateName = "ai_body"
+metadata/_custom_type_script = "uid://cji1p6jp3h7wi"
+
+[sub_resource type="Resource" id="Resource_ftn5y"]
+script = ExtResource("3_aqm47")
+StateName = "ai_body"
+metadata/_custom_type_script = "uid://cji1p6jp3h7wi"
+
+[sub_resource type="Resource" id="Resource_2nbll"]
+script = ExtResource("50_8u0xh")
+StateName = "hit"
+metadata/_custom_type_script = "uid://c660toxappm7j"
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_h51k5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k7rfy"]
+size = Vector3(0.5, 1.7, 0.5)
+
+[node name="Enemy" type="CharacterBody3D" unique_id=59942441 groups=["enemy", "entitys"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=303514235]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_807wf")
+shape = SubResource("CapsuleShape3D_qva5h")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=243406171]
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=372094428]
+root_motion_local = true
+tree_root = SubResource("AnimationNodeBlendTree_icy35")
+parameters/locomotion/conditions/IsSlideExit = false
+parameters/locomotion/blend/blend_position = 0.0
+
+[node name="Model" type="Node3D" parent="." unique_id=772926613]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Model" unique_id=1920526853]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("ShaderMaterial_35kcb")
-mesh = SubResource("CapsuleMesh_u4bgj")
+mesh = SubResource("CapsuleMesh_0xx5w")
+
+[node name="SystemLogicComponents" type="Node" parent="." unique_id=1035323207 node_paths=PackedStringArray("Pawn")]
+script = ExtResource("2_807wf")
+Pawn = NodePath("..")
+metadata/_custom_type_script = "uid://csul773tt3ick"
+
+[node name="LogicStateMachineComponent" type="Node" parent="SystemLogicComponents" unique_id=1281517318]
+script = ExtResource("46_0rcjk")
+InitialState = SubResource("Resource_2jbmx")
+States = Array[Object]([SubResource("Resource_ftn5y"), SubResource("Resource_2nbll")])
+metadata/_custom_type_script = "uid://deak5rf4vqh6r"
+
+[node name="HealthComponent" type="Node" parent="SystemLogicComponents" unique_id=2138727390]
+script = ExtResource("48_2x158")
+metadata/_custom_type_script = "uid://cqybgm2cwfpo"
+
+[node name="BrainComponent" type="Node" parent="SystemLogicComponents" unique_id=2094667235]
+script = ExtResource("49_sbrh5")
+metadata/_custom_type_script = "uid://c7vwk2f7vmohd"
+
+[node name="BTPlayer" type="BTPlayer" parent="SystemLogicComponents/BrainComponent" unique_id=70538927]
+behavior_tree = ExtResource("54_hftmh")
+agent_node = NodePath("../..")
+blackboard_plan = SubResource("BlackboardPlan_h51k5")
+
+[node name="HurtboxComponent" type="Area3D" parent="." unique_id=444668529]
+script = ExtResource("50_r1iks")
+metadata/_custom_type_script = "uid://doowx1x1wgo41"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent" unique_id=1377095327]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("BoxShape3D_k7rfy")
