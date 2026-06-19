@@ -12,22 +12,21 @@ public partial class LogicStateAIIdle : LogicState
 {
     public override void Enter(LogicStateMachineComponent sm)
     {
-        sm?.systemLogicContext?.AnimationStateMachineComponent?.ChangeState("locomotion");
+        
     }
 
     public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
     {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-        if (context.Pawn is not CharacterBody3D cb) return;
+        // if (sm?.Pawn is not CharacterBody3D cb) return;
 
-        float decel = context.Stats?.Deceleration ?? 8f;
-        cb.Velocity = new Vector3(
-            Mathf.MoveToward(cb.Velocity.X, 0f, decel * delta),
-            cb.Velocity.Y,
-            Mathf.MoveToward(cb.Velocity.Z, 0f, decel * delta)
-        );
+        // float decel = Pawn.Stats?.Deceleration ?? 8f;
+        // cb.Velocity = new Vector3(
+        //     Mathf.MoveToward(cb.Velocity.X, 0f, decel * delta),
+        //     cb.Velocity.Y,
+        //     Mathf.MoveToward(cb.Velocity.Z, 0f, decel * delta)
+        // );
 
-        PhysicsHandler.ApplyGravity(context, delta);
-        MovementHandler.MoveAndSlide(context);
+        // PhysicsHandler.ApplyGravity(context, delta);
+        // MovementHandler.MoveAndSlide(context);
     }
 }
