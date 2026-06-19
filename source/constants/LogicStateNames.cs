@@ -14,5 +14,10 @@ public static class LogicStateNames
     public const string Death    = "death";
     public const string Dodge    = "dodge";
     public const string Block    = "block";
-    public const string AiChase  = "ai_chase";
+    public const string AiIdle       = "ai_idle";
+    public const string AiChase      = "ai_chase";
+    public const string AiPatrol     = "ai_patrol";
+    public const string AiInvestigate = "ai_investigate";
+    public const string AiAttack     = "ai_attack";
+    public const string AiFlee       = "ai_flee";
 }
