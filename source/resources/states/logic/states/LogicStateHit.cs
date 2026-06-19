@@ -15,6 +15,8 @@ public partial class LogicStateHit : LogicState
     [Export] public string HitAnimState   = "hit";
     [Export] public float  HitDuration    = 0.4f;
     [Export] public float  KnockbackDecay = 20f;
+    // Override recovery state. Leave empty to use player default (Walk/Idle by input).
+    [Export] public string RecoverState   = "";
 
     private const string HitTimerMeta    = "hit_timer";
     private const string HitKnockbackMeta = "hit_knockback";
@@ -47,9 +49,14 @@ public partial class LogicStateHit : LogicState
         context.Pawn.SetMeta(HitTimerMeta, timer);
 
         if (timer <= 0f)
-            sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
-                ? LogicStateNames.Walk
-                : LogicStateNames.Idle);
+        {
+            if (!string.IsNullOrEmpty(RecoverState))
+                sm.ChangeState(RecoverState);
+            else
+                sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
+                    ? LogicStateNames.Walk
+                    : LogicStateNames.Idle);
+        }
     }
 
     public override void Exit(LogicStateMachineComponent sm)
