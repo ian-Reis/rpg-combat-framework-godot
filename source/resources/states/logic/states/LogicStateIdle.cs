@@ -12,29 +12,29 @@ public partial class LogicStateIdle : LogicState
 {
     public override void Enter(LogicStateMachineComponent stateMachineComponent) { }
 
-    public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent, float delta)
-    {
-        if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext context) return;
+    // public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent, float delta)
+    // {
+    //     if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext context) return;
 
-        PhysicsHandler.ApplyGravity(context, delta);
-        MovementHandler.ApplyMovement(context, delta);
-        MovementHandler.MoveAndSlide(context);
+    //     PhysicsHandler.ApplyGravity(context, delta);
+    //     MovementHandler.ApplyMovement(context, delta);
+    //     MovementHandler.MoveAndSlide(context);
 
-        if (InputHelper.GetInputDirection().Length() > 0f)
-            stateMachineComponent.ChangeState(LogicStateNames.Walk);
-    }
+    //     if (InputHelper.GetInputDirection().Length() > 0f)
+    //         stateMachineComponent.ChangeState(LogicStateNames.Walk);
+    // }
 
-    public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
-    {
-        if (@event.IsActionPressed("attack"))
-            stateMachineComponent.ChangeState(LogicStateNames.Attack);
+    // public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
+    // {
+    //     if (@event.IsActionPressed("attack"))
+    //         stateMachineComponent.ChangeState(LogicStateNames.Attack);
 
-        if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
-            stateMachineComponent.ChangeState(LogicStateNames.Dodge);
+    //     if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
+    //         stateMachineComponent.ChangeState(LogicStateNames.Dodge);
 
-        if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
-            stateMachineComponent.ChangeState(LogicStateNames.Block);
-    }
+    //     if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
+    //         stateMachineComponent.ChangeState(LogicStateNames.Block);
+    // }
 
-    public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
+    // public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
 }
