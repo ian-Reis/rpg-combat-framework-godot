@@ -10,36 +10,36 @@ namespace Resources.states;
 [GlobalClass]
 public partial class LogicStateWalk : LogicState
 {
-    public override void Enter(LogicStateMachineComponent stateMachineComponent) { }
+    // public override void Enter(LogicStateMachineComponent stateMachineComponent) { }
 
-    public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent, float delta)
-    {
-        if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext logicContext) return;
+    // public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent, float delta)
+    // {
+    //     if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext logicContext) return;
 
-        // JumpHandler.ApplyJump(logicContext);
-        PhysicsHandler.ApplyGravity(logicContext, delta);
-        MovementHandler.ApplyMovement(logicContext, delta);
-        MovementHandler.MoveAndSlide(logicContext);
+    //     // JumpHandler.ApplyJump(logicContext);
+    //     PhysicsHandler.ApplyGravity(logicContext, delta);
+    //     MovementHandler.ApplyMovement(logicContext, delta);
+    //     MovementHandler.MoveAndSlide(logicContext);
 
-        var inputDir = InputHelper.GetInputDirection();
-        bool isMoving  = inputDir.Length() > 0f;
-        bool isRunning = Input.IsActionPressed("run");
+    //     var inputDir = InputHelper.GetInputDirection();
+    //     bool isMoving  = inputDir.Length() > 0f;
+    //     bool isRunning = Input.IsActionPressed("run");
 
-        if (!isMoving)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
-        if (isRunning)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Run);  return; }
-    }
+    //     if (!isMoving)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
+    //     if (isRunning)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Run);  return; }
+    // }
 
-    public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
-    {
-        if (@event.IsActionPressed("attack"))
-            stateMachineComponent.ChangeState(LogicStateNames.Attack);
+    // public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
+    // {
+    //     if (@event.IsActionPressed("attack"))
+    //         stateMachineComponent.ChangeState(LogicStateNames.Attack);
 
-        if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
-            stateMachineComponent.ChangeState(LogicStateNames.Dodge);
+    //     if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
+    //         stateMachineComponent.ChangeState(LogicStateNames.Dodge);
 
-        if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
-            stateMachineComponent.ChangeState(LogicStateNames.Block);
-    }
+    //     if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
+    //         stateMachineComponent.ChangeState(LogicStateNames.Block);
+    // }
 
-    public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
+    // public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
 }
