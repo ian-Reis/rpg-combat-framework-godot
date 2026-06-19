@@ -19,61 +19,61 @@ public partial class LogicStateBlock : LogicState
 
     private const string ParryTimerMeta = "block_parry_timer";
 
-    public override void Enter(LogicStateMachineComponent sm)
-    {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+    // public override void Enter(LogicStateMachineComponent sm)
+    // {
+    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
 
-        var hurtbox = context.GetComponent<HurtboxComponent>();
-        if (hurtbox != null)
-        {
-            hurtbox.DamageMultiplier    = 1f - DamageReduction;
-            hurtbox.IsParryWindowActive = true;
-            context.Pawn?.SetMeta(ParryTimerMeta, ParryWindow);
-        }
+    //     var hurtbox = context.GetComponent<HurtboxComponent>();
+    //     if (hurtbox != null)
+    //     {
+    //         hurtbox.DamageMultiplier    = 1f - DamageReduction;
+    //         hurtbox.IsParryWindowActive = true;
+    //         context.Pawn?.SetMeta(ParryTimerMeta, ParryWindow);
+    //     }
 
-        context.AnimationStateMachineComponent?.ChangeState(BlockAnimState);
-    }
+    //     context.AnimationStateMachineComponent?.ChangeState(BlockAnimState);
+    // }
 
-    public override void Update(LogicStateMachineComponent sm, float delta)
-    {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-        if (context.Pawn == null) return;
+    // public override void Update(LogicStateMachineComponent sm, float delta)
+    // {
+    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+    //     if (context.Pawn == null) return;
 
-        float timer = context.Pawn.GetMeta(ParryTimerMeta, 0f).AsSingle();
-        if (timer <= 0f) return;
+    //     float timer = context.Pawn.GetMeta(ParryTimerMeta, 0f).AsSingle();
+    //     if (timer <= 0f) return;
 
-        timer -= delta;
-        context.Pawn.SetMeta(ParryTimerMeta, timer);
+    //     timer -= delta;
+    //     context.Pawn.SetMeta(ParryTimerMeta, timer);
 
-        if (timer <= 0f)
-        {
-            var hurtbox = context.GetComponent<HurtboxComponent>();
-            if (hurtbox != null) hurtbox.IsParryWindowActive = false;
-        }
-    }
+    //     if (timer <= 0f)
+    //     {
+    //         var hurtbox = context.GetComponent<HurtboxComponent>();
+    //         if (hurtbox != null) hurtbox.IsParryWindowActive = false;
+    //     }
+    // }
 
-    public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
-    {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+    // public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
+    // {
+    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
 
-        PhysicsHandler.ApplyGravity(context, delta);
-        MovementHandler.ApplyMovement(context, delta);
-        MovementHandler.MoveAndSlide(context);
+    //     PhysicsHandler.ApplyGravity(context, delta);
+    //     MovementHandler.ApplyMovement(context, delta);
+    //     MovementHandler.MoveAndSlide(context);
 
-        if (!Input.IsActionPressed("block"))
-            sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
-                ? LogicStateNames.Walk
-                : LogicStateNames.Idle);
-    }
+    //     if (!Input.IsActionPressed("block"))
+    //         sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
+    //             ? LogicStateNames.Walk
+    //             : LogicStateNames.Idle);
+    // }
 
-    public override void Exit(LogicStateMachineComponent sm)
-    {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+    // public override void Exit(LogicStateMachineComponent sm)
+    // {
+    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
 
-        var hurtbox = context.GetComponent<HurtboxComponent>();
-        if (hurtbox == null) return;
+    //     var hurtbox = context.GetComponent<HurtboxComponent>();
+    //     if (hurtbox == null) return;
 
-        hurtbox.DamageMultiplier    = 1f;
-        hurtbox.IsParryWindowActive = false;
-    }
+    //     hurtbox.DamageMultiplier    = 1f;
+    //     hurtbox.IsParryWindowActive = false;
+    // }
 }
