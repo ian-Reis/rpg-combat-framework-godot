@@ -17,7 +17,6 @@ public partial class LogicStateMachineComponent : Node
     [Export] public LogicState InitialState { get; set; }
     [Export] public LogicState[] States { get; set; }
 
-    public ISystemLogicContext systemLogicContext { get; private set; }
     public string CurrentStateName { get; private set; } = "";
 
     private readonly Dictionary<string, LogicState> _statesMap = new();
@@ -42,7 +41,6 @@ public partial class LogicStateMachineComponent : Node
     {
         try
         {
-            systemLogicContext = context;
 
             if (States == null || States.Length == 0)
             {
@@ -62,7 +60,7 @@ public partial class LogicStateMachineComponent : Node
                 _statesMap[state.StateName] = state;
             }
 
-            await ToSignal(systemLogicContext as Node, Node.SignalName.Ready);
+            await ToSignal(this, Node.SignalName.Ready);
 
             ChangeState(InitialState.StateName);
             _isReady = true;
@@ -75,12 +73,6 @@ public partial class LogicStateMachineComponent : Node
 
     public void ChangeState(string newStateName)
     {
-        if (systemLogicContext == null)
-        {
-            GD.PrintErr("[LogicStateMachineComponent] Context is null, cannot change state");
-            return;
-        }
-
         if (string.IsNullOrEmpty(newStateName))
         {
             GD.PrintErr("[LogicStateMachineComponent] State name cannot be null or empty");
