@@ -14,6 +14,11 @@ public partial class LogicStateAIChase : LogicState
 {
     [Export] public string LostTargetState = LogicStateNames.Idle;
 
+    public override void Enter(LogicStateMachineComponent sm)
+    {
+        sm?.systemLogicContext?.AnimationStateMachineComponent?.ChangeState("locomotion");
+    }
+
     public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
     {
         if (sm?.systemLogicContext is not ISystemLogicContext context) return;
@@ -37,7 +42,7 @@ public partial class LogicStateAIChase : LogicState
             cb.Velocity = new Vector3(dir.X * speed, cb.Velocity.Y, dir.Z * speed);
 
             // Rotate pawn to face movement direction.
-            float targetAngle = Mathf.Atan2(dir.X, dir.Z);
+            float targetAngle = Mathf.Atan2(-dir.X, -dir.Z);
             cb.Rotation = new Vector3(cb.Rotation.X, targetAngle, cb.Rotation.Z);
         }
 
