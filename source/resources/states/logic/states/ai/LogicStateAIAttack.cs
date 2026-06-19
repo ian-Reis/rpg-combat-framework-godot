@@ -19,47 +19,47 @@ public partial class LogicStateAIAttack : LogicState
 
     public override void Enter(LogicStateMachineComponent sm)
     {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+        if (sm?.Pawn is not CharacterBody3D cb) return;
 
-        var attackData = PickAttack(context);
-        context.GetComponent<HitboxComponent>()?.Activate(attackData);
-        context.AnimationStateMachineComponent?.ChangeState(AttackAnimState);
+        // var attackData = PickAttack(context);
+        // context.GetComponent<HitboxComponent>()?.Activate(attackData);
+        // context.AnimationStateMachineComponent?.ChangeState(AttackAnimState);
     }
 
     public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
     {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-        if (context.Pawn is not CharacterBody3D cb) return;
 
-        PhysicsHandler.ApplyGravity(context, delta);
+        // if (context.Pawn is not CharacterBody3D cb) return;
 
-        if (UseRootMotion)
-        {
-            var vel = context.AnimationStateMachineComponent?.CurrentSnapshot.RootMotionVelocity ?? Vector3.Zero;
-            cb.Velocity = new Vector3(vel.X, cb.Velocity.Y, vel.Z);
-        }
-        else
-        {
-            float decel = context.Stats?.Deceleration ?? 8f;
-            cb.Velocity = new Vector3(
-                Mathf.MoveToward(cb.Velocity.X, 0f, decel * delta),
-                cb.Velocity.Y,
-                Mathf.MoveToward(cb.Velocity.Z, 0f, decel * delta)
-            );
-        }
+        // PhysicsHandler.ApplyGravity(context, delta);
 
-        MovementHandler.MoveAndSlide(context);
+        // if (UseRootMotion)
+        // {
+        //     var vel = context.AnimationStateMachineComponent?.CurrentSnapshot.RootMotionVelocity ?? Vector3.Zero;
+        //     cb.Velocity = new Vector3(vel.X, cb.Velocity.Y, vel.Z);
+        // }
+        // else
+        // {
+        //     float decel = context.Stats?.Deceleration ?? 8f;
+        //     cb.Velocity = new Vector3(
+        //         Mathf.MoveToward(cb.Velocity.X, 0f, decel * delta),
+        //         cb.Velocity.Y,
+        //         Mathf.MoveToward(cb.Velocity.Z, 0f, decel * delta)
+        //     );
+        // }
 
-        var animSM = context.AnimationStateMachineComponent;
-        if (animSM != null && AnimationTreeHelper.GetCurrentNode(animSM) == AttackAnimState) return;
+        // MovementHandler.MoveAndSlide(context);
 
-        sm.ChangeState(AfterAttackState);
+        // var animSM = context.AnimationStateMachineComponent;
+        // if (animSM != null && AnimationTreeHelper.GetCurrentNode(animSM) == AttackAnimState) return;
+
+        // sm.ChangeState(AfterAttackState);
     }
 
     public override void Exit(LogicStateMachineComponent sm)
     {
-        if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-        context.GetComponent<HitboxComponent>()?.Deactivate();
+        // if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+        // context.GetComponent<HitboxComponent>()?.Deactivate();
     }
 
     private static AttackData PickAttack(ISystemLogicContext context)
