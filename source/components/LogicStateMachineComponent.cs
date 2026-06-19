@@ -13,6 +13,9 @@ public partial class LogicStateMachineComponent : Node
 {
     [Signal] public delegate void StateChangedEventHandler(string from, string to);
 
+    [ExportGroup("References")]
+    [Export] public CharacterBody3D Pawn { get; set; }
+    
     [ExportGroup("States")]
     [Export] public LogicState InitialState { get; set; }
     [Export] public LogicState[] States { get; set; }
