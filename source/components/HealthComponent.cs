@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using Godot;
+using Data;
 
 namespace Components;
 
@@ -17,28 +17,27 @@ public partial class HealthComponent : Node
     // ── Health ────────────────────────────────────────────────────────────────
 
     [ExportGroup("Health")]
-    // When true, uses Stats.MaxHealth. When false, uses the MaxHealthOverride below.
-    [Export] public bool  UseStatsMaxHealth  = true;
-    [Export] public float MaxHealthOverride  = 100f;
+    [Export] public bool  UseStatsMaxHealth = true;
+    [Export] public float MaxHealthOverride = 100f;
 
     // ── Defense ───────────────────────────────────────────────────────────────
 
     [ExportGroup("Defense")]
-    [Export] public float Defense        = 0f;   // flat reduction applied before percent
-    [Export] public float DefensePercent = 0f;   // 0..1 — fraction of damage absorbed after flat
-    [Export] public float MinDamage      = 1f;   // minimum damage that always gets through
+    [Export] public float Defense        = 0f;
+    [Export] public float DefensePercent = 0f;
+    [Export] public float MinDamage      = 1f;
 
     // ── Invincibility ─────────────────────────────────────────────────────────
 
     [ExportGroup("Invincibility")]
-    [Export] public float IFramesDuration = 0f;    // seconds of invincibility after each hit
-    [Export] public bool  StartInvincible = false; // begin the scene fully invincible
+    [Export] public float IFramesDuration = 0f;
+    [Export] public bool  StartInvincible = false;
 
     // ── Regeneration ──────────────────────────────────────────────────────────
 
     [ExportGroup("Regeneration")]
-    [Export] public float RegenPerSecond = 0f;  // health recovered per second (0 = disabled)
-    [Export] public float RegenDelay     = 3f;  // seconds after last hit before regen starts
+    [Export] public float RegenPerSecond = 0f;
+    [Export] public float RegenDelay     = 3f;
 
     // ── Public state ──────────────────────────────────────────────────────────
 
@@ -47,23 +46,19 @@ public partial class HealthComponent : Node
     public bool  IsInvincible     { get; private set; }
     public float NormalizedHealth => Max > 0f ? Mathf.Clamp(Current / Max, 0f, 1f) : 0f;
 
-    public float Max => UseStatsMaxHealth
-        ? (_owner?.Stats?.MaxHealth ?? MaxHealthOverride)
-        : MaxHealthOverride;
+    public float Max => UseStatsMaxHealth ? (_pawn?.Stats?.MaxHealth ?? MaxHealthOverride) : MaxHealthOverride;
 
     // ── Private state ─────────────────────────────────────────────────────────
 
-    private float _iFramesTimer  = 0f;
-    private float _regenTimer    = 0f;
-    private SystemLogicComponents _owner;
+    private Pawn  _pawn;
+    private float _iFramesTimer = 0f;
+    private float _regenTimer   = 0f;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     public override void _Ready()
     {
-        _owner = GetParentOrNull<SystemLogicComponents>();
-        Debug.Assert(_owner != null, "HealthComponent must be a child of SystemLogicComponents");
-
+        _pawn        = GetParent<Pawn>();
         Current      = Max;
         IsInvincible = StartInvincible;
     }
@@ -71,7 +66,6 @@ public partial class HealthComponent : Node
     public override void _Process(double delta)
     {
         float dt = (float)delta;
-
         TickIFrames(dt);
         TickRegen(dt);
     }
@@ -140,7 +134,7 @@ public partial class HealthComponent : Node
 
     private void StartIFrames()
     {
-        IsInvincible = true;
+        IsInvincible  = true;
         _iFramesTimer = IFramesDuration;
         EmitSignal(SignalName.IFramesStarted);
     }

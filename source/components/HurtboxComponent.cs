@@ -1,14 +1,12 @@
-using System.Diagnostics;
 using Godot;
 using Data;
 using Constants;
 
 namespace Components;
 
-// Area3D placed anywhere under the entity's CharacterBody3D.
-// Self-registers to the nearest SystemLogicComponents ancestor so that
-// context.GetComponent<HurtboxComponent>() works from logic states.
-// Collision layer 2 (hitboxes use mask 2 to detect it).
+// Area3D placed anywhere under the entity. FindOwner traverses up to find
+// the ancestor Pawn so Area3D nesting under bones is unrestricted.
+// Collision layer 2 — HitboxComponent uses mask 2 to detect it.
 [GlobalClass]
 public partial class HurtboxComponent : Area3D
 {
@@ -20,21 +18,16 @@ public partial class HurtboxComponent : Area3D
     public float DamageMultiplier    { get; set; } = 1f;
     public bool  IsParryWindowActive { get; set; } = false;
 
-    public SystemLogicComponents LogicOwner => _owner;
+    public Pawn LogicOwner => _owner;
 
-    private SystemLogicComponents _owner;
-    private HealthComponent       _health;
+    private Pawn _owner;
 
     public override void _Ready()
     {
         CollisionLayer = 2;
         CollisionMask  = 0;
-
         _owner = FindOwner();
         _owner?.RegisterComponent(this);
-
-        Debug.Assert(_owner != null,
-            $"[HurtboxComponent] '{Name}' could not find a SystemLogicComponents ancestor.");
     }
 
     public void ReceiveHit(AttackData data, Vector3 direction)
@@ -47,10 +40,9 @@ public partial class HurtboxComponent : Area3D
             return;
         }
 
-        _health ??= _owner?.GetComponent<HealthComponent>();
-        _health?.TakeDamage(data.Damage * DamageMultiplier, direction);
+        _owner?.Health?.TakeDamage(data.Damage * DamageMultiplier, direction);
 
-        var statusComp = _owner?.GetComponent<StatusEffectComponent>();
+        var statusComp = _owner?.StatusFX;
         if (statusComp != null)
             ApplyStatusEffects(statusComp, data);
 
@@ -75,24 +67,20 @@ public partial class HurtboxComponent : Area3D
 
     private void TriggerKnockback(Vector3 velocity)
     {
-        if (_owner?.Pawn == null) return;
-        _owner.Pawn.SetMeta("hit_knockback", velocity);
-        _owner.LogicStateMachineComponent?.ChangeState(LogicStateNames.Hit);
+        if (_owner == null) return;
+        _owner.SetMeta("hit_knockback", velocity);
+        _owner.LogicSM?.ChangeState(LogicStateNames.Hit);
     }
 
-    private SystemLogicComponents FindOwner()
+    private Pawn FindOwner()
     {
         Node node = GetParent();
         while (node != null)
         {
-            if (node is SystemLogicComponents slc) return slc;
+            if (node is Pawn pawn) return pawn;
 
-            // SystemLogicComponents may be a sibling branch (e.g. child of CharacterBody3D
-            // alongside the Model subtree). Check this ancestor's children before going higher.
             foreach (var child in node.GetChildren())
-            {
-                if (child is SystemLogicComponents slc2) return slc2;
-            }
+                if (child is Pawn p) return p;
 
             node = node.GetParent();
         }
