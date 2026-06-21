@@ -15,15 +15,6 @@ metadata/_custom_type_script = "uid://cwvuos1fyywrq"
 radius = 0.16796875
 height = 1.8325195
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wrora"]
-animation = &"Jump"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xweym"]
-animation = &"Jump_Land"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_l0n7w"]
-animation = &"Jump_Start"
-
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jhwwk"]
 animation = &"Idle"
 
@@ -50,9 +41,22 @@ blend_point_2/name = &"Sprint"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ie3ru"]
 advance_mode = 2
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i51of"]
-switch_mode = 2
-advance_mode = 2
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_30ead"]
+states/Locomotion/node = SubResource("AnimationNodeBlendSpace1D_wydch")
+states/Locomotion/position = Vector2(350.8, 100.192)
+transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_ie3ru")]
+graph_offset = Vector2(-4, -41)
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_wrora"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xweym"]
+animation = &"Jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_l0n7w"]
+animation = &"Jump_Land"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_i51of"]
+animation = &"Jump_Start"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u6dyd"]
 
@@ -61,30 +65,31 @@ switch_mode = 2
 advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x0if5"]
-xfade_time = 0.05
-switch_mode = 1
 
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_30ead"]
-states/Jump/node = SubResource("AnimationNodeAnimation_wrora")
-states/Jump/position = Vector2(395.8, 208.3248)
-states/Jump_Land/node = SubResource("AnimationNodeAnimation_xweym")
-states/Jump_Land/position = Vector2(516.6, 207.99585)
-states/Jump_Start/node = SubResource("AnimationNodeAnimation_l0n7w")
-states/Jump_Start/position = Vector2(277.40002, 209.0032)
-states/Locomotion/node = SubResource("AnimationNodeBlendSpace1D_wydch")
-states/Locomotion/position = Vector2(350.8, 100.192)
-transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_ie3ru"), "Jump_Start", "Jump", SubResource("AnimationNodeStateMachineTransition_i51of"), "Jump", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_u6dyd"), "Jump_Land", "Locomotion", SubResource("AnimationNodeStateMachineTransition_w2awq"), "Locomotion", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_x0if5")]
-graph_offset = Vector2(-108, 100)
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_350bp"]
+states/End/position = Vector2(808, 96.8)
+states/Jump/node = SubResource("AnimationNodeAnimation_xweym")
+states/Jump/position = Vector2(474.8, 96.8)
+states/Jump_Land/node = SubResource("AnimationNodeAnimation_l0n7w")
+states/Jump_Land/position = Vector2(622.8, 100.35839)
+states/Jump_Start/node = SubResource("AnimationNodeAnimation_i51of")
+states/Jump_Start/position = Vector2(346, 100.32)
+transitions = ["Start", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_u6dyd"), "Jump_Start", "Jump", SubResource("AnimationNodeStateMachineTransition_w2awq"), "Jump", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_x0if5")]
+graph_offset = Vector2(115, -65)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_wrora"]
-graph_offset = Vector2(-425.6, 157.6)
-nodes/output/position = Vector2(288, 160)
+graph_offset = Vector2(-619.4761, 202.37285)
+nodes/output/position = Vector2(272, 336)
 nodes/DefaultSM/node = SubResource("AnimationNodeStateMachine_30ead")
-nodes/DefaultSM/position = Vector2(-48, 160)
-node_connections = [&"output", 0, &"DefaultSM"]
+nodes/DefaultSM/position = Vector2(-496, 240)
+nodes/JumpSM/node = SubResource("AnimationNodeStateMachine_350bp")
+nodes/JumpSM/position = Vector2(-496, 448)
+nodes/JumpBlend/node = SubResource("AnimationNodeBlend2_wrora")
+nodes/JumpBlend/position = Vector2(-160, 320)
+node_connections = [&"output", 0, &"JumpBlend", &"JumpBlend", 0, &"DefaultSM", &"JumpBlend", 1, &"JumpSM"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_xweym"]
-graph_offset = Vector2(-257.6, 78.4)
+graph_offset = Vector2(-215.42012, 4.982422)
 nodes/DefaultBT/node = SubResource("AnimationNodeBlendTree_wrora")
 nodes/DefaultBT/position = Vector2(64, 144)
 node_connections = [&"output", 0, &"DefaultBT"]
@@ -18045,6 +18050,7 @@ root_motion_track = NodePath("../RotateDirection3D/Model/Armature/GeneralSkeleto
 tree_root = SubResource("AnimationNodeBlendTree_xweym")
 anim_player = NodePath("../RotateDirection3D/Model/AnimationPlayer")
 parameters/DefaultBT/DefaultSM/Locomotion/blend_position = -0.0012722646
+parameters/DefaultBT/JumpBlend/blend_amount = 0.0
 
 [node name="TPSSpringArm3D" type="SpringArm3D" parent="." unique_id=1499199349]
 transform = Transform3D(1, 0, 0, 0, 0.9848077, 0.17364818, 0, -0.17364818, 0.9848077, 0, 1.6702025, 0)
@@ -18540,4 +18546,6 @@ libraries/ = SubResource("AnimationLibrary_u6dyd")
 script = ExtResource("6_wrora")
 AnimTree = NodePath("../AnimationTree")
 Pawn = NodePath("..")
+JumpBlendSpeed = 20.0
+LandBlendSpeed = 20.0
 metadata/_custom_type_script = "uid://3sb52k0ijjxy"
