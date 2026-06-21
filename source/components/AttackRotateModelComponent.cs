@@ -7,32 +7,32 @@ namespace Components;
 [GlobalClass]
 public partial class AttackRotateModelComponent : Node
 {
-    [Export] public Node3D Model;
-    [Export] public SpringArm3D SpringArm;
+    [ExportGroup("References")]
+    [Export] public Node3D      Model     { get; set; }
+    [Export] public SpringArm3D SpringArm { get; set; }
+
+    [ExportGroup("Settings")]
     [Export] public float AttackTurnSpeed = 20f;
     [Export] public bool  InvertY         = false;
 
-    private SystemLogicComponents _owner;
+    private Pawn _pawn;
 
     public override void _Ready()
     {
-        _owner = GetParentOrNull<SystemLogicComponents>();
+        _pawn = GetParent<Pawn>();
     }
 
     public override void _Process(double delta)
     {
-        if (_owner?.Pawn == null || Model == null) return;
-        if (_owner.Pawn is not CharacterBody3D pawn) return;
+        if (_pawn == null || Model == null) return;
 
-        bool isAttacking = _owner.GetComponent<LogicStateMachineComponent>()
-            ?.CurrentStateName == LogicStateNames.Attack;
-
+        bool isAttacking = _pawn.LogicSM?.CurrentStateName == LogicStateNames.Attack;
         if (!isAttacking) return;
 
-        SpringArm3D cam = SpringArm ?? (SpringArm3D)pawn.Get(EntityProps.SpringArm);
+        SpringArm3D cam = SpringArm ?? (SpringArm3D)_pawn.Get(EntityProps.SpringArm);
         if (cam == null) return;
 
-        Vector3 up = pawn.UpDirection.Normalized();
+        Vector3 up = _pawn.UpDirection.Normalized();
 
         Vector3 camForward = InvertY ? cam.Transform.Basis.Z : -cam.Transform.Basis.Z;
         camForward -= up * camForward.Dot(up);
@@ -49,7 +49,7 @@ public partial class AttackRotateModelComponent : Node
 
         float turn     = Mathf.Clamp(angle, -AttackTurnSpeed * (float)delta, AttackTurnSpeed * (float)delta);
         Quaternion rot = new Quaternion(up, turn);
-        Vector3 newFwd = rot * currentForward;
+        Vector3 newFwd   = rot * currentForward;
         Vector3 newRight = newFwd.Cross(up).Normalized();
 
         Model.Transform = new Transform3D(

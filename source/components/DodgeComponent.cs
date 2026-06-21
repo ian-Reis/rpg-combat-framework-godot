@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Godot;
 using Data;
 
@@ -10,22 +9,20 @@ public partial class DodgeComponent : Node
     [Signal] public delegate void DodgeStartedEventHandler();
     [Signal] public delegate void DodgeEndedEventHandler();
 
+    [ExportGroup("Stats")]
     [Export] public DodgeStats Stats;
 
     public bool IsDodging    { get; private set; } = false;
     public bool IsOnCooldown => _cooldownTimer > 0f;
 
+    private Pawn    _pawn;
     private float   _cooldownTimer  = 0f;
     private float   _dodgeTimer     = 0f;
     private Vector3 _dodgeDirection = Vector3.Zero;
 
-    private SystemLogicComponents _owner;
-
     public override void _Ready()
     {
-        _owner = GetParentOrNull<SystemLogicComponents>();
-        Debug.Assert(_owner != null, "DodgeComponent must be a child of SystemLogicComponents");
-        Debug.Assert(Stats != null, "DodgeComponent requires a DodgeStats resource");
+        _pawn = GetParent<Pawn>();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -47,14 +44,14 @@ public partial class DodgeComponent : Node
         if (IsDodging || IsOnCooldown || Stats == null) return false;
 
         _dodgeDirection = direction.IsZeroApprox()
-            ? (_owner?.Pawn != null ? -_owner.Pawn.Transform.Basis.Z : Vector3.Forward)
+            ? (_pawn != null ? -_pawn.Transform.Basis.Z : Vector3.Forward)
             : direction.Normalized();
 
         IsDodging      = true;
         _dodgeTimer    = Stats.Duration;
         _cooldownTimer = Stats.Cooldown;
 
-        _owner?.GetComponent<HealthComponent>()?.SetInvincible(true);
+        _pawn?.Health?.SetInvincible(true);
         EmitSignal(SignalName.DodgeStarted);
         return true;
     }
@@ -64,7 +61,7 @@ public partial class DodgeComponent : Node
     private void EndDodge()
     {
         IsDodging = false;
-        _owner?.GetComponent<HealthComponent>()?.SetInvincible(false);
+        _pawn?.Health?.SetInvincible(false);
         EmitSignal(SignalName.DodgeEnded);
     }
 }
