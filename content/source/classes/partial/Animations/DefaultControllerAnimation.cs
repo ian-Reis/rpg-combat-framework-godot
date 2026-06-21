@@ -16,12 +16,19 @@ public partial class DefaultControllerAnimation : Node
     [Export] public string LocomotionBlendParam { get; set; } =
         "parameters/DefaultBT/DefaultSM/Locomotion/blend_position";
     [Export] public string StateMachineParam { get; set; } =
-        "parameters/DefaultBT/DefaultSM/travel";
+        "parameters/DefaultBT/DefaultSM/playback";
+
+    private AnimationNodeStateMachinePlayback _playback;
 
     public override void _Ready()
     {
-        if (AnimTree != null)
-            AnimTree.Active = true;
+        if (AnimTree == null) { GD.PrintErr("[AnimController] AnimTree não atribuído!"); return; }
+        if (Pawn == null)     { GD.PrintErr("[AnimController] Pawn não atribuído!"); return; }
+
+        AnimTree.Active = true;
+        AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
+        _playback = (AnimationNodeStateMachinePlayback)AnimTree.Get(StateMachineParam);
+        GD.Print($"[AnimController] Ready — playback={_playback} | currentNode='{_playback?.GetCurrentNode()}'");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -33,5 +40,6 @@ public partial class DefaultControllerAnimation : Node
         float horizontalSpeed = new Vector2(vel.X, vel.Z).Length();
 
         UpdateLocomotion(horizontalSpeed);
+        UpdateJump();
     }
 }
