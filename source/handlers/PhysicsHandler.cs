@@ -1,15 +1,14 @@
 using Godot;
 using Helpers;
-using Interfaces;
 
 namespace Handlers;
 
 public static class PhysicsHandler
 {
-    public static void ApplyGravity(ISystemLogicContext context, float delta)
+    public static void ApplyGravity(Pawn pawn, float delta)
     {
-        if (context?.Pawn is not CharacterBody3D charBody) return;
+        if (pawn == null) return;
         var gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
-        CharacterBodyHelper.ApplyGravity(charBody, gravity, delta);
+        CharacterBodyHelper.ApplyGravity(pawn, gravity, delta);
     }
 }

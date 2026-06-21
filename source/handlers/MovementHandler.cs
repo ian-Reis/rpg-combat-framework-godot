@@ -1,19 +1,21 @@
+using Godot;
 using Helpers;
-using Interfaces;
 
 namespace Handlers;
 
 public static class MovementHandler
 {
-    public static void ApplyMovement(ISystemLogicContext context, float delta, bool ignoreAirControl = false, bool canRun = true)
+    public static void ApplyMovement(Pawn pawn, float delta, bool canRun = true)
     {
-        if (context?.Pawn is not Godot.CharacterBody3D charBody) return;
-        CharacterBodyHelper.ApplyMovement(charBody, context, delta, canRun);
+        if (pawn == null) return;
+        float speedMult = pawn.StatusFX?.GetSpeedMultiplier() ?? 1f;
+        SpringArm3D springArm = pawn.Camera?.SpringArm;
+        CharacterBodyHelper.ApplyMovement(pawn, pawn.Stats, springArm, delta, canRun, speedMult);
     }
 
-    public static void MoveAndSlide(ISystemLogicContext context, float pushForce = 5f)
+    public static void MoveAndSlide(Pawn pawn, float pushForce = 5f)
     {
-        if (context?.Pawn is not Godot.CharacterBody3D pawn) return;
+        if (pawn == null) return;
         CharacterBodyHelper.MoveAndSlide(pawn, pushForce);
     }
 }
