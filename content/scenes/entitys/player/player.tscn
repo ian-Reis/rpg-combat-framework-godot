@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://b37qx5isrffnn" path="res://content/source/classes/partial/TPSSpringArm3D.cs" id="2_ie3ru"]
 [ext_resource type="Script" uid="uid://bsfr1r1n0lbxn" path="res://content/source/classes/partial/RotateDirection3D.cs" id="3_30ead"]
 [ext_resource type="Script" uid="uid://dhk5ctnoll33q" path="res://content/source/classes/partial/CustomCamera3D.cs" id="4_30ead"]
+[ext_resource type="Script" uid="uid://3sb52k0ijjxy" path="res://content/source/classes/partial/Animations/DefaultControllerAnimation.cs" id="6_wrora"]
 
 [sub_resource type="Resource" id="Resource_8uoi8"]
 script = ExtResource("2_30ead")
@@ -13,6 +14,15 @@ metadata/_custom_type_script = "uid://cwvuos1fyywrq"
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wrora"]
 radius = 0.16796875
 height = 1.8325195
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wrora"]
+animation = &"Jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xweym"]
+animation = &"Jump_Land"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_l0n7w"]
+animation = &"Jump_Start"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jhwwk"]
 animation = &"Idle"
@@ -40,10 +50,31 @@ blend_point_2/name = &"Sprint"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ie3ru"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i51of"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u6dyd"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w2awq"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x0if5"]
+xfade_time = 0.05
+switch_mode = 1
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_30ead"]
+states/Jump/node = SubResource("AnimationNodeAnimation_wrora")
+states/Jump/position = Vector2(395.8, 208.3248)
+states/Jump_Land/node = SubResource("AnimationNodeAnimation_xweym")
+states/Jump_Land/position = Vector2(516.6, 207.99585)
+states/Jump_Start/node = SubResource("AnimationNodeAnimation_l0n7w")
+states/Jump_Start/position = Vector2(277.40002, 209.0032)
 states/Locomotion/node = SubResource("AnimationNodeBlendSpace1D_wydch")
 states/Locomotion/position = Vector2(350.8, 100.192)
-transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_ie3ru")]
+transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_ie3ru"), "Jump_Start", "Jump", SubResource("AnimationNodeStateMachineTransition_i51of"), "Jump", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_u6dyd"), "Jump_Land", "Locomotion", SubResource("AnimationNodeStateMachineTransition_w2awq"), "Locomotion", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_x0if5")]
+graph_offset = Vector2(-108, 100)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_wrora"]
 graph_offset = Vector2(-425.6, 157.6)
@@ -53,6 +84,7 @@ nodes/DefaultSM/position = Vector2(-48, 160)
 node_connections = [&"output", 0, &"DefaultSM"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_xweym"]
+graph_offset = Vector2(-257.6, 78.4)
 nodes/DefaultBT/node = SubResource("AnimationNodeBlendTree_wrora")
 nodes/DefaultBT/position = Vector2(64, 144)
 node_connections = [&"output", 0, &"DefaultBT"]
@@ -18503,3 +18535,9 @@ skeleton = NodePath("..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="RotateDirection3D/Model" unique_id=155575500]
 libraries/ = SubResource("AnimationLibrary_u6dyd")
+
+[node name="DefaultControllerAnimation" type="Node" parent="." unique_id=1813039549 node_paths=PackedStringArray("AnimTree", "Pawn")]
+script = ExtResource("6_wrora")
+AnimTree = NodePath("../AnimationTree")
+Pawn = NodePath("..")
+metadata/_custom_type_script = "uid://3sb52k0ijjxy"
