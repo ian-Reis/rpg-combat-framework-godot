@@ -1,54 +1,9 @@
 using Godot;
-using Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Data;
 
 // ReSharper disable once CheckNamespace
 namespace Components;
 
+// Legacy node — kept so existing scene files that reference this script don't break.
+// No longer the required parent for components. Use direct [Export] references instead.
 [GlobalClass]
-public partial class SystemLogicComponents : Node, ISystemLogicContext
-{
-    [ExportGroup("References")]
-    [Export] public Node3D Pawn { get; set; }
-
-    [ExportGroup("Stats")]
-    [Export] public CharacterStats Stats { get; set; }
-
-    public AudioStreamPlayer3D            SoundEffect                    => GetComponent<AudioStreamPlayer3D>();
-    public LogicStateMachineComponent     LogicStateMachineComponent     => GetComponent<LogicStateMachineComponent>();
-    public AnimationStateMachineComponent AnimationStateMachineComponent  => GetComponent<AnimationStateMachineComponent>();
-    public HealthComponent                HealthComponent                => GetComponent<HealthComponent>();
-
-    // AI components
-    public BrainComponent                 BrainComponent                 => GetComponent<BrainComponent>();
-    public AIDetectionComponent           AIDetectionComponent           => GetComponent<AIDetectionComponent>();
-    public AIMemoryComponent              AIMemoryComponent              => GetComponent<AIMemoryComponent>();
-    public AIPatrolComponent              AIPatrolComponent              => GetComponent<AIPatrolComponent>();
-    public AIAlertComponent               AIAlertComponent               => GetComponent<AIAlertComponent>();
-
-    private readonly Dictionary<Type, Node> _componentCache = new();
-
-    public T GetComponent<T>() where T : class
-    {
-        var type = typeof(T);
-        if (_componentCache.TryGetValue(type, out var cached))
-            return cached as T;
-
-        var found = GetChildren().OfType<T>().FirstOrDefault();
-        if (found is Node node)
-            _componentCache[type] = node;
-
-        return found;
-    }
-
-    // Called by Area3D components (HurtboxComponent, HitboxComponent) that live
-    // deeper in the scene tree and cannot be found by GetChildren().OfType<T>().
-    public void RegisterComponent(Node component)
-    {
-        if (component == null) return;
-        _componentCache[component.GetType()] = component;
-    }
-}
+public partial class SystemLogicComponents : Node { }
