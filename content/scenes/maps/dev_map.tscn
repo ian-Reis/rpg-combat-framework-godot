@@ -1,7 +1,11 @@
 [gd_scene format=3 uid="uid://crretwwyoggel"]
 
 [ext_resource type="Texture2D" uid="uid://bhck2gycx6duj" path="res://assets/Kenney Textures Prototype/Dark/texture_01.png" id="1_l3aci"]
-[ext_resource type="PackedScene" uid="uid://bcsgi4lvw334f" path="res://content/scenes/entitys/player/pawn.tscn" id="2_8uoi8"]
+[ext_resource type="PackedScene" uid="uid://disw7ryti387q" path="res://content/scenes/entitys/player/player.tscn" id="2_l3aci"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l3aci"]
+friction = 0.5
+absorbent = true
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l3aci"]
 load_path = "res://.godot/imported/texture_09.png-ffb6030bd47f9a7ffac3b93a2a6f360d.s3tc.ctex"
@@ -50,6 +54,7 @@ volumetric_fog_length = 10.25
 
 [node name="CubeRB" type="RigidBody3D" parent="Props" unique_id=844985134]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2214942, 0.8581327, -2.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB" unique_id=175746506]
 mesh = SubResource("BoxMesh_i11yy")
@@ -59,6 +64,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB2" type="RigidBody3D" parent="Props" unique_id=486145904]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86261135, 2.087852, -2.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB2" unique_id=868511429]
 mesh = SubResource("BoxMesh_i11yy")
@@ -68,6 +74,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB3" type="RigidBody3D" parent="Props" unique_id=619974377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29099768, 2.087852, -2.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB3" unique_id=1034587239]
 mesh = SubResource("BoxMesh_i11yy")
@@ -77,6 +84,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB4" type="RigidBody3D" parent="Props" unique_id=402594735]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2214942, 0.8581327, -2.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB4" unique_id=443845204]
 mesh = SubResource("BoxMesh_i11yy")
@@ -86,6 +94,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB5" type="RigidBody3D" parent="Props" unique_id=1290809151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7785058, 0.8581327, -2.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB5" unique_id=1081418128]
 mesh = SubResource("BoxMesh_i11yy")
@@ -95,6 +104,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB6" type="RigidBody3D" parent="Props" unique_id=1751849127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7785058, 0.8581327, -3.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB6" unique_id=1761867133]
 mesh = SubResource("BoxMesh_i11yy")
@@ -104,6 +114,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB7" type="RigidBody3D" parent="Props" unique_id=2110531188]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2214942, 0.8581327, -3.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB7" unique_id=1516051553]
 mesh = SubResource("BoxMesh_i11yy")
@@ -113,6 +124,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB8" type="RigidBody3D" parent="Props" unique_id=1002470639]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2214942, 0.8581327, -3.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB8" unique_id=26182134]
 mesh = SubResource("BoxMesh_i11yy")
@@ -122,6 +134,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB9" type="RigidBody3D" parent="Props" unique_id=1407163489]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2214942, 0.8581327, -4.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB9" unique_id=82233769]
 mesh = SubResource("BoxMesh_i11yy")
@@ -131,6 +144,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB10" type="RigidBody3D" parent="Props" unique_id=201498411]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2214942, 0.8581327, -4.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB10" unique_id=2044327867]
 mesh = SubResource("BoxMesh_i11yy")
@@ -140,6 +154,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB11" type="RigidBody3D" parent="Props" unique_id=1948569050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7785058, 0.8581327, -4.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB11" unique_id=1367859579]
 mesh = SubResource("BoxMesh_i11yy")
@@ -149,6 +164,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB12" type="RigidBody3D" parent="Props" unique_id=1274436694]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7785058, 2.8581328, -4.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB12" unique_id=1712265148]
 mesh = SubResource("BoxMesh_i11yy")
@@ -158,6 +174,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB13" type="RigidBody3D" parent="Props" unique_id=318676154]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2214942, 2.8581328, -4.465972)
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB13" unique_id=1461994448]
 mesh = SubResource("BoxMesh_i11yy")
@@ -173,11 +190,11 @@ mesh = SubResource("PlaneMesh_emsoq")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/TerrainSB" unique_id=317227056]
 shape = SubResource("ConcavePolygonShape3D_qo67p")
 
-[node name="Pawn" parent="." unique_id=445737270 instance=ExtResource("2_8uoi8")]
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=784504666]
 environment = SubResource("Environment_i11yy")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=1574281827]
 transform = Transform3D(1, 0, 0, 0, -0.36018065, 0.9328827, 0, -0.9328827, -0.36018065, 0, 0, 0)
 shadow_enabled = true
+
+[node name="Player" parent="." unique_id=1216230058 instance=ExtResource("2_l3aci")]
