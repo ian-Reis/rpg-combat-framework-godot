@@ -10,16 +10,16 @@ public partial class AIDetectionComponent : Node
     [ExportGroup("Detection")]
     [Export] public string TargetGroup     = "Player";
     [Export] public float  ScanInterval    = 0.3f;
-    [Export] public float  DetectionRadius = 10f;  // 0 = unlimited
+    [Export] public float  DetectionRadius = 10f;
 
     public Node3D CurrentTarget { get; private set; }
 
-    private float                 _timer;
-    private SystemLogicComponents _owner;
+    private Pawn  _pawn;
+    private float _timer;
 
     public override void _Ready()
     {
-        _owner = GetParentOrNull<SystemLogicComponents>();
+        _pawn = GetParent<Pawn>();
         Scan();
     }
 
@@ -33,14 +33,13 @@ public partial class AIDetectionComponent : Node
 
     private void Scan()
     {
-        Node3D pawn = _owner?.Pawn;
-        if (pawn == null) { CurrentTarget = null; return; }
+        if (_pawn == null) { CurrentTarget = null; return; }
 
         float maxDist = DetectionRadius > 0f ? DetectionRadius : float.MaxValue;
 
         if (CurrentTarget != null && IsInstanceValid(CurrentTarget))
         {
-            if (pawn.GlobalPosition.DistanceTo(CurrentTarget.GlobalPosition) <= maxDist)
+            if (_pawn.GlobalPosition.DistanceTo(CurrentTarget.GlobalPosition) <= maxDist)
                 return;
         }
 
@@ -50,7 +49,7 @@ public partial class AIDetectionComponent : Node
         foreach (Node node in GetTree().GetNodesInGroup(TargetGroup))
         {
             if (node is not Node3D t || !IsInstanceValid(node)) continue;
-            float d = pawn.GlobalPosition.DistanceTo(t.GlobalPosition);
+            float d = _pawn.GlobalPosition.DistanceTo(t.GlobalPosition);
             if (d < best && d <= maxDist) { best = d; CurrentTarget = t; }
         }
     }
