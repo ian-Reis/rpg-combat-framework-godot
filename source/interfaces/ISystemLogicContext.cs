@@ -7,5 +7,5 @@ namespace Interfaces;
 public interface ISystemLogicContext : IComponentOwner, IHasLogicStateMachineComponent, IHasAnimationStateMachineComponent
 {
     Node3D Pawn { get; }
-    CharacterStats Stats { get; }
+    PawnStats Stats { get; }
 }
