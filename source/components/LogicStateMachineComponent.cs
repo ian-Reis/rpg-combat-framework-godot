@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Resources.states;
-using Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace Components;
@@ -14,37 +13,28 @@ public partial class LogicStateMachineComponent : Node
     [Signal] public delegate void StateChangedEventHandler(string from, string to);
 
     [ExportGroup("References")]
-    [Export] public CharacterBody3D Pawn { get; set; }
-    
+    [Export] public Pawn Pawn { get; set; }
+
     [ExportGroup("States")]
-    [Export] public LogicState InitialState { get; set; }
-    [Export] public LogicState[] States { get; set; }
+    [Export] public LogicState   InitialState { get; set; }
+    [Export] public LogicState[] States       { get; set; }
 
     public string CurrentStateName { get; private set; } = "";
 
     private readonly Dictionary<string, LogicState> _statesMap = new();
-    
     private LogicState _currentState;
     private bool _isReady = false;
 
     public override void _Ready()
     {
         base._Ready();
-        var context = GetParent<ISystemLogicContext>();
-        if (context == null)
-        {
-            GD.PrintErr("[LogicStateMachineComponent] Parent must implement ISystemLogicContext");
-            return;
-        }
-
-        _ = SetupAsync(context);
+        _ = SetupAsync();
     }
 
-    private async Task SetupAsync(ISystemLogicContext context)
+    private async Task SetupAsync()
     {
         try
         {
-
             if (States == null || States.Length == 0)
             {
                 GD.PrintErr("[LogicStateMachineComponent] No states assigned!");
@@ -68,7 +58,7 @@ public partial class LogicStateMachineComponent : Node
             ChangeState(InitialState.StateName);
             _isReady = true;
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             GD.PrintErr($"[LogicStateMachineComponent] Setup failed: {e.Message}\n{e.StackTrace}");
         }
