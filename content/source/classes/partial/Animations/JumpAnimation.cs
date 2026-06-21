@@ -4,27 +4,28 @@ namespace RPGFramework.Core;
 
 public partial class DefaultControllerAnimation
 {
-    private bool _wasOnFloor = true;
+    private bool  _wasOnFloor = true;
+    private float _jumpBlend  = 0f;
 
-    private void UpdateJump()
+    private void UpdateJump(float dt)
     {
-        bool isOnFloor = Pawn.IsOnFloor();
+        bool isOnFloor  = Pawn.IsOnFloor();
         float velocityY = Pawn.Velocity.Y;
 
-        GD.Print($"[Jump] isOnFloor={isOnFloor} | wasOnFloor={_wasOnFloor} | VelocityY={velocityY:F2} | current='{_playback?.GetCurrentNode()}'");
+        bool justJumped = _wasOnFloor && !isOnFloor && velocityY > 0f;
+        bool justLanded = !_wasOnFloor && isOnFloor;
 
-        if (_playback == null) return;
+        if (justJumped)
+            _jumpSMPlayback?.Start("Jump_Start");
 
-        if (_wasOnFloor && !isOnFloor && velocityY > 0f)
-        {
-            GD.Print("[Jump] -> travel Jump_Start");
-            _playback.Travel("Jump_Start");
-        }
-        else if (!_wasOnFloor && isOnFloor)
-        {
-            GD.Print("[Jump] -> start Jump_Land");
-            _playback.Start("Jump_Land");
-        }
+        if (justLanded)
+            _jumpSMPlayback?.Travel("Jump_Land");
+
+        float target = isOnFloor ? 0f : 1f;
+        float speed  = isOnFloor ? LandBlendSpeed : JumpBlendSpeed;
+        _jumpBlend = Mathf.Lerp(_jumpBlend, target, 1f - Mathf.Exp(-speed * dt));
+
+        AnimTree.Set(JumpBlendParam, _jumpBlend);
 
         _wasOnFloor = isOnFloor;
     }
