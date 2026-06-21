@@ -17,8 +17,15 @@ public partial class DefaultControllerAnimation : Node
         "parameters/DefaultBT/DefaultSM/Locomotion/blend_position";
     [Export] public string StateMachineParam { get; set; } =
         "parameters/DefaultBT/DefaultSM/playback";
+    [Export] public string JumpBlendParam { get; set; } = "parameters/DefaultBT/JumpBlend/blend_amount";
+    [Export] public string JumpSMParam    { get; set; } = "parameters/DefaultBT/JumpSM/playback";
+
+    [ExportGroup("Settings")]
+    [Export] public float JumpBlendSpeed { get; set; } = 10f;
+    [Export] public float LandBlendSpeed { get; set; } = 3f;
 
     private AnimationNodeStateMachinePlayback _playback;
+    private AnimationNodeStateMachinePlayback _jumpSMPlayback;
 
     public override void _Ready()
     {
@@ -27,8 +34,8 @@ public partial class DefaultControllerAnimation : Node
 
         AnimTree.Active = true;
         AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
-        _playback = (AnimationNodeStateMachinePlayback)AnimTree.Get(StateMachineParam);
-        GD.Print($"[AnimController] Ready — playback={_playback} | currentNode='{_playback?.GetCurrentNode()}'");
+        _playback       = (AnimationNodeStateMachinePlayback)AnimTree.Get(StateMachineParam);
+        _jumpSMPlayback = (AnimationNodeStateMachinePlayback)AnimTree.Get(JumpSMParam);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -37,9 +44,10 @@ public partial class DefaultControllerAnimation : Node
             return;
 
         Vector3 vel = Pawn.Velocity;
+        float dt = (float)delta;
         float horizontalSpeed = new Vector2(vel.X, vel.Z).Length();
 
         UpdateLocomotion(horizontalSpeed);
-        UpdateJump();
+        UpdateJump(dt);
     }
 }
