@@ -1,7 +1,6 @@
 using Godot;
 using Handlers;
 using Helpers;
-using Interfaces;
 using Constants;
 using Components;
 
@@ -15,53 +14,46 @@ public partial class LogicStateHit : LogicState
     [Export] public string HitAnimState   = "hit";
     [Export] public float  HitDuration    = 0.4f;
     [Export] public float  KnockbackDecay = 20f;
-    // Override recovery state. Leave empty to use player default (Walk/Idle by input).
     [Export] public string RecoverState   = "";
 
-    private const string HitTimerMeta    = "hit_timer";
+    private const string HitTimerMeta     = "hit_timer";
     private const string HitKnockbackMeta = "hit_knockback";
 
-    // public override void Enter(LogicStateMachineComponent sm)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+    public override void Enter(LogicStateMachineComponent sm)
+    {
+        sm.Pawn?.SetMeta(HitTimerMeta, HitDuration);
+        sm.Pawn.AnimationSM?.ChangeState(HitAnimState);
+    }
 
-    //     context.Pawn?.SetMeta(HitTimerMeta, HitDuration);
-    //     context.AnimationStateMachineComponent?.ChangeState(HitAnimState);
-    // }
+    public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
+    {
+        if (sm.Pawn == null) return;
 
-    // public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-    //     if (context.Pawn == null) return;
+        var knockback = sm.Pawn.GetMeta(HitKnockbackMeta, Vector3.Zero).AsVector3();
+        sm.Pawn.Velocity = new Vector3(knockback.X, sm.Pawn.Velocity.Y, knockback.Z);
 
-    //     var knockback = context.Pawn.GetMeta(HitKnockbackMeta, Vector3.Zero).AsVector3();
+        sm.Pawn.SetMeta(HitKnockbackMeta,
+            knockback.MoveToward(Vector3.Zero, KnockbackDecay * delta));
 
-    //     if (context.Pawn is CharacterBody3D cb)
-    //         cb.Velocity = new Vector3(knockback.X, cb.Velocity.Y, knockback.Z);
+        PhysicsHandler.ApplyGravity(sm.Pawn, delta);
+        MovementHandler.MoveAndSlide(sm.Pawn);
 
-    //     context.Pawn.SetMeta(HitKnockbackMeta,
-    //         knockback.MoveToward(Vector3.Zero, KnockbackDecay * delta));
+        float timer = sm.Pawn.GetMeta(HitTimerMeta, 0f).AsSingle() - delta;
+        sm.Pawn.SetMeta(HitTimerMeta, timer);
 
-    //     PhysicsHandler.ApplyGravity(context, delta);
-    //     MovementHandler.MoveAndSlide(context);
+        if (timer <= 0f)
+        {
+            if (!string.IsNullOrEmpty(RecoverState))
+                sm.ChangeState(RecoverState);
+            else
+                sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
+                    ? LogicStateNames.Walk
+                    : LogicStateNames.Idle);
+        }
+    }
 
-    //     float timer = context.Pawn.GetMeta(HitTimerMeta, 0f).AsSingle() - delta;
-    //     context.Pawn.SetMeta(HitTimerMeta, timer);
-
-    //     if (timer <= 0f)
-    //     {
-    //         if (!string.IsNullOrEmpty(RecoverState))
-    //             sm.ChangeState(RecoverState);
-    //         else
-    //             sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
-    //                 ? LogicStateNames.Walk
-    //                 : LogicStateNames.Idle);
-    //     }
-    // }
-
-    // public override void Exit(LogicStateMachineComponent sm)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-    //     context.Pawn?.SetMeta(HitKnockbackMeta, Vector3.Zero);
-    // }
+    public override void Exit(LogicStateMachineComponent sm)
+    {
+        sm.Pawn?.SetMeta(HitKnockbackMeta, Vector3.Zero);
+    }
 }

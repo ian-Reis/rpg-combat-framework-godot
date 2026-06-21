@@ -1,7 +1,6 @@
 using Godot;
 using Handlers;
 using Helpers;
-using Interfaces;
 using Constants;
 using Components;
 using Data;
@@ -15,75 +14,62 @@ public partial class LogicStateAttack : LogicState
     [Export] public bool       UseRootMotion        = true;
     [Export] public bool       LockMovement         = false;
     [Export] public AttackData AttackData;
+    [Export] public string[]   InterruptibleBy      = [];
 
-    // Logic states that are allowed to interrupt this attack mid-animation.
-    [Export] public string[] InterruptibleBy = [];
+    public override void Enter(LogicStateMachineComponent sm)
+    {
+        sm.Pawn.AnimationSM?.ChangeState(FirstAttackAnimState);
+        sm.Pawn.Hitbox?.Activate(AttackData);
+    }
 
-    // public override void Enter(LogicStateMachineComponent sm)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-    //     context.AnimationStateMachineComponent?.ChangeState(FirstAttackAnimState);
-    //     context.GetComponent<HitboxComponent>()?.Activate(AttackData);
-    // }
+    public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
+    {
+        PhysicsHandler.ApplyGravity(sm.Pawn, delta);
 
-    // public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+        if (UseRootMotion)
+            ApplyRootMotion(sm);
+        else if (!LockMovement)
+            MovementHandler.ApplyMovement(sm.Pawn, delta);
 
-    //     PhysicsHandler.ApplyGravity(context, delta);
+        MovementHandler.MoveAndSlide(sm.Pawn);
 
-    //     if (UseRootMotion)
-    //         ApplyRootMotion(context);
-    //     else if (!LockMovement)
-    //         MovementHandler.ApplyMovement(context, delta);
+        if (CanInterrupt(LogicStateNames.Airborne) && sm.Pawn != null && !sm.Pawn.IsOnFloor())
+        {
+            sm.ChangeState(LogicStateNames.Airborne);
+            return;
+        }
 
-    //     MovementHandler.MoveAndSlide(context);
+        var animSM = sm.Pawn.AnimationSM;
+        if (animSM != null && animSM.CurrentStateName.StartsWith("attack")) return;
 
-    //     // Check physics-based interrupts (e.g. knocked into the air).
-    //     if (CanInterrupt(LogicStateNames.Airborne) && context.Pawn is CharacterBody3D cb && !cb.IsOnFloor())
-    //     {
-    //         sm.ChangeState(LogicStateNames.Airborne);
-    //         return;
-    //     }
+        sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
+            ? LogicStateNames.Walk
+            : LogicStateNames.Idle);
+    }
 
-    //     // Wait until the animation SM finishes the entire combo chain.
-    //     var animSM = context.AnimationStateMachineComponent;
-    //     if (animSM != null && animSM.CurrentStateName.StartsWith("attack")) return;
+    public override void HandleInput(LogicStateMachineComponent sm, InputEvent @event)
+    {
+        if (CanInterrupt(LogicStateNames.Jump)
+            && @event.IsActionPressed("jump")
+            && sm.Pawn != null
+            && sm.Pawn.IsOnFloor())
+        {
+            sm.ChangeState(LogicStateNames.Jump);
+        }
+    }
 
-    //     sm.ChangeState(InputHelper.GetInputDirection().Length() > 0f
-    //         ? LogicStateNames.Walk
-    //         : LogicStateNames.Idle);
-    // }
+    public override void Exit(LogicStateMachineComponent sm)
+    {
+        sm.Pawn.Hitbox?.Deactivate();
+    }
 
-    // public override void HandleInput(LogicStateMachineComponent sm, InputEvent @event)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
+    private bool CanInterrupt(string stateName)
+        => InterruptibleBy != null && System.Array.IndexOf(InterruptibleBy, stateName) >= 0;
 
-    //     if (CanInterrupt(LogicStateNames.Jump)
-    //         && @event.IsActionPressed("jump")
-    //         && context.Pawn is CharacterBody3D charBody
-    //         && charBody.IsOnFloor())
-    //     {
-    //         sm.ChangeState(LogicStateNames.Jump);
-    //         return;
-    //     }
-    // }
-
-    // public override void Exit(LogicStateMachineComponent sm)
-    // {
-    //     if (sm?.systemLogicContext is not ISystemLogicContext context) return;
-    //     context.GetComponent<HitboxComponent>()?.Deactivate();
-    // }
-
-    // // ── Helpers ───────────────────────────────────────────────────────────────
-
-    // private bool CanInterrupt(string stateName)
-    //     => InterruptibleBy != null && System.Array.IndexOf(InterruptibleBy, stateName) >= 0;
-
-    // private static void ApplyRootMotion(ISystemLogicContext context)
-    // {
-    //     if (context.Pawn is not CharacterBody3D charBody) return;
-    //     var rootVel = context.AnimationStateMachineComponent?.CurrentSnapshot.RootMotionVelocity ?? Vector3.Zero;
-    //     charBody.Velocity = new Vector3(rootVel.X, charBody.Velocity.Y, rootVel.Z);
-    // }
+    private static void ApplyRootMotion(LogicStateMachineComponent sm)
+    {
+        if (sm.Pawn == null) return;
+        var rootVel = sm.Pawn.AnimationSM?.CurrentSnapshot.RootMotionVelocity ?? Vector3.Zero;
+        sm.Pawn.Velocity = new Vector3(rootVel.X, sm.Pawn.Velocity.Y, rootVel.Z);
+    }
 }

@@ -1,7 +1,6 @@
 using Godot;
 using Handlers;
 using Helpers;
-using Interfaces;
 using Constants;
 using Components;
 
@@ -10,36 +9,28 @@ namespace Resources.states;
 [GlobalClass]
 public partial class LogicStateRun : LogicState
 {
-    public override void Enter(LogicStateMachineComponent stateMachineComponent) { }
+    public override void PhysicsUpdate(LogicStateMachineComponent sm, float delta)
+    {
+        PhysicsHandler.ApplyGravity(sm.Pawn, delta);
+        MovementHandler.ApplyMovement(sm.Pawn, delta);
+        MovementHandler.MoveAndSlide(sm.Pawn);
 
-    // public override void PhysicsUpdate(LogicStateMachineComponent stateMachineComponent  , float delta)
-    // {
+        bool isMoving  = InputHelper.GetInputDirection().Length() > 0f;
+        bool isRunning = Input.IsActionPressed("run");
 
-    //    if (stateMachineComponent?.systemLogicContext is not ISystemLogicContext logicContext) return;
+        if (!isMoving)  { sm.ChangeState(LogicStateNames.Idle); return; }
+        if (!isRunning) { sm.ChangeState(LogicStateNames.Walk); return; }
+    }
 
-    //     PhysicsHandler.ApplyGravity(logicContext, delta);
-    //     MovementHandler.ApplyMovement(logicContext, delta);
-    //     MovementHandler.MoveAndSlide(logicContext);
+    public override void HandleInput(LogicStateMachineComponent sm, InputEvent @event)
+    {
+        if (@event.IsActionPressed("attack"))
+            sm.ChangeState(LogicStateNames.Attack);
 
-    //     var inputDir = InputHelper.GetInputDirection();
-    //     bool isMoving  = inputDir.Length() > 0f;
-    //     bool isRunning = Input.IsActionPressed("run");
+        if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
+            sm.ChangeState(LogicStateNames.Dodge);
 
-    //     if (!isMoving)  { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Idle); return; }
-    //     if (!isRunning) { LogicStateMachineHelper.ChangeState(stateMachineComponent, LogicStateNames.Walk); return; }
-    // }
-
-    // public override void HandleInput(LogicStateMachineComponent stateMachineComponent, InputEvent @event)
-    // {
-    //     if (@event.IsActionPressed("attack"))
-    //         stateMachineComponent.ChangeState(LogicStateNames.Attack);
-
-    //     if (InputMap.HasAction("dodge") && @event.IsActionPressed("dodge"))
-    //         stateMachineComponent.ChangeState(LogicStateNames.Dodge);
-
-    //     if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
-    //         stateMachineComponent.ChangeState(LogicStateNames.Block);
-    // }
-
-    // public override void Exit(LogicStateMachineComponent stateMachineComponent) { }
+        if (InputMap.HasAction("block") && @event.IsActionPressed("block"))
+            sm.ChangeState(LogicStateNames.Block);
+    }
 }
