@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Godot;
 using Helpers;
 
@@ -7,26 +6,25 @@ namespace Components;
 [GlobalClass]
 public partial class InputRotateModelComponent : Node
 {
-    [Export] public Node3D      Model             { get; set; }
-    [Export] public SpringArm3D SpringArm         { get; set; }
-    [Export] public float       RotationSmoothness = 10f;
-    [Export] public float       InputDeadZone      = 0.1f;
-    [Export] public bool        InvertY            = false;
+    [ExportGroup("References")]
+    [Export] public Node3D      Model     { get; set; }
+    [Export] public SpringArm3D SpringArm { get; set; }
 
-    // When true, model only rotates while the pawn has horizontal velocity above MinVelocityToRotate.
-    // Prevents in-place rotation when the character is stationary.
+    [ExportGroup("Rotation")]
+    [Export] public float RotationSmoothness = 10f;
+    [Export] public float InputDeadZone      = 0.1f;
+    [Export] public bool  InvertY            = false;
+
     [ExportGroup("Velocity Gate")]
-    [Export] public bool  RequireVelocity      = true;
-    [Export] public float MinVelocityToRotate  = 0.1f;
+    [Export] public bool  RequireVelocity     = true;
+    [Export] public float MinVelocityToRotate = 0.1f;
 
-    private SystemLogicComponents _systemLogicComponents;
+    private Pawn _pawn;
 
     public override void _Ready()
     {
-        _systemLogicComponents = GetParentOrNull<SystemLogicComponents>();
-        Debug.Assert(_systemLogicComponents != null, "InputRotateModelComponent must be a child of SystemLogicComponents");
-
-        SpringArm ??= _systemLogicComponents?.GetComponent<CameraComponent>()?.SpringArm;
+        _pawn     = GetParent<Pawn>();
+        SpringArm ??= _pawn?.Camera?.SpringArm;
     }
 
     public override void _Process(double delta)
@@ -45,7 +43,7 @@ public partial class InputRotateModelComponent : Node
         if (SpringArm != null)
         {
             Vector3 camForward = -SpringArm.GlobalTransform.Basis.Z;
-            Vector3 camRight = SpringArm.GlobalTransform.Basis.X;
+            Vector3 camRight   =  SpringArm.GlobalTransform.Basis.X;
 
             Vector3 moveDir = (camRight * inputDir.X + camForward * inputDir.Y).Normalized();
             targetAngle = Mathf.Atan2(moveDir.X, moveDir.Z);
@@ -56,15 +54,14 @@ public partial class InputRotateModelComponent : Node
         }
 
         float currentAngle = Model.Rotation.Y;
-        float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, RotationSmoothness * (float)delta);
-
-        Model.Rotation = new Vector3(Model.Rotation.X, newAngle, Model.Rotation.Z);
+        float newAngle     = Mathf.LerpAngle(currentAngle, targetAngle, RotationSmoothness * (float)delta);
+        Model.Rotation     = new Vector3(Model.Rotation.X, newAngle, Model.Rotation.Z);
     }
 
     private bool HasEnoughVelocity()
     {
-        if (_systemLogicComponents?.Pawn is not CharacterBody3D cb) return true;
-        Vector3 vel = cb.Velocity;
+        if (_pawn == null) return true;
+        Vector3 vel = _pawn.Velocity;
         return new Vector2(vel.X, vel.Z).Length() > MinVelocityToRotate;
     }
 }

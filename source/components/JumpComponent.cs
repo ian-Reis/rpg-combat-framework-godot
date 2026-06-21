@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Godot;
 using Classes.statics;
 
@@ -10,79 +9,76 @@ public partial class JumpComponent : Node
     [Signal] public delegate void JumpedEventHandler();
     [Signal] public delegate void LandedEventHandler();
 
+    private Pawn _pawn;
     private float _jumpTimer  = 0f;
     private bool  _isJumping  = false;
     private bool  _wasOnFloor = false;
 
-    private SystemLogicComponents _owner;
-
     public override void _Ready()
     {
-        _owner = GetParentOrNull<SystemLogicComponents>();
-        Debug.Assert(_owner != null, "JumpComponent must be a child of SystemLogicComponents");
+        _pawn = GetParent<Pawn>();
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_owner?.Stats == null) return;
-        if (_owner.Pawn is not CharacterBody3D character) return;
+        if (_pawn == null || _pawn.Stats == null) return;
 
         float dt        = (float)delta;
-        bool  isOnFloor = character.IsOnFloor();
+        bool  isOnFloor = _pawn.IsOnFloor();
 
         if (isOnFloor && !_wasOnFloor)
             EmitSignal(SignalName.Landed);
 
         _wasOnFloor = isOnFloor;
 
-        ProcessJump(character, isOnFloor, dt);
-        ProcessJumpTravel(character, dt);
+        ProcessJump(_pawn, isOnFloor, dt);
+        ProcessJumpTravel(_pawn, dt);
     }
 
-    private void ProcessJump(CharacterBody3D character, bool isOnFloor, float dt)
+    private void ProcessJump(Pawn pawn, bool isOnFloor, float dt)
     {
-        Vector3 up        = GetUpDirection(character);
-        float   vertSpeed = character.Velocity.Dot(up);
+        Vector3 up        = GetUpDirection(pawn);
+        float   vertSpeed = pawn.Velocity.Dot(up);
 
         if (Input.IsActionJustPressed("jump") && isOnFloor)
         {
-            character.Velocity -= up * vertSpeed;
-            character.Velocity += up * _owner.Stats.JumpForce;
+            pawn.Velocity -= up * vertSpeed;
+            pawn.Velocity += up * pawn.Stats.JumpForce;
             _isJumping = true;
-            _jumpTimer = _owner.Stats.JumpHoldTime;
+            _jumpTimer = pawn.Stats.JumpHoldTime;
             EmitSignal(SignalName.Jumped);
         }
 
         if (Input.IsActionPressed("jump") && _isJumping && _jumpTimer > 0f)
         {
-            character.Velocity += up * _owner.Stats.Gravity * dt;
+            pawn.Velocity += up * pawn.Stats.Gravity * dt;
             _jumpTimer -= dt;
         }
 
-        if (Input.IsActionJustReleased("jump") && character.Velocity.Dot(up) > 0f)
+        if (Input.IsActionJustReleased("jump") && pawn.Velocity.Dot(up) > 0f)
         {
-            float vert = character.Velocity.Dot(up);
-            character.Velocity -= up * vert;
-            character.Velocity += up * vert * _owner.Stats.CutJumpFactor;
+            float vert = pawn.Velocity.Dot(up);
+            pawn.Velocity -= up * vert;
+            pawn.Velocity += up * vert * pawn.Stats.CutJumpFactor;
             _isJumping = false;
         }
     }
 
-    private void ProcessJumpTravel(CharacterBody3D character, float dt)
+    private void ProcessJumpTravel(Pawn pawn, float dt)
     {
         if (!Input.IsActionPressed("jet")) return;
 
-        Vector3 up = GetUpDirection(character);
-        character.Velocity -= up * character.Velocity.Dot(up);
-        character.Velocity += up * _owner.Stats.JumpForce;
+        Vector3 up = GetUpDirection(pawn);
+        pawn.Velocity -= up * pawn.Velocity.Dot(up);
+        pawn.Velocity += up * pawn.Stats.JumpForce;
     }
 
-    private static Vector3 GetUpDirection(CharacterBody3D character)
+    private static Vector3 GetUpDirection(Pawn pawn)
     {
-        var planet = character.Get(EntityProps.CurrentPlanet).As<Node3D>();
+        var planet = pawn.Get(EntityProps.CurrentPlanet).As<Node3D>();
         if (planet != null)
-            return (character.GlobalPosition - planet.GlobalPosition).Normalized();
+            return (pawn.GlobalPosition - planet.GlobalPosition).Normalized();
 
-        return character.UpDirection.Normalized();
+        return pawn.UpDirection.Normalized();
     }
 }

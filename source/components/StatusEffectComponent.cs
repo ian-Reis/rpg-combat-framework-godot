@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Data;
-using Interfaces;
 
 namespace Components;
 
@@ -13,15 +11,14 @@ public partial class StatusEffectComponent : Node
     [Signal] public delegate void EffectAppliedEventHandler(StatusEffect effect);
     [Signal] public delegate void EffectRemovedEventHandler(StatusEffect effect);
 
+    private Pawn _pawn;
     private readonly Dictionary<string, (StatusEffect effect, float timeRemaining)> _active = new();
-    private SystemLogicComponents _owner;
-    private ISystemLogicContext   _context;
+
+    public HealthComponent Health => _pawn?.Health;
 
     public override void _Ready()
     {
-        _owner   = GetParentOrNull<SystemLogicComponents>();
-        _context = _owner as ISystemLogicContext;
-        Debug.Assert(_owner != null, "StatusEffectComponent must be a child of SystemLogicComponents");
+        _pawn = GetParent<Pawn>();
     }
 
     public override void _Process(double delta)
@@ -35,7 +32,7 @@ public partial class StatusEffectComponent : Node
         {
             if (!_active.TryGetValue(key, out var entry)) continue;
 
-            entry.effect.OnTick(_context, dt);
+            entry.effect.OnTick(this, dt);
 
             float remaining = entry.timeRemaining - dt;
             if (remaining <= 0f)
@@ -56,20 +53,19 @@ public partial class StatusEffectComponent : Node
 
         if (_active.ContainsKey(effect.EffectId))
         {
-            // Refresh duration; ignore if not stackable
             _active[effect.EffectId] = (effect, effect.Duration);
             return;
         }
 
         _active[effect.EffectId] = (effect, effect.Duration);
-        effect.OnApply(_context);
+        effect.OnApply(this);
         EmitSignal(SignalName.EffectApplied, effect);
     }
 
     public void Remove(string effectId)
     {
         if (!_active.TryGetValue(effectId, out var entry)) return;
-        entry.effect.OnRemove(_context);
+        entry.effect.OnRemove(this);
         _active.Remove(effectId);
         EmitSignal(SignalName.EffectRemoved, entry.effect);
     }
@@ -78,7 +74,6 @@ public partial class StatusEffectComponent : Node
     public bool HasType(StatusEffect.EffectType type) => _active.Values.Any(e => e.effect.Type == type);
     public bool IsStunned                             => HasType(StatusEffect.EffectType.Stun);
 
-    // Returns combined speed multiplier from all active slow effects.
     public float GetSpeedMultiplier()
     {
         float mult = 1f;
