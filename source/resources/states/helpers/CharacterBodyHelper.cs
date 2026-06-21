@@ -1,6 +1,5 @@
 using Godot;
 using Components;
-using Interfaces;
 using Data;
 
 namespace Helpers;
@@ -9,14 +8,13 @@ public static class CharacterBodyHelper
 {
     // ── Movement ──────────────────────────────────────────────────────────────
 
-    public static void ApplyMovement(CharacterBody3D pawn, ISystemLogicContext context, float delta, bool canRun = true)
+    public static void ApplyMovement(CharacterBody3D pawn, PawnStats stats, SpringArm3D springArm, float delta, bool canRun = true, float speedMult = 1f)
     {
-        if (context.Stats == null) return;
+        if (stats == null) return;
 
         Vector2 inputDir = InputHelper.GetInputDirection();
         Vector3 up       = pawn.UpDirection.Normalized();
 
-        SpringArm3D springArm = context.GetComponent<CameraComponent>()?.SpringArm;
         Basis camBasis = springArm is not null
             ? springArm.GlobalTransform.Basis
             : pawn.GlobalTransform.Basis;
@@ -32,19 +30,18 @@ public static class CharacterBodyHelper
             ? (right * inputDir.X + forward * -inputDir.Y).Normalized()
             : Vector3.Zero;
 
-        float speedMult   = context.GetComponent<StatusEffectComponent>()?.GetSpeedMultiplier() ?? 1f;
         float targetSpeed = (canRun && Input.IsActionPressed("run")
-            ? context.Stats.RunSpeed
-            : context.Stats.WalkSpeed) * speedMult;
+            ? stats.RunSpeed
+            : stats.WalkSpeed) * speedMult;
 
         bool isGrounded = pawn.IsOnFloor();
         float accel = hasInput
-            ? (isGrounded ? context.Stats.Acceleration    : context.Stats.AirAcceleration)
-            : (isGrounded ? context.Stats.Deceleration    : context.Stats.AirDeceleration);
+            ? (isGrounded ? stats.Acceleration    : stats.AirAcceleration)
+            : (isGrounded ? stats.Deceleration    : stats.AirDeceleration);
 
-        Vector3 target        = moveDir * targetSpeed;
-        Vector3 currentHoriz  = GetHorizontalVelocity(pawn);
-        Vector3 newHoriz      = currentHoriz.MoveToward(target, accel * delta);
+        Vector3 target       = moveDir * targetSpeed;
+        Vector3 currentHoriz = GetHorizontalVelocity(pawn);
+        Vector3 newHoriz     = currentHoriz.MoveToward(target, accel * delta);
 
         float verticalSpeed = pawn.Velocity.Dot(up);
         pawn.Velocity = newHoriz + up * verticalSpeed;
@@ -73,14 +70,14 @@ public static class CharacterBodyHelper
 
     // ── Jump ──────────────────────────────────────────────────────────────────
 
-    public static void ApplyJump(CharacterBody3D pawn, ISystemLogicContext context)
+    public static void ApplyJump(CharacterBody3D pawn, PawnStats stats)
     {
         if (!Input.IsActionJustPressed("jump") || !pawn.IsOnFloor()) return;
 
         Node3D planet = (Node3D)pawn.Get(Classes.statics.EntityProps.CurrentPlanet);
         if (planet == null) return;
 
-        float jumpForce = context.Stats?.JumpForce ?? 8f;
+        float jumpForce = stats?.JumpForce ?? 8f;
         Vector3 up      = (pawn.GlobalPosition - planet.GlobalPosition).Normalized();
 
         pawn.Velocity -= up * pawn.Velocity.Dot(up);
