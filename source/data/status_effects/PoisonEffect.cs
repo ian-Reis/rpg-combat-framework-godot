@@ -1,13 +1,12 @@
 using Godot;
 using Components;
-using Interfaces;
 
 namespace Data;
 
 [GlobalClass]
 public partial class PoisonEffect : StatusEffect
 {
-    [Export] public float DamagePerSecond = 5f;
+    [Godot.Export] public float DamagePerSecond = 5f;
 
     public PoisonEffect()
     {
@@ -16,6 +15,6 @@ public partial class PoisonEffect : StatusEffect
         Duration = 5f;
     }
 
-    public override void OnTick(ISystemLogicContext context, float delta)
-        => context.GetComponent<HealthComponent>()?.TakeDamage(DamagePerSecond * delta);
+    public override void OnTick(StatusEffectComponent component, float delta)
+        => component.Health?.TakeDamage(DamagePerSecond * delta);
 }

@@ -10,7 +10,7 @@ public partial class EnemyData : Resource
     [Export] public Texture2D Icon;
 
     [ExportGroup("Stats")]
-    [Export] public CharacterStats Stats;
+    [Export] public PawnStats Stats;
 
     [ExportGroup("AI")]
     // Assign a LimboAI BehaviorTree resource here.

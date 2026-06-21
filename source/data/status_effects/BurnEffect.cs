@@ -1,13 +1,12 @@
 using Godot;
 using Components;
-using Interfaces;
 
 namespace Data;
 
 [GlobalClass]
 public partial class BurnEffect : StatusEffect
 {
-    [Export] public float DamagePerSecond = 12f;
+    [Godot.Export] public float DamagePerSecond = 12f;
 
     public BurnEffect()
     {
@@ -16,6 +15,6 @@ public partial class BurnEffect : StatusEffect
         Duration = 3f;
     }
 
-    public override void OnTick(ISystemLogicContext context, float delta)
-        => context.GetComponent<HealthComponent>()?.TakeDamage(DamagePerSecond * delta);
+    public override void OnTick(StatusEffectComponent component, float delta)
+        => component.Health?.TakeDamage(DamagePerSecond * delta);
 }

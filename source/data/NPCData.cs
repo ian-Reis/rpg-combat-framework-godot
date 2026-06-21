@@ -10,7 +10,7 @@ public partial class NPCData : Resource
     [Export] public Texture2D Portrait;
 
     [ExportGroup("Stats")]
-    [Export] public CharacterStats Stats;
+    [Export] public PawnStats Stats;
 
     [ExportGroup("AI")]
     // Assign a LimboAI BehaviorTree resource here.

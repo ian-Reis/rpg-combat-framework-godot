@@ -1,5 +1,5 @@
 using Godot;
-using Interfaces;
+using Components;
 
 namespace Data;
 
@@ -13,7 +13,7 @@ public partial class StatusEffect : Resource
     [Export] public float      Duration    = 3f;
     [Export] public bool       IsStackable = false;
 
-    public virtual void OnApply(ISystemLogicContext context)             { }
-    public virtual void OnTick(ISystemLogicContext context, float delta) { }
-    public virtual void OnRemove(ISystemLogicContext context)            { }
+    public virtual void OnApply(StatusEffectComponent component)             { }
+    public virtual void OnTick(StatusEffectComponent component, float delta) { }
+    public virtual void OnRemove(StatusEffectComponent component)            { }
 }
