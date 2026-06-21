@@ -15,16 +15,17 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
     [ExportGroup("References")]
     [Export] public AnimationTree AnimationTree { get; set; }
-    [Export] public string PlaybackPath { get; set; } = "parameters/playback";
+    [Export] public string        PlaybackPath  { get; set; } = "parameters/playback";
+    [Export] public Node3D        Model         { get; set; }
 
     [ExportGroup("States")]
-    [Export] public AnimationState InitialState { get; set; }
-    [Export] public AnimationState[] States { get; set; }
+    [Export] public AnimationState   InitialState { get; set; }
+    [Export] public AnimationState[] States       { get; set; }
 
-    public ISystemLogicContext Context { get; private set; }
     public AnimationSnapshot CurrentSnapshot { get; private set; }
     public string CurrentStateName { get; private set; } = "";
 
+    private Pawn _pawn;
     private readonly Dictionary<string, AnimationState> _statesMap = new();
     private AnimationState _currentState;
     private float _timeInAir = 0f;
@@ -32,6 +33,7 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
     public override void _Ready()
     {
+        _pawn = GetParent<Pawn>();
         _ = SetupAsync();
     }
 
@@ -39,13 +41,6 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
     {
         try
         {
-            Context = GetParent<ISystemLogicContext>();
-            if (Context == null)
-            {
-                GD.PrintErr("[AnimationStateMachineComponent] Parent must implement ISystemLogicContext");
-                return;
-            }
-
             if (States == null || States.Length == 0)
             {
                 GD.PrintErr("[AnimationStateMachineComponent] No states assigned!");
@@ -64,7 +59,7 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
                 _statesMap[state.StateName] = state;
             }
 
-            await ToSignal(Context as Node, Node.SignalName.Ready);
+            await ToSignal(this, Node.SignalName.Ready);
 
             ChangeState(InitialState.StateName);
             _isReady = true;
@@ -103,15 +98,15 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
         _currentState.Update(this, CurrentSnapshot, dt);
     }
 
-    private Basis GetMoveBasis(CharacterBody3D charBody)
+    private Basis GetMoveBasis()
     {
-        Vector3 up = charBody.UpDirection.Normalized();
+        if (_pawn == null) return Basis.Identity;
+        Vector3 up = _pawn.UpDirection.Normalized();
 
-        Node3D model = Context.GetComponent<InputRotateModelComponent>()?.Model;
-        if (model != null)
+        if (Model != null)
         {
-            Vector3 mFwd   = -model.GlobalTransform.Basis.Z;
-            Vector3 mRight =  model.GlobalTransform.Basis.X;
+            Vector3 mFwd   = -Model.GlobalTransform.Basis.Z;
+            Vector3 mRight =  Model.GlobalTransform.Basis.X;
 
             Vector3 forward = (mFwd   - up * mFwd.Dot(up)).Normalized();
             Vector3 right   = (mRight - up * mRight.Dot(up)).Normalized();
@@ -120,9 +115,9 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
             return new Basis(right, newUp, forward);
         }
 
-        SpringArm3D springArm = Context.GetComponent<CameraComponent>()?.SpringArm;
+        SpringArm3D springArm = _pawn.Camera?.SpringArm;
         if (springArm == null)
-            return charBody.GlobalTransform.Basis;
+            return _pawn.GlobalTransform.Basis;
 
         Vector3 camFwd   = -springArm.GlobalTransform.Basis.Z;
         Vector3 camRight =  springArm.GlobalTransform.Basis.X;
@@ -136,15 +131,15 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
 
     private AnimationSnapshot BuildSnapshot(float delta)
     {
-        if (Context.Pawn is not CharacterBody3D charBody) return default;
+        if (_pawn == null) return default;
 
-        bool  isGrounded     = CharacterBodyHelper.IsOnFloor(charBody);
-        float horizontalSpeed = CharacterBodyHelper.GetHorizontalSpeed(charBody);
-        float verticalVelocity = charBody.Velocity.Y;
+        bool  isGrounded       = CharacterBodyHelper.IsOnFloor(_pawn);
+        float horizontalSpeed  = CharacterBodyHelper.GetHorizontalSpeed(_pawn);
+        float verticalVelocity = _pawn.Velocity.Y;
 
         _timeInAir = isGrounded ? 0f : _timeInAir + delta;
 
-        float runSpeed        = Context.Stats?.RunSpeed ?? 6f;
+        float runSpeed        = _pawn.Stats?.RunSpeed ?? 6f;
         float normalizedSpeed = runSpeed > 0f ? Mathf.Clamp(horizontalSpeed / runSpeed, 0f, 1f) : 0f;
 
         return new AnimationSnapshot
@@ -155,7 +150,7 @@ public partial class AnimationStateMachineComponent : Node, IHasAnimationTree
             IsGrounded         = isGrounded,
             HasInput           = Helpers.InputHelper.GetInputDirection().Length() > 0.1f,
             TimeInAir          = _timeInAir,
-            RootMotionVelocity = Helpers.AnimationTreeHelper.GetRootMotionVelocity(this, GetMoveBasis(charBody), delta),
+            RootMotionVelocity = Helpers.AnimationTreeHelper.GetRootMotionVelocity(this, GetMoveBasis(), delta),
         };
     }
 }
