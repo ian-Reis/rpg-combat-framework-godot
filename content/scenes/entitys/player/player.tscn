@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cwvuos1fyywrq" path="res://content/source/resources/PawnStats.cs" id="2_30ead"]
 [ext_resource type="Script" uid="uid://b37qx5isrffnn" path="res://content/source/classes/partial/TPSSpringArm3D.cs" id="2_ie3ru"]
 [ext_resource type="Script" uid="uid://bsfr1r1n0lbxn" path="res://content/source/classes/partial/RotateDirection3D.cs" id="3_30ead"]
+[ext_resource type="Script" uid="uid://dhk5ctnoll33q" path="res://content/source/classes/partial/CustomCamera3D.cs" id="4_30ead"]
 
 [sub_resource type="Resource" id="Resource_8uoi8"]
 script = ExtResource("2_30ead")
@@ -18020,8 +18021,11 @@ script = ExtResource("2_ie3ru")
 SmoothSpeed = 50.0
 metadata/_custom_type_script = "uid://b37qx5isrffnn"
 
-[node name="Camera3D" type="Camera3D" parent="TPSSpringArm3D" unique_id=1635482040]
+[node name="CustomCamera3D" type="Camera3D" parent="TPSSpringArm3D" unique_id=183542560 node_paths=PackedStringArray("Character")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+script = ExtResource("4_30ead")
+Character = NodePath("../..")
+metadata/_custom_type_script = "uid://dhk5ctnoll33q"
 
 [node name="RotateDirection3D" type="Node3D" parent="." unique_id=1297649301 node_paths=PackedStringArray("SpringArm")]
 script = ExtResource("3_30ead")
