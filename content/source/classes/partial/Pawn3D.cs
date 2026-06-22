@@ -14,19 +14,54 @@ public partial class Pawn3D : CharacterBody3D
     [ExportGroup("Resources")]
     [Export] public PawnStats Stats { get; set; }
 
+    [ExportGroup("Attack Lunge")]
+    // Curva (X: tempo normalizado 0..1, Y: multiplicador de velocidade). Null = ease-out padrão.
+    [Export] public Curve LungeCurve    { get; set; }
+    [Export] public float LungeDuration { get; set; } = 0.25f;
+
+    [ExportGroup("Crouch")]
+    [Export] public CollisionShape3D Collider        { get; set; }
+    [Export] public float CrouchHeight               { get; set; } = 1.0f;   // altura do colisor agachado
+    [Export] public float CrouchSpeedMultiplier      { get; set; } = 0.45f;  // fator de velocidade agachado
+    [Export] public float CrouchTransitionSpeed      { get; set; } = 12f;    // suavidade do colisor
+
     public Vector2 Motion { get; private set; }
+    public bool    IsCrouching { get; private set; }
+
+    private Vector3 _lungeDir   = Vector3.Zero;
+    private float   _lungeForce = 0f;
+    private float   _lungeTime  = 0f;
+    private bool    _lunging    = false;
+
+    private CapsuleShape3D _capsule;
+    private float _standHeight;
+    private float _colliderBottomY; // pé fixo no chão ao redimensionar
+    private float _currentHeight;
 
     private static readonly float ProjectGravity =
         ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
+    public override void _Ready()
+    {
+        if (Collider?.Shape is CapsuleShape3D cap)
+        {
+            _capsule         = cap;
+            _standHeight     = cap.Height;
+            _colliderBottomY = Collider.Position.Y - _standHeight * 0.5f;
+            _currentHeight   = _standHeight;
+        }
+    }
 
     public override void _PhysicsProcess(double delta)
     {
         float dt = (float)delta;
         Vector3 velocity = Velocity;
 
+        UpdateCrouch(dt);
         ApplyGravity(ref velocity, dt);
         HandleJump(ref velocity);
         HandleMovement(ref velocity, dt);
+        ApplyLunge(ref velocity, dt);
 
         Velocity = velocity;
         MoveAndSlide();
@@ -60,6 +95,7 @@ public partial class Pawn3D : CharacterBody3D
         }
 
         float speed = Stats?.Speed ?? 5f;
+        if (IsCrouching) speed *= CrouchSpeedMultiplier;
         float accel = Stats?.Acceleration ?? 15f;
         float fric  = Stats?.Friction ?? 10f;
 
@@ -81,7 +117,8 @@ public partial class Pawn3D : CharacterBody3D
     }
 
     // API de força — chamada por Call Method Track na timeline do AnimationPlayer.
-    // Empurra na direção que o RotateModel encara (forward = -Z, plano horizontal).
+    // Inicia um lunge fluido na direção que o RotateModel encara (forward = -Z, plano horizontal).
+    // 'force' = velocidade de pico (units/s), modulada pela LungeCurve ao longo de LungeDuration.
     public void AddAttackForce(float force)
     {
         if (RotateModel == null) return;
@@ -90,8 +127,45 @@ public partial class Pawn3D : CharacterBody3D
         forward.Y = 0f;
         if (forward.LengthSquared() < 0.0001f) return;
 
-        Vector3 velocity = Velocity + forward.Normalized() * force;
-        Velocity = velocity;
+        _lungeDir   = forward.Normalized();
+        _lungeForce = force;
+        _lungeTime  = 0f;
+        _lunging    = true;
+    }
+
+    private void ApplyLunge(ref Vector3 velocity, float dt)
+    {
+        if (!_lunging) return;
+
+        _lungeTime += dt;
+        float t = LungeDuration > 0f ? Mathf.Clamp(_lungeTime / LungeDuration, 0f, 1f) : 1f;
+
+        // LungeCurve dá o controle total do feel; sem curva, ease-out suave (pico no início).
+        float weight = LungeCurve?.SampleBaked(t) ?? (1f - t) * (1f - t);
+        float speed  = _lungeForce * weight;
+
+        velocity.X = _lungeDir.X * speed;
+        velocity.Z = _lungeDir.Z * speed;
+
+        if (t >= 1f)
+            _lunging = false;
+    }
+
+    private void UpdateCrouch(float dt)
+    {
+        // Hold: agacha só no chão. Solta = levanta.
+        IsCrouching = IsOnFloor() && Input.IsActionPressed("crouch");
+
+        if (_capsule == null) return;
+
+        // Redimensiona o colisor suavemente mantendo os pés no chão.
+        float target = IsCrouching ? CrouchHeight : _standHeight;
+        _currentHeight = Mathf.Lerp(_currentHeight, target, 1f - Mathf.Exp(-CrouchTransitionSpeed * dt));
+        _capsule.Height = _currentHeight;
+
+        Vector3 p = Collider.Position;
+        p.Y = _colliderBottomY + _currentHeight * 0.5f;
+        Collider.Position = p;
     }
 
     private void PushRigidBodies()
