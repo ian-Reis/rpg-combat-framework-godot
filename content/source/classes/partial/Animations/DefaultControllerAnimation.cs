@@ -22,6 +22,7 @@ public partial class DefaultControllerAnimation : Node
     [Export] public string CrouchBSParam    { get; set; } = "parameters/DefaultBT/CrouchBS/blend_position";
     [Export] public string CombatOneShotParam { get; set; } = "parameters/DefaultBT/CombatOneShot/request";
     [Export] public string CombatSMParam    { get; set; } = "parameters/DefaultBT/CombatSM/playback";
+    [Export] public string HeavyOneShotParam { get; set; } = "parameters/DefaultBT/OneShot/request";
 
     [ExportGroup("Settings")]
     [Export] public float JumpBlendSpeed   { get; set; } = 10f;  // suavidade do blend locomotion↔Jump
