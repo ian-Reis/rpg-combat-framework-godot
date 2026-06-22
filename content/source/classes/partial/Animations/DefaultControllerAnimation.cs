@@ -14,24 +14,28 @@ public partial class DefaultControllerAnimation : Node
 
     [ExportGroup("AnimTree Params")]
     [Export] public string LocomotionBlendParam { get; set; } =
-        "parameters/DefaultBT/LocomotionSM/Locomotion/blend_position";
-    [Export] public string StateMachineParam { get; set; } =
-        "parameters/DefaultBT/LocomotionSM/playback";
-    [Export] public string JumpBlendParam   { get; set; } = "parameters/DefaultBT/JumpBlend/blend_amount";
-    [Export] public string JumpSMParam      { get; set; } = "parameters/DefaultBT/JumpSM/playback";
-    [Export] public string CombatBlendParam { get; set; } = "parameters/DefaultBT/CombatBlend/blend_amount";
+        "parameters/DefaultBT/MovementSM/Locomotion/blend_position";
+    [Export] public string MovementSMParam { get; set; } =
+        "parameters/DefaultBT/MovementSM/playback";
+    [Export] public string JumpBlendParam { get; set; } = "parameters/DefaultBT/JumpBlend/blend_amount";
+    [Export] public string CrouchBlendParam { get; set; } = "parameters/DefaultBT/CrouchBlend/blend_amount";
+    [Export] public string CrouchBSParam    { get; set; } = "parameters/DefaultBT/CrouchBS/blend_position";
+    [Export] public string CombatOneShotParam { get; set; } = "parameters/DefaultBT/CombatOneShot/request";
     [Export] public string CombatSMParam    { get; set; } = "parameters/DefaultBT/CombatSM/playback";
 
     [ExportGroup("Settings")]
-    [Export] public float JumpBlendSpeed   { get; set; } = 10f;
-    [Export] public float LandBlendSpeed   { get; set; } = 3f;
-    [Export] public float CombatBlendSpeed { get; set; } = 8f;
+    [Export] public float JumpBlendSpeed   { get; set; } = 10f;  // suavidade do blend locomotion↔Jump
+    [Export] public float CrouchBlendSpeed { get; set; } = 10f;  // suavidade do blend em pé↔agachado
 
-    private AnimationNodeStateMachinePlayback _playback;
-    private AnimationNodeStateMachinePlayback _jumpSMPlayback;
+    private AnimationNodeStateMachinePlayback _moveSM;
     private AnimationNodeStateMachinePlayback _combatSMPlayback;
 
-    // Chamado por MeshAnimation._Ready() após injetar Pawn e Stats
+    public override void _Ready()
+    {
+        Stats ??= Pawn?.Stats;
+        Setup();
+    }
+
     public void Setup()
     {
         if (AnimTree == null) { GD.PrintErr("[AnimController] AnimTree não atribuído!"); return; }
@@ -39,11 +43,10 @@ public partial class DefaultControllerAnimation : Node
 
         AnimTree.Active = true;
         AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
-        _playback         = (AnimationNodeStateMachinePlayback)AnimTree.Get(StateMachineParam);
-        _jumpSMPlayback   = (AnimationNodeStateMachinePlayback)AnimTree.Get(JumpSMParam);
+        _moveSM           = (AnimationNodeStateMachinePlayback)AnimTree.Get(MovementSMParam);
         _combatSMPlayback = (AnimationNodeStateMachinePlayback)AnimTree.Get(CombatSMParam);
 
-        _playback?.Travel("Locomotion");
+        _moveSM?.Travel("Locomotion");
 
         AnimTree.AnimationFinished += HandleAnimationFinished;
         SetupCombatCallbacks();
@@ -59,7 +62,8 @@ public partial class DefaultControllerAnimation : Node
         float horizontalSpeed = new Vector2(vel.X, vel.Z).Length();
 
         UpdateLocomotion(horizontalSpeed);
+        UpdateCrouch(dt, horizontalSpeed);
         UpdateJump(dt);
-        UpdateCombat(dt);
+        UpdateCombat();
     }
 }
