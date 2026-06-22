@@ -54,6 +54,7 @@ volumetric_fog_length = 10.25
 
 [node name="CubeRB" type="RigidBody3D" parent="Props" unique_id=844985134]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2214942, 0.8581327, -2.465972)
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB" unique_id=175746506]
@@ -64,6 +65,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB2" type="RigidBody3D" parent="Props" unique_id=486145904]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86261135, 2.087852, -2.465972)
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB2" unique_id=868511429]
@@ -74,6 +76,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB3" type="RigidBody3D" parent="Props" unique_id=619974377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29099768, 2.087852, -2.465972)
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB3" unique_id=1034587239]
@@ -84,6 +87,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB4" type="RigidBody3D" parent="Props" unique_id=402594735]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2214942, 0.8581327, -2.465972)
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB4" unique_id=443845204]
@@ -94,6 +98,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB5" type="RigidBody3D" parent="Props" unique_id=1290809151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7785058, 0.8581327, -2.465972)
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB5" unique_id=1081418128]
@@ -104,6 +109,7 @@ shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB6" type="RigidBody3D" parent="Props" unique_id=1751849127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7785058, 0.8581327, -3.465972)
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB6" unique_id=1761867133]
