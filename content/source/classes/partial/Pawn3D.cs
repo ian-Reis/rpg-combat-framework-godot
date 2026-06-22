@@ -8,8 +8,9 @@ namespace RPGFramework.Entitys;
 public partial class Pawn3D : CharacterBody3D
 {
     [ExportGroup("References Nodes")]
-    [Export] public SpringArm3D SpringArm { get; set; }
-    
+    [Export] public SpringArm3D SpringArm  { get; set; }
+    [Export] public Node3D      RotateModel { get; set; }
+
     [ExportGroup("Resources")]
     [Export] public PawnStats Stats { get; set; }
 
@@ -77,6 +78,20 @@ public partial class Pawn3D : CharacterBody3D
             velocity.X = Mathf.Lerp(velocity.X, 0f, t);
             velocity.Z = Mathf.Lerp(velocity.Z, 0f, t);
         }
+    }
+
+    // API de força — chamada por Call Method Track na timeline do AnimationPlayer.
+    // Empurra na direção que o RotateModel encara (forward = -Z, plano horizontal).
+    public void AddAttackForce(float force)
+    {
+        if (RotateModel == null) return;
+
+        Vector3 forward = -RotateModel.GlobalTransform.Basis.Z;
+        forward.Y = 0f;
+        if (forward.LengthSquared() < 0.0001f) return;
+
+        Vector3 velocity = Velocity + forward.Normalized() * force;
+        Velocity = velocity;
     }
 
     private void PushRigidBodies()
