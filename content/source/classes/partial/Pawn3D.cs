@@ -27,6 +27,7 @@ public partial class Pawn3D : CharacterBody3D
 
     public Vector2 Motion { get; private set; }
     public bool    IsCrouching { get; private set; }
+    public bool    MovementEnabled { get; private set; } = true;
 
     private Vector3 _lungeDir   = Vector3.Zero;
     private float   _lungeForce = 0f;
@@ -82,7 +83,10 @@ public partial class Pawn3D : CharacterBody3D
 
     private void HandleMovement(ref Vector3 velocity, float dt)
     {
-        Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        // Movimento desabilitado (ex: durante heavy combo) → sem input, a fricção desacelera.
+        Vector2 inputDir = MovementEnabled
+            ? Input.GetVector("move_left", "move_right", "move_forward", "move_back")
+            : Vector2.Zero;
         Motion = inputDir;
 
         Vector3 moveDir = Vector3.Zero;
@@ -115,6 +119,10 @@ public partial class Pawn3D : CharacterBody3D
             velocity.Z = Mathf.Lerp(velocity.Z, 0f, t);
         }
     }
+
+    // API — chamada por Call Method Track na timeline do AnimationPlayer.
+    // Liga/desliga os inputs de movimento (ex: travar locomoção durante o heavy combo).
+    public void SetMovementEnabled(bool enabled) => MovementEnabled = enabled;
 
     // API de força — chamada por Call Method Track na timeline do AnimationPlayer.
     // Inicia um lunge fluido na direção que o RotateModel encara (forward = -Z, plano horizontal).
