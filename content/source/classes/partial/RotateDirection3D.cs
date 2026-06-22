@@ -8,9 +8,15 @@ public partial class RotateDirection3D : Node3D
     [Export] public SpringArm3D SpringArm { get; set; }
     [Export] public float RotationSpeed { get; set; } = 10f;
 
+    public bool RotationEnabled { get; private set; } = true;
+
+    // API — chamada por Call Method Track na timeline do AnimationPlayer.
+    // Trava/destrava a rotação do modelo (ex: travar o giro durante o golpe do heavy combo).
+    public void SetRotationEnabled(bool enabled) => RotationEnabled = enabled;
+
     public override void _PhysicsProcess(double delta)
     {
-        if (SpringArm == null)
+        if (SpringArm == null || !RotationEnabled)
             return;
 
         Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
