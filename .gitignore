@@ -12,3 +12,6 @@ scenes/avatares/avatar_sample_x.tscn
 scenes/avatares/avatar_sample_x.tscn
 .vs
 .vscode
+
+# Runtime logs
+*.log
