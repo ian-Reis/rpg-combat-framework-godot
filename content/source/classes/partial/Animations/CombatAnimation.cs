@@ -8,9 +8,14 @@ public partial class DefaultControllerAnimation
     [Export] public string[] CombatRecoveryAnimations { get; set; } =
         { "Sword_Regular_A_Rec", "Sword_Regular_B_Rec", "Sword_Regular_C" };
     [Export] public string HeavyComboAnimationName { get; set; } = "Sword_Heavy_Combo";
+    // Hitbox do golpe — ligado/desligado por código conforme o estado de ataque da CombatSM.
+    [Export] public HitBoxArea3D HitBox { get; set; }
+    [Export] public string[] AttackAnimations { get; set; } =
+        { "Sword_Regular_A", "Sword_Regular_B", "Sword_Regular_C" };
 
     private bool _attackJustPressed = false;
     private bool _heavyAttackJustPressed = false;
+    private StringName _activeAttackNode = "";
 
     private void SetupCombatCallbacks()
     {
@@ -41,6 +46,8 @@ public partial class DefaultControllerAnimation
     {
         if (_combatSMPlayback == null) return;
 
+        UpdateHitBox();
+
         // Heavy combo (tecla E): OneShot fire-and-forget, toca o clip uma vez e volta sozinho.
         if (_heavyAttackJustPressed)
         {
@@ -63,6 +70,31 @@ public partial class DefaultControllerAnimation
             // Início fresco (idle/recovery/C): reseta a SM em A e dispara o OneShot (fadein).
             _combatSMPlayback.Travel("Sword_Regular_A");
             AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+        }
+    }
+
+    // Liga o hitbox enquanto a CombatSM está num golpe ativo (A/B/C), desliga no resto.
+    // Só age na MUDANÇA de estado: ao entrar num golpe novo, `Enabled = true` reseta o dedup
+    // (cada golpe acerta de novo); ao sair, desliga. Limpo e sem depender de track de animação.
+    private void UpdateHitBox()
+    {
+        if (HitBox == null) return;
+
+        StringName current = _combatSMPlayback.GetCurrentNode();
+        bool isAttack = System.Array.IndexOf(AttackAnimations, current.ToString()) >= 0;
+
+        if (isAttack)
+        {
+            if (current != _activeAttackNode)
+            {
+                _activeAttackNode = current;
+                HitBox.Enabled = true; // novo golpe → dedup limpo + ativo
+            }
+        }
+        else if (_activeAttackNode != "")
+        {
+            _activeAttackNode = "";
+            HitBox.Enabled = false;
         }
     }
 }
