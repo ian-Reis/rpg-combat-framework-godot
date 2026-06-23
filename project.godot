@@ -23,6 +23,10 @@ project/assembly_name="Combat Framework"
 
 enabled=PackedStringArray("res://addons/ultimate_placer/plugin.cfg")
 
+[global_group]
+
+player=""
+
 [graph_dialogs]
 
 general/input/continue_input_action="dialogs_continue_action"
@@ -129,7 +133,7 @@ block={
 [limbo_ai]
 
 behavior_tree/behavior_tree_default_dir="res://source/ai/tasks/actions"
-behavior_tree/user_task_dirs=PackedStringArray("res://ai/tasks", "res://source/ai/tasks/actions", "res://source/ai/tasks/conditions")
+behavior_tree/user_task_dirs=PackedStringArray("res://content/source/ai/tasks/actions", "res://content/source/ai/tasks/conditions")
 
 [physics]
 
