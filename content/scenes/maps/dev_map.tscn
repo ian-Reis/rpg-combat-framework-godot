@@ -2,6 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://bhck2gycx6duj" path="res://assets/Kenney Textures Prototype/Dark/texture_01.png" id="1_l3aci"]
 [ext_resource type="PackedScene" uid="uid://disw7ryti387q" path="res://content/scenes/entitys/player/player.tscn" id="2_l3aci"]
+[ext_resource type="Script" uid="uid://cwvuos1fyywrq" path="res://content/source/resources/PawnStats.cs" id="3_emsoq"]
+[ext_resource type="Script" uid="uid://0c8ijqm0kns3" path="res://content/source/resources/PawnState.cs" id="4_qo67p"]
+[ext_resource type="PackedScene" uid="uid://cwr64akueep63" path="res://content/scenes/entitys/dummy/dummy_rb.tscn" id="5_qo67p"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l3aci"]
 friction = 0.5
@@ -47,6 +50,14 @@ volumetric_fog_enabled = true
 volumetric_fog_density = 0.01
 volumetric_fog_anisotropy = 0.9
 volumetric_fog_length = 10.25
+
+[sub_resource type="Resource" id="Resource_qhu17"]
+script = ExtResource("3_emsoq")
+metadata/_custom_type_script = "uid://cwvuos1fyywrq"
+
+[sub_resource type="Resource" id="Resource_d6mg4"]
+script = ExtResource("4_qo67p")
+metadata/_custom_type_script = "uid://0c8ijqm0kns3"
 
 [node name="DevMap" type="Node3D" unique_id=1783196751]
 
@@ -204,3 +215,8 @@ transform = Transform3D(1, 0, 0, 0, -0.36018065, 0.9328827, 0, -0.9328827, -0.36
 shadow_enabled = true
 
 [node name="Player" parent="." unique_id=1216230058 instance=ExtResource("2_l3aci")]
+Stats = SubResource("Resource_qhu17")
+State = SubResource("Resource_d6mg4")
+
+[node name="DummyRigidBody3D" parent="." unique_id=650229619 instance=ExtResource("5_qo67p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.745607, 1.3497326, -3.3055217)
