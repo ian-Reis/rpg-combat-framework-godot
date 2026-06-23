@@ -12,14 +12,21 @@ public partial class HealthComponent : Node
     // Opcional: se atribuído, auto-conecta no sinal Hurt e aplica o dano sozinho.
     [Export] public HurtBoxArea3D HurtBox { get; set; }
 
-    public float Current { get; private set; }
+    [Export] public float Current { get; private set; }
     public bool  IsDead => Current <= 0f;
 
     public override void _Ready()
     {
         Current = MaxHealth;
         if (HurtBox != null)
+        {
             HurtBox.Hurt += OnHurt;
+            GD.Print($"[Health:{GetParent()?.Name}] pronto: {Current}/{MaxHealth} (conectado em {HurtBox.Name})");
+        }
+        else
+        {
+            GD.Print($"[Health:{GetParent()?.Name}] pronto: {Current}/{MaxHealth} (sem HurtBox atribuído)");
+        }
     }
 
     private void OnHurt(HitBoxArea3D hitBox)
@@ -32,10 +39,14 @@ public partial class HealthComponent : Node
         if (IsDead || amount <= 0f) return;
 
         Current = Mathf.Max(0f, Current - amount);
+        GD.Print($"[Health:{GetParent()?.Name}] -{amount} de {source?.Name ?? "?"} → {Current}/{MaxHealth}");
         EmitSignal(SignalName.HealthChanged, Current, MaxHealth);
 
         if (IsDead)
+        {
+            GD.Print($"[Health:{GetParent()?.Name}] MORREU");
             EmitSignal(SignalName.Died);
+        }
     }
 
     public void Heal(float amount)
@@ -43,6 +54,7 @@ public partial class HealthComponent : Node
         if (IsDead || amount <= 0f) return;
 
         Current = Mathf.Min(MaxHealth, Current + amount);
+        GD.Print($"[Health:{GetParent()?.Name}] +{amount} (cura) → {Current}/{MaxHealth}");
         EmitSignal(SignalName.HealthChanged, Current, MaxHealth);
     }
 }
