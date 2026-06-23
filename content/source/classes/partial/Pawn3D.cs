@@ -81,26 +81,13 @@ public partial class Pawn3D : CharacterBody3D
 
     private void HandleJump(ref Vector3 velocity)
     {
-        if (IsOnFloor() && Input.IsActionJustPressed("jump"))
+        if (IsOnFloor() && ReadJump())
             velocity.Y = Stats?.JumpForce ?? 5f;
     }
 
     private void HandleMovement(ref Vector3 velocity, float dt)
     {
-        // Movimento desabilitado (ex: durante heavy combo) → sem input, a fricção desacelera.
-        Vector2 inputDir = MovementEnabled
-            ? Input.GetVector("move_left", "move_right", "move_forward", "move_back")
-            : Vector2.Zero;
-        Motion = inputDir;
-
-        Vector3 moveDir = Vector3.Zero;
-        if (SpringArm != null && inputDir != Vector2.Zero)
-        {
-            float yawRad = Mathf.DegToRad(SpringArm.RotationDegrees.Y);
-            Vector3 forward = new(-Mathf.Sin(yawRad), 0f, -Mathf.Cos(yawRad));
-            Vector3 right   = new( Mathf.Cos(yawRad), 0f, -Mathf.Sin(yawRad));
-            moveDir = (forward * -inputDir.Y + right * inputDir.X).Normalized();
-        }
+        Vector3 moveDir = ReadMoveDirection();
 
         float speed = Stats?.Speed ?? 5f;
         if (IsCrouching) speed *= CrouchSpeedMultiplier;
@@ -123,6 +110,30 @@ public partial class Pawn3D : CharacterBody3D
             velocity.Z = Mathf.Lerp(velocity.Z, 0f, t);
         }
     }
+
+    // ===== Fonte de intenção — sobrescrevível por subclasses (ex: PawnAI3D usa IA, não input) =====
+
+    // Direção de movimento desejada em world-space (horizontal). Vector3.Zero = parado.
+    protected virtual Vector3 ReadMoveDirection()
+    {
+        // Movimento desabilitado (ex: durante heavy combo) → sem input, a fricção desacelera.
+        Vector2 inputDir = MovementEnabled
+            ? Input.GetVector("move_left", "move_right", "move_forward", "move_back")
+            : Vector2.Zero;
+        Motion = inputDir;
+
+        if (SpringArm == null || inputDir == Vector2.Zero)
+            return Vector3.Zero;
+
+        // Direção relativa à câmera (SpringArm).
+        float yawRad = Mathf.DegToRad(SpringArm.RotationDegrees.Y);
+        Vector3 forward = new(-Mathf.Sin(yawRad), 0f, -Mathf.Cos(yawRad));
+        Vector3 right   = new( Mathf.Cos(yawRad), 0f, -Mathf.Sin(yawRad));
+        return (forward * -inputDir.Y + right * inputDir.X).Normalized();
+    }
+
+    protected virtual bool ReadJump()   => Input.IsActionJustPressed("jump");
+    protected virtual bool ReadCrouch() => Input.IsActionPressed("crouch");
 
     // API — chamada por Call Method Track na timeline do AnimationPlayer.
     // Liga/desliga os inputs de movimento (ex: travar locomoção durante o heavy combo).
@@ -166,7 +177,7 @@ public partial class Pawn3D : CharacterBody3D
     private void UpdateCrouch(float dt)
     {
         // Hold: agacha só no chão. Solta = levanta.
-        IsCrouching = IsOnFloor() && Input.IsActionPressed("crouch");
+        IsCrouching = IsOnFloor() && ReadCrouch();
 
         if (_capsule == null) return;
 
