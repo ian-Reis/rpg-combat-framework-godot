@@ -13,6 +13,7 @@ public partial class Pawn3D : CharacterBody3D
 
     [ExportGroup("Resources")]
     [Export] public PawnStats Stats { get; set; }
+    [Export] public PawnState State { get; set; }
 
     [ExportGroup("Attack Lunge")]
     // Curva (X: tempo normalizado 0..1, Y: multiplicador de velocidade). Null = ease-out padrão.
@@ -44,6 +45,9 @@ public partial class Pawn3D : CharacterBody3D
 
     public override void _Ready()
     {
+        // Estado runtime por-instância (se atribuído um .tres compartilhado, duplica pra não vazar entre entidades).
+        State = State != null ? (PawnState)State.Duplicate() : new PawnState();
+
         if (Collider?.Shape is CapsuleShape3D cap)
         {
             _capsule         = cap;
