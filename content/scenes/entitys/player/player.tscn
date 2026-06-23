@@ -18271,6 +18271,7 @@ size = Vector3(0.5, 1.2, 0.5)
 
 [node name="Player" type="CharacterBody3D" unique_id=1216230058 node_paths=PackedStringArray("SpringArm", "RotateModel", "Collider") groups=["player"]]
 script = ExtResource("1_wydch")
+Faction = 0
 SpringArm = NodePath("TPSSpringArm3D")
 RotateModel = NodePath("RotateDirection3D")
 Stats = SubResource("Resource_8uoi8")
