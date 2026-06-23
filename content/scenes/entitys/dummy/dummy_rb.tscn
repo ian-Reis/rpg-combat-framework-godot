@@ -17949,8 +17949,7 @@ size = Vector3(0.3, 1.4, 0.3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_i11yy"]
 size = Vector3(0.8, 1.2, 0.6)
 
-[node name="DummyRigidBody3D" type="RigidBody3D" unique_id=650229619]
-mass = 150.0
+[node name="DummyRigidBody3D" type="CharacterBody3D" unique_id=1939890552]
 
 [node name="UAL1_Standard" type="Node3D" parent="." unique_id=210951162]
 
@@ -18429,7 +18428,7 @@ shape = SubResource("BoxShape3D_apo3a")
 
 [node name="HurtBoxArea3D" type="Area3D" parent="." unique_id=505026634 node_paths=PackedStringArray("Entity")]
 script = ExtResource("1_sedh3")
-Entity = NodePath("..")
+Entity = NodePath("")
 metadata/_custom_type_script = "uid://jkuvjmpcjslm"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBoxArea3D" unique_id=1009003758]
