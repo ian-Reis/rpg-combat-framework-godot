@@ -25,6 +25,7 @@ public partial class HurtBoxArea3D : Area3D
     // Chamado pela HitBoxArea3D ao acertar. Repassa via sinal.
     public void ReceiveHit(HitBoxArea3D hitBox)
     {
+        GD.Print($"[HurtBox:{Name}] recebeu hit de {hitBox.Name} (dano={hitBox.Damage}) → emitindo Hurt");
         EmitSignal(SignalName.Hurt, hitBox);
     }
 }
