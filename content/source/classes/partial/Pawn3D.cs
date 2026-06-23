@@ -135,6 +135,9 @@ public partial class Pawn3D : CharacterBody3D
     protected virtual bool ReadJump()   => Input.IsActionJustPressed("jump");
     protected virtual bool ReadCrouch() => Input.IsActionPressed("crouch");
 
+    // True enquanto o pawn está num golpe (lido pela IA pra esperar a animação terminar).
+    public bool IsAttacking() => State?.CurrentAction == PawnState.Action.Attacking;
+
     // API — chamada por Call Method Track na timeline do AnimationPlayer.
     // Liga/desliga os inputs de movimento (ex: travar locomoção durante o heavy combo).
     public void SetMovementEnabled(bool enabled) => MovementEnabled = enabled;
