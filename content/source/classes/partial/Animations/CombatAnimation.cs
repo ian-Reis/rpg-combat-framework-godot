@@ -1,4 +1,5 @@
 using Godot;
+using RPGFramework.Resources;
 
 namespace RPGFramework.Core;
 
@@ -12,6 +13,8 @@ public partial class DefaultControllerAnimation
     [Export] public HitBoxArea3D HitBox { get; set; }
     [Export] public string[] AttackAnimations { get; set; } =
         { "Sword_Regular_A", "Sword_Regular_B", "Sword_Regular_C" };
+    // Player = true (lê input). IA/inimigo = false (ataca via RequestAttack do BT).
+    [Export] public bool ListenToInput { get; set; } = true;
 
     private bool _attackJustPressed = false;
     private bool _heavyAttackJustPressed = false;
@@ -22,7 +25,10 @@ public partial class DefaultControllerAnimation
         // Ao terminar o último golpe/recovery, o OneShot faz fadeout de volta para a base.
         foreach (var anim in CombatRecoveryAnimations)
             OnAnimFinished(anim, () =>
-                AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.FadeOut));
+            {
+                AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
+                Pawn.State?.SetAction(PawnState.Action.None); // combate terminou
+            });
 
         // Rede de segurança: se o heavy combo terminar (mesmo interrompido), garante que
         // movimento e rotação voltem ativos, evitando o jogador travado.
@@ -36,11 +42,16 @@ public partial class DefaultControllerAnimation
     // _UnhandledInput é mais confiável que IsActionJustPressed em _PhysicsProcess
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (!ListenToInput) return; // inimigos não reagem ao input do player
         if (@event.IsActionPressed("attack"))
-            _attackJustPressed = true;
+            RequestAttack();
         if (@event.IsActionPressed("heavy_attack"))
-            _heavyAttackJustPressed = true;
+            RequestHeavyAttack();
     }
+
+    // Disparo de ataque por código (ex: IA via behavior tree). Mesmo efeito do input.
+    public void RequestAttack()      => _attackJustPressed = true;
+    public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
 
     private void UpdateCombat()
     {
@@ -70,6 +81,7 @@ public partial class DefaultControllerAnimation
             // Início fresco (idle/recovery/C): reseta a SM em A e dispara o OneShot (fadein).
             _combatSMPlayback.Travel("Sword_Regular_A");
             AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            Pawn.State?.SetAction(PawnState.Action.Attacking); // entrou em combate
         }
     }
 
