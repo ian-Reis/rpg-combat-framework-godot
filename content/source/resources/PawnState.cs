@@ -23,6 +23,7 @@ public partial class PawnState : Resource
     public void SetWeapon(Weapon weapon)
     {
         if (CurrentWeapon == weapon) return;
+        GD.Print($"[PawnState] arma: {CurrentWeapon} → {weapon}");
         CurrentWeapon = weapon;
         EmitSignal(SignalName.StateChanged);
     }
@@ -30,6 +31,7 @@ public partial class PawnState : Resource
     public void SetAction(Action action)
     {
         if (CurrentAction == action) return;
+        GD.Print($"[PawnState] ação: {CurrentAction} → {action}");
         CurrentAction = action;
         EmitSignal(SignalName.StateChanged);
     }
