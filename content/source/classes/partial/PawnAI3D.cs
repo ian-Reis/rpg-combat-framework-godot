@@ -1,4 +1,5 @@
 using Godot;
+using RPGFramework.Core;
 using RPGFramework.Resources;
 
 namespace RPGFramework.Entitys;
@@ -9,6 +10,9 @@ namespace RPGFramework.Entitys;
 [GlobalClass]
 public partial class PawnAI3D : Pawn3D
 {
+    [ExportGroup("AI References")]
+    [Export] public DefaultControllerAnimation AnimController { get; set; }
+
     [ExportGroup("AI Facing")]
     [Export] public float FacingSpeed { get; set; } = 10f; // suavidade do giro do modelo
 
@@ -83,10 +87,17 @@ public partial class PawnAI3D : Pawn3D
     public void RequestJump()          => _jumpRequested = true;
     public void SetCrouching(bool on)  => _crouching = on;
 
-    // Hook de ataque — chamado pela task `attack` do BT. Sobrescreva no inimigo concreto
-    // para acionar animação + hitbox. Por padrão, só marca o estado.
+    // Hook de ataque — chamado pela task `attack` do BT.
+    // Reaproveita a mesma animação de combate do player via DefaultControllerAnimation.
+    // O estado (Attacking/None) é gerido pelo combate, não aqui.
     public virtual void Attack()
     {
-        State?.SetAction(PawnState.Action.Attacking);
+        if (AnimController == null)
+        {
+            GD.PrintErr($"[PawnAI3D:{Name}] Attack() chamado mas AnimController não está atribuído no inspector!");
+            return;
+        }
+        GD.Print($"[PawnAI3D:{Name}] Attack() → RequestAttack");
+        AnimController.RequestAttack();
     }
 }
