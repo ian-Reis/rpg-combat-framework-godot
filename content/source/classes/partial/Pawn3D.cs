@@ -11,9 +11,15 @@ public partial class Pawn3D : CharacterBody3D
     [Export] public SpringArm3D SpringArm  { get; set; }
     [Export] public Node3D      RotateModel { get; set; }
 
+    [ExportGroup("Identity")]
+    [Export] public EntityFaction Faction { get; set; } = EntityFaction.NPC;
+
     [ExportGroup("Resources")]
     [Export] public PawnStats Stats { get; set; }
     [Export] public PawnState State { get; set; }
+
+    // Nome do grupo desta facção (ex: "enemy"). A IA mira alvos por esse nome.
+    public StringName FactionGroup => Faction.ToString().ToLower();
 
     [ExportGroup("Attack Lunge")]
     // Curva (X: tempo normalizado 0..1, Y: multiplicador de velocidade). Null = ease-out padrão.
@@ -45,6 +51,9 @@ public partial class Pawn3D : CharacterBody3D
 
     public override void _Ready()
     {
+        // Registra a entidade no grupo da sua facção (player/enemy/npc/pet) para a IA mirar.
+        AddToGroup(FactionGroup);
+
         // Estado runtime por-instância (se atribuído um .tres compartilhado, duplica pra não vazar entre entidades).
         State = State != null ? (PawnState)State.Duplicate() : new PawnState();
 
