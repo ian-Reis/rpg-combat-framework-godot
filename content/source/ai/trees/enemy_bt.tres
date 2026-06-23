@@ -1,6 +1,6 @@
 [gd_resource type="BehaviorTree" format=3 uid="uid://dg53tobkmvcff"]
 
-[ext_resource type="Script" uid="uid://b03ahlbs0af1m" path="res://content/source/ai/tasks/actions/find_player.gd" id="1_find"]
+[ext_resource type="Script" uid="uid://cu8ye3l004oky" path="res://content/source/ai/tasks/actions/find_target.gd" id="1_find"]
 [ext_resource type="Script" uid="uid://ca7k3famoul7w" path="res://content/source/ai/tasks/conditions/is_target_in_range.gd" id="2_range"]
 [ext_resource type="Script" uid="uid://bnxbxf5f6kdet" path="res://content/source/ai/tasks/actions/attack.gd" id="3_attack"]
 [ext_resource type="Script" uid="uid://d5rnogkirt8e" path="res://content/source/ai/tasks/actions/move_to_target.gd" id="4_move"]
@@ -12,7 +12,7 @@ script = ExtResource("1_find")
 
 [sub_resource type="BTCondition" id="BTCondition_range"]
 script = ExtResource("2_range")
-attack_range = null
+attack_range = 1.0
 
 [sub_resource type="BTAction" id="BTAction_attack"]
 script = ExtResource("3_attack")
@@ -22,6 +22,7 @@ children = [SubResource("BTCondition_range"), SubResource("BTAction_attack")]
 
 [sub_resource type="BTAction" id="BTAction_move"]
 script = ExtResource("4_move")
+arrival_distance = 1.0
 
 [sub_resource type="BTSelector" id="BTSelector_combat"]
 children = [SubResource("BTSequence_attack"), SubResource("BTAction_move")]
