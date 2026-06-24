@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://disw7ryti387q" path="res://content/scenes/entitys/player/player.tscn" id="2_l3aci"]
 [ext_resource type="Script" uid="uid://cwvuos1fyywrq" path="res://content/source/resources/PawnStats.cs" id="3_emsoq"]
 [ext_resource type="Script" uid="uid://0c8ijqm0kns3" path="res://content/source/resources/PawnState.cs" id="4_qo67p"]
-[ext_resource type="PackedScene" uid="uid://cwr64akueep63" path="res://content/scenes/entitys/dummy/enemy.tscn" id="5_qo67p"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l3aci"]
 friction = 0.5
@@ -217,6 +216,3 @@ shadow_enabled = true
 [node name="Player" parent="." unique_id=1216230058 instance=ExtResource("2_l3aci")]
 Stats = SubResource("Resource_qhu17")
 State = SubResource("Resource_d6mg4")
-
-[node name="DummyRigidBody3D" parent="." unique_id=650229619 instance=ExtResource("5_qo67p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.745607, 1.3497326, -3.3055217)
