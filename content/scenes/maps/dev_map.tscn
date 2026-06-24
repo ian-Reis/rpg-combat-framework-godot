@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://disw7ryti387q" path="res://content/scenes/entitys/player/player.tscn" id="2_l3aci"]
 [ext_resource type="Script" uid="uid://cwvuos1fyywrq" path="res://content/source/resources/PawnStats.cs" id="3_emsoq"]
 [ext_resource type="Script" uid="uid://0c8ijqm0kns3" path="res://content/source/resources/PawnState.cs" id="4_qo67p"]
-[ext_resource type="PackedScene" uid="uid://cwr64akueep63" path="res://content/scenes/entitys/dummy/dummy_rb.tscn" id="5_qo67p"]
+[ext_resource type="PackedScene" uid="uid://cwr64akueep63" path="res://content/scenes/entitys/dummy/enemy.tscn" id="5_qo67p"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l3aci"]
 friction = 0.5
