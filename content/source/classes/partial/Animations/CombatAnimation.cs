@@ -11,6 +11,7 @@ public partial class DefaultControllerAnimation
     [Export] public string HeavyComboAnimationName { get; set; } = "Sword_Heavy_Combo";
     // Hitbox do golpe — ligado/desligado por código conforme o estado de ataque da CombatSM.
     [Export] public HitBoxArea3D HitBox { get; set; }
+    [Export] public WeaponComponent Weapon { get; set; } // arma equipada (dano por golpe)
     [Export] public string[] AttackAnimations { get; set; } =
         { "Sword_Regular_A", "Sword_Regular_B", "Sword_Regular_C" };
     // Player = true (lê input). IA/inimigo = false (ataca via RequestAttack do BT).
@@ -42,13 +43,6 @@ public partial class DefaultControllerAnimation
     // Disparo de ataque por código (ex: IA via behavior tree). Mesmo efeito do input.
     public void RequestAttack()      => _attackJustPressed = true;
     public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
-    // Saca / guarda a espada. Muda o PawnState → o ArmedBlend reage sozinho.
-    private void ToggleWeapon()
-    {
-        if (Pawn.State == null) return;
-        Pawn.State.SetWeapon(Pawn.State.IsArmed ? PawnState.Weapon.Unarmed : PawnState.Weapon.Sword);
-    }
-
     // _UnhandledInput é mais confiável que IsActionJustPressed em _PhysicsProcess
     public override void _UnhandledInput(InputEvent @event)
     {
@@ -58,7 +52,7 @@ public partial class DefaultControllerAnimation
         if (@event.IsActionPressed("heavy_attack"))
             RequestHeavyAttack();
         if (@event.IsActionPressed("draw_weapon"))
-            ToggleWeapon();
+            Weapon?.ToggleEquip(); // saca/guarda via WeaponComponent (modelo + library + estado)
     }
 
     private void UpdateCombat()
@@ -108,6 +102,12 @@ public partial class DefaultControllerAnimation
             if (current != _activeAttackNode)
             {
                 _activeAttackNode = current;
+
+                // Dano data-driven: cada golpe do combo usa o dano da arma equipada.
+                int comboIndex = System.Array.IndexOf(AttackAnimations, current.ToString());
+                if (Weapon?.CurrentWeapon != null && comboIndex >= 0)
+                    HitBox.Damage = Weapon.CurrentWeapon.DamageForCombo(comboIndex);
+
                 HitBox.Enabled = true; // novo golpe → dedup limpo + ativo
             }
         }
