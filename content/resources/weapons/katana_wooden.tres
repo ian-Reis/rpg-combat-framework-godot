@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="WeaponResource" format=3 uid="uid://qqmuxopsvobr"]
+
+[ext_resource type="Script" uid="uid://cbp2tuxmd4cx0" path="res://content/source/resources/AttackData.cs" id="1_s8owq"]
+[ext_resource type="PackedScene" uid="uid://dbjevy6oulsjk" path="res://content/scenes/prefabs/weapons/kanata_prefab.tscn" id="2_s8owq"]
+[ext_resource type="Script" uid="uid://dfw5q5wph3ht1" path="res://content/source/resources/WeaponResource.cs" id="3_haalv"]
+
+[sub_resource type="Resource" id="Resource_gm75n"]
+script = ExtResource("1_s8owq")
+metadata/_custom_type_script = "uid://cbp2tuxmd4cx0"
+
+[sub_resource type="Resource" id="Resource_3wgpu"]
+script = ExtResource("1_s8owq")
+metadata/_custom_type_script = "uid://cbp2tuxmd4cx0"
+
+[sub_resource type="Resource" id="Resource_5ved5"]
+script = ExtResource("1_s8owq")
+metadata/_custom_type_script = "uid://cbp2tuxmd4cx0"
+
+[sub_resource type="Resource" id="Resource_scs4p"]
+script = ExtResource("1_s8owq")
+metadata/_custom_type_script = "uid://cbp2tuxmd4cx0"
+
+[resource]
+script = ExtResource("3_haalv")
+Prefab = ExtResource("2_s8owq")
+GripPosition = Vector3(-0.010752305, 0.07856525, 0.037087988)
+GripRotation = Vector3(-0.9708198, -2.544332, 2.1568205)
+Combo = [SubResource("Resource_gm75n"), SubResource("Resource_3wgpu"), SubResource("Resource_5ved5")]
+Heavy = SubResource("Resource_scs4p")
+metadata/_custom_type_script = "uid://dfw5q5wph3ht1"
