@@ -3,28 +3,26 @@ using Godot;
 namespace RPGFramework.Resources;
 
 // Blackboard de estado runtime do Pawn. Vários sistemas leem/escrevem:
-// animação escolhe moveset, input bloqueia ações, hitbox checa se pode acertar, etc.
+// animação escolhe pose, input bloqueia ações, hitbox checa se pode acertar, etc.
 [GlobalClass]
 public partial class PawnState : Resource
 {
-    public enum Weapon { Unarmed, Sword }
     public enum Action { None, Attacking, Blocking, Dodging, Hurt, Dead }
 
-    // Emitido sempre que arma ou ação mudam (Resource.Changed é reservado, por isso nome próprio).
     [Signal] public delegate void StateChangedEventHandler();
 
-    [Export] public Weapon CurrentWeapon { get; set; } = Weapon.Unarmed;
+    // Armado com QUALQUER arma. A identidade real da arma é o WeaponResource (WeaponComponent).
+    [Export] public bool IsArmed { get; set; }
     [Export] public Action CurrentAction { get; set; } = Action.None;
 
-    public bool IsArmed => CurrentWeapon != Weapon.Unarmed;
-    public bool IsBusy  => CurrentAction != Action.None;
-    public bool IsDead  => CurrentAction == Action.Dead;
+    public bool IsBusy => CurrentAction != Action.None;
+    public bool IsDead => CurrentAction == Action.Dead;
 
-    public void SetWeapon(Weapon weapon)
+    public void SetArmed(bool armed)
     {
-        if (CurrentWeapon == weapon) return;
-        GD.Print($"[PawnState] arma: {CurrentWeapon} → {weapon}");
-        CurrentWeapon = weapon;
+        if (IsArmed == armed) return;
+        GD.Print($"[PawnState] armado: {armed}");
+        IsArmed = armed;
         EmitSignal(SignalName.StateChanged);
     }
 
