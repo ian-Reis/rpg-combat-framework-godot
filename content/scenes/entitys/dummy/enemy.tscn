@@ -44,6 +44,8 @@
 [ext_resource type="Script" uid="uid://dc8y2wisedock" path="res://content/source/classes/partial/Combat/HealthComponent.cs" id="42_ydx1m"]
 [ext_resource type="Script" uid="uid://3sb52k0ijjxy" path="res://content/source/classes/partial/Animations/DefaultControllerAnimation.cs" id="43_ml8on"]
 [ext_resource type="BehaviorTree" uid="uid://dg53tobkmvcff" path="res://content/source/ai/trees/enemy_bt.tres" id="44_ye4gb"]
+[ext_resource type="Script" uid="uid://ccovymnaxknk0" path="res://content/source/classes/partial/Combat/WeaponComponent.cs" id="45_ugd5n"]
+[ext_resource type="Resource" uid="uid://qqmuxopsvobr" path="res://content/resources/weapons/katana_wooden.tres" id="46_nhacm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_apo3a"]
 size = Vector3(0.3, 1.4, 0.3)
@@ -20334,8 +20336,8 @@ bones/1/name = "Hips"
 bones/1/parent = 0
 bones/1/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9167, -0.05010003)
 bones/1/enabled = true
-bones/1/position = Vector3(0.0049982523, 0.8744347, -0.087295696)
-bones/1/rotation = Quaternion(-0.039391357, -0.1156377, -0.004539445, 0.99249977)
+bones/1/position = Vector3(0.0027982192, 0.8691901, -0.088093765)
+bones/1/rotation = Quaternion(-0.034357473, -0.115585476, -0.004057463, 0.99269485)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/name = "Spine"
 bones/2/parent = 1
@@ -20370,7 +20372,7 @@ bones/6/parent = 5
 bones/6/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.081100024, 0.0155999875)
 bones/6/enabled = true
 bones/6/position = Vector3(0, 0.081100024, 0.0155999875)
-bones/6/rotation = Quaternion(0.07179503, 0.09555519, 0.0070740175, 0.9928065)
+bones/6/rotation = Quaternion(0.046829015, 0.09521963, 0.009876971, 0.9943052)
 bones/6/scale = Vector3(1, 1, 1)
 bones/7/name = "LeftShoulder"
 bones/7/parent = 4
@@ -20713,28 +20715,28 @@ bones/55/parent = 1
 bones/55/rest = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, 0.089, 0.015400031, 0.051499985)
 bones/55/enabled = true
 bones/55/position = Vector3(0.089, 0.015400031, 0.051499985)
-bones/55/rotation = Quaternion(-0.0007967251, 0.13870661, 0.98379475, -0.113612376)
+bones/55/rotation = Quaternion(-0.000905197, 0.16042632, 0.97987187, -0.11880184)
 bones/55/scale = Vector3(1, 1, 1)
 bones/56/name = "LeftLowerLeg"
 bones/56/parent = 55
 bones/56/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.450581e-09, 0.40029997, -0.0027998893)
 bones/56/enabled = true
 bones/56/position = Vector3(-7.450581e-09, 0.40029997, -0.0027998893)
-bones/56/rotation = Quaternion(0.018450411, 0.9792379, -0.16833296, 0.11143109)
+bones/56/rotation = Quaternion(0.021474568, 0.9740222, -0.19704264, 0.10951641)
 bones/56/scale = Vector3(1, 1, 1)
 bones/57/name = "LeftFoot"
 bones/57/parent = 56
 bones/57/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, -7.218184e-09, 0.42809996, 0.034399886)
 bones/57/enabled = true
 bones/57/position = Vector3(-7.218184e-09, 0.42809996, 0.034399886)
-bones/57/rotation = Quaternion(-0.094432086, 0.72313696, -0.68419015, 0.0062884334)
+bones/57/rotation = Quaternion(-0.095627114, 0.7141319, -0.693418, 0.00653424)
 bones/57/scale = Vector3(1, 1, 1)
 bones/58/name = "LeftToes"
 bones/58/parent = 57
 bones/58/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -3.933849e-09, 0.14900002, -0.08849997)
 bones/58/enabled = true
 bones/58/position = Vector3(-3.933849e-09, 0.14900002, -0.08849997)
-bones/58/rotation = Quaternion(2.2986607e-05, 0.9999998, 0.00059492036, 4.992257e-06)
+bones/58/rotation = Quaternion(4.6636085e-08, 1, 5.9461676e-08, 2.7764516e-08)
 bones/58/scale = Vector3(1, 1, 1)
 bones/59/name = "ball_leaf_l"
 bones/59/parent = 58
@@ -20748,28 +20750,28 @@ bones/60/parent = 1
 bones/60/rest = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, -0.089, 0.015400031, 0.051499985)
 bones/60/enabled = true
 bones/60/position = Vector3(-0.089, 0.015400031, 0.051499985)
-bones/60/rotation = Quaternion(0.0009782796, -0.090728104, 0.9879232, 0.12559955)
+bones/60/rotation = Quaternion(0.00095433765, -0.07025162, 0.9878078, 0.13892321)
 bones/60/scale = Vector3(1, 1, 1)
 bones/61/name = "RightLowerLeg"
 bones/61/parent = 60
 bones/61/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 7.450581e-09, 0.40029997, -0.0027998893)
 bones/61/enabled = true
 bones/61/position = Vector3(7.450581e-09, 0.40029997, -0.0027998893)
-bones/61/rotation = Quaternion(-0.039495658, 0.9272093, -0.10915556, -0.35610119)
+bones/61/rotation = Quaternion(-0.05419723, 0.9227665, -0.14858791, -0.3514062)
 bones/61/scale = Vector3(1, 1, 1)
 bones/62/name = "RightFoot"
 bones/62/parent = 61
 bones/62/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 7.683263e-09, 0.4280999, 0.034399875)
 bones/62/enabled = true
 bones/62/position = Vector3(7.683263e-09, 0.4280999, 0.034399875)
-bones/62/rotation = Quaternion(0.17087603, 0.6358577, -0.7526526, -0.00069324486)
+bones/62/rotation = Quaternion(0.17034906, 0.619941, -0.76592934, 0.0025966787)
 bones/62/scale = Vector3(1, 1, 1)
 bones/63/name = "RightToes"
 bones/63/parent = 62
 bones/63/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 3.5171341e-09, 0.14900002, -0.08849997)
 bones/63/enabled = true
 bones/63/position = Vector3(3.5171341e-09, 0.14900002, -0.08849997)
-bones/63/rotation = Quaternion(-6.674731e-08, 1, 8.931551e-08, 2.2552389e-09)
+bones/63/rotation = Quaternion(-2.948995e-06, 1, 0.00011405828, -1.2944886e-07)
 bones/63/scale = Vector3(1, 1, 1)
 bones/64/name = "ball_leaf_r"
 bones/64/parent = 63
@@ -20785,7 +20787,7 @@ skin = SubResource("Skin_emfba")
 skeleton = NodePath("..")
 
 [node name="RighthHandBoneAttachment3D" type="BoneAttachment3D" parent="Model/Armature/GeneralSkeleton" unique_id=111307023]
-transform = Transform3D(0.077538475, -0.15093222, 0.98549837, 0.47138083, -0.86546123, -0.16963616, 0.8785143, 0.4776983, 0.0040401504, -0.29318175, 0.92018354, -0.18884736)
+transform = Transform3D(0.07667303, -0.14902662, 0.98585594, 0.462827, -0.87046427, -0.16757892, 0.8831264, 0.4691295, 0.0022324445, -0.29549336, 0.9153096, -0.18914875)
 bone_name = "RightHand"
 bone_idx = 34
 
@@ -20849,3 +20851,12 @@ metadata/_custom_type_script = "uid://3sb52k0ijjxy"
 behavior_tree = ExtResource("44_ye4gb")
 blackboard_plan = SubResource("BlackboardPlan_oexaj")
 monitor_performance = true
+
+[node name="WeaponComponent" type="Node" parent="." unique_id=1527341458 node_paths=PackedStringArray("Pawn", "AnimPlayer", "HandAttachment")]
+script = ExtResource("45_ugd5n")
+Pawn = NodePath("..")
+AnimPlayer = NodePath("../Model/AnimationPlayer")
+HandAttachment = NodePath("../Model/Armature/GeneralSkeleton/RighthHandBoneAttachment3D")
+Inventory = [ExtResource("46_nhacm")]
+StartIndex = 0
+metadata/_custom_type_script = "uid://ccovymnaxknk0"
