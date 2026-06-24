@@ -22,6 +22,10 @@ public partial class HurtBoxArea3D : Area3D
         Monitorable    = true;  // mas precisa ser detectável
     }
 
+    // Liga/desliga a detecção (ex: desativar ao morrer pra não ser mais atingido).
+    // set_deferred porque pode ser chamado de dentro de um sinal de física (area_entered → morte).
+    public void SetActive(bool active) => SetDeferred(Area3D.PropertyName.Monitorable, active);
+
     // Chamado pela HitBoxArea3D ao acertar. Repassa via sinal.
     public void ReceiveHit(HitBoxArea3D hitBox)
     {
