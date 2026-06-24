@@ -92,7 +92,9 @@ public partial class DefaultControllerAnimation
     // (cada golpe acerta de novo); ao sair, desliga. Limpo e sem depender de track de animação.
     private void UpdateHitBox()
     {
-        if (HitBox == null) return;
+        // Hitbox da arma equipada (vindo da prefab); fallback pro fixo (ex: desarmado).
+        HitBoxArea3D hb = Weapon?.CurrentHitBox ?? HitBox;
+        if (hb == null) return;
 
         StringName current = _combatSMPlayback.GetCurrentNode();
         bool isAttack = System.Array.IndexOf(AttackAnimations, current.ToString()) >= 0;
@@ -106,15 +108,15 @@ public partial class DefaultControllerAnimation
                 // Dano data-driven: cada golpe do combo usa o dano da arma equipada.
                 int comboIndex = System.Array.IndexOf(AttackAnimations, current.ToString());
                 if (Weapon?.CurrentWeapon != null && comboIndex >= 0)
-                    HitBox.Damage = Weapon.CurrentWeapon.DamageForCombo(comboIndex);
+                    hb.Damage = Weapon.CurrentWeapon.DamageForCombo(comboIndex);
 
-                HitBox.Enabled = true; // novo golpe → dedup limpo + ativo
+                hb.Enabled = true; // novo golpe → dedup limpo + ativo
             }
         }
         else if (_activeAttackNode != "")
         {
             _activeAttackNode = "";
-            HitBox.Enabled = false;
+            hb.Enabled = false;
         }
     }
 }
