@@ -39,6 +39,16 @@ public partial class DefaultControllerAnimation
         });
     }
 
+    // Disparo de ataque por código (ex: IA via behavior tree). Mesmo efeito do input.
+    public void RequestAttack()      => _attackJustPressed = true;
+    public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
+    // Saca / guarda a espada. Muda o PawnState → o ArmedBlend reage sozinho.
+    private void ToggleWeapon()
+    {
+        if (Pawn.State == null) return;
+        Pawn.State.SetWeapon(Pawn.State.IsArmed ? PawnState.Weapon.Unarmed : PawnState.Weapon.Sword);
+    }
+
     // _UnhandledInput é mais confiável que IsActionJustPressed em _PhysicsProcess
     public override void _UnhandledInput(InputEvent @event)
     {
@@ -47,11 +57,9 @@ public partial class DefaultControllerAnimation
             RequestAttack();
         if (@event.IsActionPressed("heavy_attack"))
             RequestHeavyAttack();
+        if (@event.IsActionPressed("draw_weapon"))
+            ToggleWeapon();
     }
-
-    // Disparo de ataque por código (ex: IA via behavior tree). Mesmo efeito do input.
-    public void RequestAttack()      => _attackJustPressed = true;
-    public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
 
     private void UpdateCombat()
     {
