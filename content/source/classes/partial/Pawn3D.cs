@@ -68,6 +68,9 @@ public partial class Pawn3D : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        // Morto = corpo congelado no lugar (sem gravidade/movimento), pra não cair sem colisor.
+        if (State?.IsDead == true) return;
+
         float dt = (float)delta;
         Vector3 velocity = Velocity;
 
@@ -90,13 +93,15 @@ public partial class Pawn3D : CharacterBody3D
 
     private void HandleJump(ref Vector3 velocity)
     {
+        if (State?.IsDead == true) return;
         if (IsOnFloor() && ReadJump())
             velocity.Y = Stats?.JumpForce ?? 5f;
     }
 
     private void HandleMovement(ref Vector3 velocity, float dt)
     {
-        Vector3 moveDir = ReadMoveDirection();
+        // Morto = não anda (a fricção desacelera).
+        Vector3 moveDir = State?.IsDead == true ? Vector3.Zero : ReadMoveDirection();
 
         float speed = Stats?.Speed ?? 5f;
         if (IsCrouching) speed *= CrouchSpeedMultiplier;
