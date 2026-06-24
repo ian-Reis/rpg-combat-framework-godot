@@ -26,6 +26,9 @@ public partial class WeaponComponent : Node
     public WeaponResource CurrentWeapon { get; private set; }
     public bool IsEquipped => CurrentWeapon != null;
 
+    // HitBox vindo da prefab da arma equipada (o combate usa este).
+    public HitBoxArea3D CurrentHitBox { get; private set; }
+
     private int _index = -1;
     private int _lastIndex = 0; // lembra a última arma pra re-sacar
     private Node _spawnedModel;
@@ -49,7 +52,7 @@ public partial class WeaponComponent : Node
         if (weapon == null) return;
         CurrentWeapon = weapon;
 
-        SwapModel(weapon.Model);
+        SwapPrefab(weapon.Prefab);
         SwapAnimations(weapon.Animations);
         Pawn?.State?.SetArmed(true);
 
@@ -60,7 +63,7 @@ public partial class WeaponComponent : Node
     {
         CurrentWeapon = null;
         _index = -1;
-        SwapModel(null);
+        SwapPrefab(null);
         if (AnimPlayer != null && AnimPlayer.HasAnimationLibrary(AnimLibrarySlot))
             AnimPlayer.RemoveAnimationLibrary(AnimLibrarySlot);
         Pawn?.State?.SetArmed(false);
@@ -82,15 +85,40 @@ public partial class WeaponComponent : Node
         EquipIndex((_index + 1) % Inventory.Length);
     }
 
-    private void SwapModel(PackedScene model)
+    private void SwapPrefab(PackedScene prefab)
     {
         _spawnedModel?.QueueFree();
         _spawnedModel = null;
-        if (HandAttachment != null && model != null)
+        CurrentHitBox = null;
+        if (HandAttachment == null || prefab == null) return;
+
+        Node inst = prefab.Instantiate();
+        _spawnedModel = inst;
+        HandAttachment.AddChild(inst);
+
+        // Grip: posiciona a prefab inteira (modelo + hitbox) na mão.
+        if (inst is Node3D node && CurrentWeapon != null)
         {
-            _spawnedModel = model.Instantiate();
-            HandAttachment.AddChild(_spawnedModel);
+            node.Position        = CurrentWeapon.GripPosition;
+            node.RotationDegrees = CurrentWeapon.GripRotation;
+            node.Scale           = CurrentWeapon.GripScale;
         }
+
+        // O HitBox da prefab vira o hitbox ativo; marca o dono pra não se acertar.
+        CurrentHitBox = FindHitBox(inst);
+        if (CurrentHitBox != null)
+            CurrentHitBox.Source = Pawn;
+    }
+
+    private static HitBoxArea3D FindHitBox(Node root)
+    {
+        if (root is HitBoxArea3D hb) return hb;
+        foreach (Node child in root.GetChildren())
+        {
+            HitBoxArea3D found = FindHitBox(child);
+            if (found != null) return found;
+        }
+        return null;
     }
 
     private void SwapAnimations(AnimationLibrary lib)
