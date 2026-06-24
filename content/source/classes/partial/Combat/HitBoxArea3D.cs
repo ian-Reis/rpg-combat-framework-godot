@@ -72,4 +72,11 @@ public partial class HitBoxArea3D : Area3D
     public void Enable()  => Enabled = true;
     public void Disable() => Enabled = false;
     public void SetActive(bool active) => Enabled = active;
+
+    // Desativa de forma deferida — seguro mesmo chamado de dentro de um sinal de física (ex: morte).
+    public void DisableDeferred()
+    {
+        _enabled = false;
+        SetDeferred(Area3D.PropertyName.Monitoring, false);
+    }
 }
