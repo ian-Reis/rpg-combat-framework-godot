@@ -27,7 +27,9 @@ public partial class DefaultControllerAnimation
         foreach (var anim in CombatRecoveryAnimations)
             OnAnimFinished(anim, () =>
             {
-                AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
+                // AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
+                if (OneShotRequest.TryGetValue("combat", out var combatOSPath))
+                    AnimTree.Set(combatOSPath, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
                 Pawn.State?.SetAction(PawnState.Action.None); // combate terminou
             });
 
@@ -57,7 +59,7 @@ public partial class DefaultControllerAnimation
 
     private void UpdateCombat()
     {
-        if (_combatSMPlayback == null) return;
+        if (_combatPB == null) return;
 
         UpdateHitBox();
 
@@ -65,24 +67,28 @@ public partial class DefaultControllerAnimation
         if (_heavyAttackJustPressed)
         {
             _heavyAttackJustPressed = false;
-            AnimTree.Set(HeavyOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            // AnimTree.Set(HeavyOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            if (OneShotRequest.TryGetValue("heavy", out var heavyOSPath))
+                AnimTree.Set(heavyOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
         }
 
         if (!_attackJustPressed) return;
         _attackJustPressed = false;
 
-        StringName current = _combatSMPlayback.GetCurrentNode();
+        StringName current = _combatPB.GetCurrentNode();
 
         // Janela de combo só durante o golpe ativo (A→B, B→C).
         if (current == "Sword_Regular_A")
-            _combatSMPlayback.Travel("Sword_Regular_B");
+            _combatPB.Travel("Sword_Regular_B");
         else if (current == "Sword_Regular_B")
-            _combatSMPlayback.Travel("Sword_Regular_C");
+            _combatPB.Travel("Sword_Regular_C");
         else
         {
             // Início fresco (idle/recovery/C): reseta a SM em A e dispara o OneShot (fadein).
-            _combatSMPlayback.Travel("Sword_Regular_A");
-            AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            _combatPB.Travel("Sword_Regular_A");
+            // AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            if (OneShotRequest.TryGetValue("combat", out var combatOSPath))
+                AnimTree.Set(combatOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
             Pawn.State?.SetAction(PawnState.Action.Attacking); // entrou em combate
         }
     }
@@ -96,7 +102,7 @@ public partial class DefaultControllerAnimation
         HitBoxArea3D hb = Weapon?.CurrentHitBox ?? HitBox;
         if (hb == null) return;
 
-        StringName current = _combatSMPlayback.GetCurrentNode();
+        StringName current = _combatPB.GetCurrentNode();
         bool isAttack = System.Array.IndexOf(AttackAnimations, current.ToString()) >= 0;
 
         if (isAttack)
