@@ -12,6 +12,7 @@ public partial class DefaultControllerAnimation
     {
         float target = Pawn.State?.IsArmed == true ? 1f : 0f;
         _armedBlend = Mathf.Lerp(_armedBlend, target, 1f - Mathf.Exp(-ArmedBlendSpeed * dt));
-        AnimTree.Set(ArmedBlendParam, _armedBlend);
+        if (BlendTo.TryGetValue("armed", out var armedBTPath))
+            AnimTree.Set(armedBTPath, _armedBlend);
     }
 }
