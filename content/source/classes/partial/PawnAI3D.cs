@@ -12,6 +12,8 @@ public partial class PawnAI3D : Pawn3D
 {
     [ExportGroup("AI References")]
     [Export] public DefaultControllerAnimation AnimController { get; set; }
+    [Export] public Node BTPlayer { get; set; }            // LimboAI BTPlayer (Node, sem tipo C#)
+    [Export] public HurtBoxArea3D HurtBox { get; set; }
 
     [ExportGroup("AI Facing")]
     [Export] public float FacingSpeed { get; set; } = 10f; // suavidade do giro do modelo
@@ -38,6 +40,29 @@ public partial class PawnAI3D : Pawn3D
     }
 
     protected override bool ReadCrouch() => _crouching;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        // Reage à morte (estado setado pelo DefaultControllerAnimation ao zerar a vida).
+        State.StateChanged += OnStateChanged;
+    }
+
+    private void OnStateChanged()
+    {
+        if (State.CurrentAction == PawnState.Action.Dead)
+            OnDeath();
+    }
+
+    // Ao morrer: para a IA, desativa a hurtbox e o colisor do corpo (player atravessa o cadáver).
+    private void OnDeath()
+    {
+        StopMoving();
+        BTPlayer?.Set("active", false);
+        HurtBox?.SetActive(false);
+        // deferred: pode rodar de dentro de um sinal de física (area_entered → morte).
+        Collider?.SetDeferred(CollisionShape3D.PropertyName.Disabled, true);
+    }
 
     public override void _PhysicsProcess(double delta)
     {
