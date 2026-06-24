@@ -8,8 +8,15 @@ public partial class WeaponResource : Resource
 {
     [Export] public string DisplayName { get; set; } = "Weapon";
 
-    // Modelo 3D anexado na mão ao equipar.
-    [Export] public PackedScene Model { get; set; }
+    // Prefab da arma: cena com modelo + HitBoxArea3D (e futuro: trail, partícula, som) já configurados.
+    // Anexada na mão ao equipar; o HitBox dentro dela vira o hitbox ativo.
+    [Export] public PackedScene Prefab { get; set; }
+
+    // Ajuste fino de como a prefab encaixa na mão (relativo ao BoneAttachment).
+    [ExportGroup("Grip (ajuste na mão)")]
+    [Export] public Vector3 GripPosition { get; set; } = Vector3.Zero;
+    [Export] public Vector3 GripRotation { get; set; } = Vector3.Zero; // em graus
+    [Export] public Vector3 GripScale    { get; set; } = Vector3.One;
 
     // Clips desta arma, com NOMES PADRONIZADOS (ex: Attack_A, Attack_B, Heavy, poses armadas).
     // Equipar troca esta library no AnimationPlayer; a CombatSM (que referencia esses nomes) não muda.
