@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="AnimationTreeParameters" format=3 uid="uid://th81apq1xqge"]
+
+[ext_resource type="Script" uid="uid://bnr12b0rycr6s" path="res://content/source/resources/AnimationTreeParameters.cs" id="1_atp"]
+
+[resource]
+script = ExtResource("1_atp")
+BlendTo = Dictionary[StringName, String]({
+&"armed": "parameters/DefaultBT/ArmedBlend/blend_amount",
+&"crouch": "parameters/DefaultBT/CrouchBlend/blend_amount",
+&"jump": "parameters/DefaultBT/JumpBlend/blend_amount"
+})
+BlendSpace1DPosition = Dictionary[StringName, String]({
+&"crouch": "parameters/DefaultBT/CrouchBS/blend_position",
+&"locomotion": "parameters/DefaultBT/MovementSM/Locomotion/blend_position"
+})
+Playback = Dictionary[StringName, String]({
+&"combat": "parameters/DefaultBT/CombatSM/playback",
+&"movement": "parameters/DefaultBT/MovementSM/playback"
+})
+TransitionRequest = Dictionary[StringName, String]({
+&"dead": "parameters/DefaultBT/AliveDead/transition_request"
+})
+OneShotRequest = Dictionary[StringName, String]({
+&"combat": "parameters/DefaultBT/CombatOneShot/request",
+&"heavy": "parameters/DefaultBT/HeavyOneShot/request"
+})
+metadata/_custom_type_script = "uid://bnr12b0rycr6s"
