@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.Collections.Generic;
 using RPGFramework.Entitys;
 using RPGFramework.Resources;
+using RPGFramework.Helpers;
 
 namespace RPGFramework.Core;
 
@@ -10,9 +11,10 @@ namespace RPGFramework.Core;
 public partial class DefaultControllerAnimation : Node
 {
     [ExportGroup("References")]
+    // [Export] public Godot.Collections.Dictionary<StringName, Node> Refs = new Godot.Collections.Dictionary<StringName, Node>();
     [Export] public Pawn3D Pawn            { get; set; }
     [Export] public AnimationTree AnimTree { get; set; }
-    [Export] public PawnStats Stats        { get; set; }
+    [ExportSubgroup("Opcionals")]
     [Export] public HealthComponent Health { get; set; } // opcional: dispara a morte ao zerar
 
     [ExportGroup("AnimTree Params")]
@@ -22,21 +24,6 @@ public partial class DefaultControllerAnimation : Node
     [Export] public Godot.Collections.Dictionary<StringName, string> TransitionRequest = new Godot.Collections.Dictionary<StringName, string>();
     [Export] public Godot.Collections.Dictionary<StringName, string> OneShotRequest = new Godot.Collections.Dictionary<StringName, string>();
     
-    // [Export] public string LocomotionBlendParam { get; set; } =
-        // "parameters/DefaultBT/MovementSM/Locomotion/blend_position";
-    // [Export] public string MovementSMParam { get; set; } =
-        // "parameters/DefaultBT/MovementSM/playback";
-    // [Export] public string JumpBlendParam { get; set; } = "parameters/DefaultBT/JumpBlend/blend_amount";
-    // [Export] public string CrouchBlendParam { get; set; } = "parameters/DefaultBT/CrouchBlend/blend_amount";
-    // [Export] public string CrouchBSParam    { get; set; } = "parameters/DefaultBT/CrouchBS/blend_position";
-    // [Export] public string ArmedBlendParam  { get; set; } = "parameters/DefaultBT/ArmedBlend/blend_amount";
-    // [Export] public string CombatOneShotParam { get; set; } = "parameters/DefaultBT/CombatOneShot/request";
-    // [Export] public string CombatSMParam    { get; set; } = "parameters/DefaultBT/CombatSM/playback";
-    // [Export] public string HeavyOneShotParam { get; set; } = "parameters/DefaultBT/OneShot/request";
-    // Transition no topo: estado "Alive" (tudo) vs "Dead" (animação de morte, segura no fim).
-    // [Export] public string DeathTransitionParam { get; set; } = "parameters/AliveDead/transition_request";
-    // [Export] public StringName DeathState { get; set; } = "Dead";
-
     [ExportGroup("Settings")]
     [Export] public float JumpBlendSpeed   { get; set; } = 10f;  // suavidade do blend locomotion↔Jump
     [Export] public float CrouchBlendSpeed { get; set; } = 10f;  // suavidade do blend em pé↔agachado
@@ -47,32 +34,12 @@ public partial class DefaultControllerAnimation : Node
     
     private bool _dead;
 
+    private StringName _logName = $"DefaultControllerAnimation";
+
     public override void _Ready()
     {
-        Stats ??= Pawn?.Stats;
         Setup();
     }
-
-    public void Setup()
-    {
-        if (AnimTree == null) { GD.PrintErr("[AnimController] AnimTree não atribuído!"); return; }
-        if (Pawn == null)     { GD.PrintErr("[AnimController] Pawn não atribuído!"); return; }
-
-        AnimTree.Active = true;
-        AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
-
-        _movementPB           = (AnimationNodeStateMachinePlayback)AnimTree.Get(Playback.GetValueOrDefault("movement"));
-        _combatPB = (AnimationNodeStateMachinePlayback)AnimTree.Get(Playback.GetValueOrDefault("combat"));
-
-        _movementPB?.Travel("Locomotion");
-
-        AnimTree.AnimationFinished += HandleAnimationFinished;
-        SetupCombatCallbacks();
-
-        if (Health != null)
-            Health.Died += Die;
-    }
-
 
     public override void _PhysicsProcess(double delta)
     {
@@ -87,6 +54,32 @@ public partial class DefaultControllerAnimation : Node
         UpdateCrouch(dt, horizontalSpeed);
         UpdateJump(dt);
         UpdateCombat();
+    }
+
+    public void Setup()
+    {
+        if (AnimTree == null) { GD.PrintErr("[AnimController] AnimTree não atribuído!"); return; }
+        if (Pawn == null)     { GD.PrintErr("[AnimController] Pawn não atribuído!");     return; }
+
+        AnimTree.Active = true;
+        AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
+
+        _movementPB = (AnimationNodeStateMachinePlayback)AnimTree.Get(Playback.GetValueOrDefault("movement"));
+        _combatPB   = (AnimationNodeStateMachinePlayback)AnimTree.Get(Playback.GetValueOrDefault("combat"));
+
+        _movementPB?.Travel("Locomotion");
+
+        SetupCombatCallbacks();
+        ConnectSignals();
+    }
+
+    private void ConnectSignals()
+    {
+        int succ = 0;
+        succ += AnimTree.TryConnect(() => AnimTree.AnimationFinished += HandleAnimationFinished, _logName);
+        succ += Health.TryConnect(() => Health.Died += Die, _logName);
+    
+        GD.Print($"{_logName} ConnectSignals Success {succ}/2");
     }
 
     private float GetHorizontalSpeed() => new Vector2(Pawn.Velocity.X, Pawn.Velocity.Z).Length();
