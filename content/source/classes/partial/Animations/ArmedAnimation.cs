@@ -2,7 +2,7 @@ using Godot;
 
 namespace RPGFramework.Core;
 
-public partial class DefaultControllerAnimation
+public partial class AnimationController
 {
     private float _armedBlend = 0f;
 
@@ -10,9 +10,9 @@ public partial class DefaultControllerAnimation
     // Dirigido pelo estado: PawnState.IsArmed (setado pelo WeaponComponent ao equipar).
     private void UpdateArmed(float dt)
     {
-        float target = Pawn.State?.IsArmed == true ? 1f : 0f;
+        float target = Pawn?.State?.IsArmed == true ? 1f : 0f;
         _armedBlend = Mathf.Lerp(_armedBlend, target, 1f - Mathf.Exp(-ArmedBlendSpeed * dt));
-        if (BlendTo.TryGetValue("armed", out var armedBTPath))
+        if (Parameters.BlendTo.TryGetValue("armed", out var armedBTPath))
             AnimTree.Set(armedBTPath, _armedBlend);
     }
 }
