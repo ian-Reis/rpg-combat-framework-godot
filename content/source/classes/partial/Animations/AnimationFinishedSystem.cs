@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RPGFramework.Core;
 
-public partial class DefaultControllerAnimation
+public partial class AnimationController
 {
     private readonly Dictionary<StringName, List<Action>> _animCallbacks = new();
 
