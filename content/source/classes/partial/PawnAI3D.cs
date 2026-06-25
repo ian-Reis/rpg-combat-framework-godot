@@ -11,7 +11,7 @@ namespace RPGFramework.Entitys;
 public partial class PawnAI3D : Pawn3D
 {
     [ExportGroup("AI References")]
-    [Export] public DefaultControllerAnimation AnimController { get; set; }
+    [Export] public AnimationController AnimController { get; set; }
     [Export] public Node BTPlayer { get; set; }            // LimboAI BTPlayer (Node, sem tipo C#)
     [Export] public HurtBoxArea3D HurtBox { get; set; }
 
@@ -44,7 +44,7 @@ public partial class PawnAI3D : Pawn3D
     public override void _Ready()
     {
         base._Ready();
-        // Reage à morte (estado setado pelo DefaultControllerAnimation ao zerar a vida).
+        // Reage à morte (estado setado pelo AnimationController ao zerar a vida).
         State.StateChanged += OnStateChanged;
     }
 
@@ -113,7 +113,7 @@ public partial class PawnAI3D : Pawn3D
     public void SetCrouching(bool on)  => _crouching = on;
 
     // Hook de ataque — chamado pela task `attack` do BT.
-    // Reaproveita a mesma animação de combate do player via DefaultControllerAnimation.
+    // Reaproveita a mesma animação de combate do player via AnimationController.
     // O estado (Attacking/None) é gerido pelo combate, não aqui.
     public virtual void Attack()
     {
