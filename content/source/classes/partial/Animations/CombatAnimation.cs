@@ -5,21 +5,24 @@ namespace RPGFramework.Core;
 
 public partial class DefaultControllerAnimation
 {
-    [ExportGroup("Combat Animations")]
-    [Export] public string[] CombatRecoveryAnimations { get; set; } =
-        { "Sword_Regular_A_Rec", "Sword_Regular_B_Rec", "Sword_Regular_C" };
-    [Export] public string HeavyComboAnimationName { get; set; } = "Sword_Heavy_Combo";
-    // Hitbox do golpe — ligado/desligado por código conforme o estado de ataque da CombatSM.
-    [Export] public HitBoxArea3D HitBox { get; set; }
-    [Export] public WeaponComponent Weapon { get; set; } // arma equipada (dano por golpe)
-    [Export] public string[] AttackAnimations { get; set; } =
-        { "Sword_Regular_A", "Sword_Regular_B", "Sword_Regular_C" };
+    [ExportGroup("Combat")]
     // Player = true (lê input). IA/inimigo = false (ataca via RequestAttack do BT).
     [Export] public bool ListenToInput { get; set; } = true;
+    [ExportSubgroup("Animations")]
+    [Export] public string[] AttackAnimations { get; set; } = { "Sword_Regular_A", "Sword_Regular_B", "Sword_Regular_C" };
+    [Export] public string[] CombatRecoveryAnimations { get; set; } = { "Sword_Regular_A_Rec", "Sword_Regular_B_Rec", "Sword_Regular_C" };
+    [Export] public string HeavyComboAnimationName { get; set; } = "Sword_Heavy_Combo";
+    [ExportSubgroup("References")]
+    [Export] public HitBoxArea3D HitBox { get; set; }
+    [Export] public WeaponComponent Weapon { get; set; } // arma equipada (dano por golpe)
 
     private bool _attackJustPressed = false;
     private bool _heavyAttackJustPressed = false;
     private StringName _activeAttackNode = "";
+
+    // Disparo de ataque por código (ex: IA via behavior tree). Mesmo efeito do input.
+    public void RequestAttack()      => _attackJustPressed = true;
+    public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
 
     private void SetupCombatCallbacks()
     {
@@ -42,9 +45,7 @@ public partial class DefaultControllerAnimation
         });
     }
 
-    // Disparo de ataque por código (ex: IA via behavior tree). Mesmo efeito do input.
-    public void RequestAttack()      => _attackJustPressed = true;
-    public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
+
     // _UnhandledInput é mais confiável que IsActionJustPressed em _PhysicsProcess
     public override void _UnhandledInput(InputEvent @event)
     {
