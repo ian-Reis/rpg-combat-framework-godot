@@ -3,7 +3,7 @@ using RPGFramework.Resources;
 
 namespace RPGFramework.Core;
 
-public partial class DefaultControllerAnimation
+public partial class AnimationController
 {
     [ExportGroup("Combat")]
     // Player = true (lê input). IA/inimigo = false (ataca via RequestAttack do BT).
@@ -31,7 +31,7 @@ public partial class DefaultControllerAnimation
             OnAnimFinished(anim, () =>
             {
                 // AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
-                if (OneShotRequest.TryGetValue("combat", out var combatOSPath))
+                if (Parameters.OneShotRequest.TryGetValue("combat", out var combatOSPath))
                     AnimTree.Set(combatOSPath, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
                 Pawn.State?.SetAction(PawnState.Action.None); // combate terminou
             });
@@ -64,36 +64,45 @@ public partial class DefaultControllerAnimation
 
         UpdateHitBox();
 
+        HeavyAttack();
+        ComboAttack();
+    }
+    private void HeavyAttack()
+    {
         // Heavy combo (tecla E): OneShot fire-and-forget, toca o clip uma vez e volta sozinho.
         if (_heavyAttackJustPressed)
         {
             _heavyAttackJustPressed = false;
             // AnimTree.Set(HeavyOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
-            if (OneShotRequest.TryGetValue("heavy", out var heavyOSPath))
+            if (Parameters.OneShotRequest.TryGetValue("heavy", out var heavyOSPath))
                 AnimTree.Set(heavyOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
         }
+    }
 
+    private void ComboAttack()
+    {
         if (!_attackJustPressed) return;
         _attackJustPressed = false;
 
         StringName current = _combatPB.GetCurrentNode();
 
-        // Janela de combo só durante o golpe ativo (A→B, B→C).
-        if (current == "Sword_Regular_A")
+        // O combo só encadeia (inclusive a partir do recovery) ENQUANTO o combate está ativo.
+        // Se já terminou (recovery acabou → None + fadeout do OneShot), recomeça do A.
+        bool combatActive = Pawn.State?.CurrentAction == PawnState.Action.Attacking;
+
+        if (combatActive && (current == "Sword_Regular_A" || current == "Sword_Regular_A_Rec"))
             _combatPB.Travel("Sword_Regular_B");
-        else if (current == "Sword_Regular_B")
+        else if (combatActive && (current == "Sword_Regular_B" || current == "Sword_Regular_B_Rec"))
             _combatPB.Travel("Sword_Regular_C");
         else
         {
-            // Início fresco (idle/recovery/C): reseta a SM em A e dispara o OneShot (fadein).
+            // Início fresco (idle/recovery terminado/C): reseta a SM em A e dispara o OneShot (fadein).
             _combatPB.Travel("Sword_Regular_A");
-            // AnimTree.Set(CombatOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
-            if (OneShotRequest.TryGetValue("combat", out var combatOSPath))
+            if (Parameters.OneShotRequest.TryGetValue("combat", out var combatOSPath))
                 AnimTree.Set(combatOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
             Pawn.State?.SetAction(PawnState.Action.Attacking); // entrou em combate
         }
     }
-
     // Liga o hitbox enquanto a CombatSM está num golpe ativo (A/B/C), desliga no resto.
     // Só age na MUDANÇA de estado: ao entrar num golpe novo, `Enabled = true` reseta o dedup
     // (cada golpe acerta de novo); ao sair, desliga. Limpo e sem depender de track de animação.
