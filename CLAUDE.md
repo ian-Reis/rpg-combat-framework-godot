@@ -24,6 +24,12 @@ Open in Godot 4.7 editor and press F5, or use `godot --path .` from the project 
 
 All runtime C# files live under `content/source/`. Every public node class uses `[GlobalClass]` to expose it in the Godot editor.
 
+**Naming conventions (suffixes):**
+- **`XController`** — a node that **drives/orchestrates** behaviour, usually per-frame (e.g., `AnimationController` drives the `AnimationTree` from pawn state; `SoundController` would manage sounds). Use for things that *command* a subsystem continuously.
+- **`XComponent`** — a node that **provides a capability or holds data** (e.g., `HealthComponent`, `WeaponComponent`). Use for things attached to an entity that *hold/expose* something rather than drive it per-frame.
+
+Rule of thumb: if it *commands* every frame → `Controller`; if it *holds/provides* → `Component`.
+
 **Key classes:**
 - `Pawn` (`CharacterBody3D`) — player controller; delegates movement parameters to an attached `PawnStats` resource. Movement direction is derived from `SpringArm.RotationDegrees.Y` so the character moves relative to the camera.
 - `TPSSpringArm3D` (`SpringArm3D`) — third-person camera. Captures mouse input to drive pitch/yaw targets; optionally smooths them via exponential lerp each frame. ESC toggles mouse capture.
