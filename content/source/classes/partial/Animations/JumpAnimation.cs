@@ -2,7 +2,7 @@ using Godot;
 
 namespace RPGFramework.Core;
 
-public partial class DefaultControllerAnimation
+public partial class AnimationController
 {
     private float _jumpBlend = 0f;
 
@@ -12,7 +12,7 @@ public partial class DefaultControllerAnimation
         float target = Pawn.IsOnFloor() ? 0f : 1f;
         _jumpBlend = Mathf.Lerp(_jumpBlend, target, 1f - Mathf.Exp(-JumpBlendSpeed * dt));
         // AnimTree.Set(JumpBlendParam, _jumpBlend);
-        if (BlendTo.TryGetValue("jump", out var jumpBTPath))
+        if (Parameters.BlendTo.TryGetValue("jump", out var jumpBTPath))
             AnimTree.Set(jumpBTPath, _jumpBlend);
     }
 }
