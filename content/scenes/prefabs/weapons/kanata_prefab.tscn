@@ -51,6 +51,8 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_nnsj1")
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_32vch"]
+
 [node name="KanataPrefab" type="Node3D" unique_id=1918793691]
 
 [node name="HitBoxArea3D" type="Area3D" parent="." unique_id=70105729]
@@ -76,3 +78,14 @@ transform = Transform3D(-8.398946e-06, -0.00020163691, 150, 6.1984224, -149.8718
 
 [node name="Katana_katana_Plane_002_None_001_0" type="MeshInstance3D" parent="Sketchfab_Scene/Sketchfab_model/3D_Katana_fbx/RootNode/Katana_katana_Plane_002" unique_id=1730673058]
 mesh = SubResource("ArrayMesh_vm7rx")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=742199205]
+mass = 15.0
+physics_material_override = SubResource("PhysicsMaterial_32vch")
+freeze = true
+freeze_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=957564498]
+transform = Transform3D(0.5916065, -1.3608744, 0.21914034, -0.88138574, -0.5568261, -1.078473, 1.0597928, 0.2965896, -1.0192515, 0.40199652, 0.15844558, -0.08511177)
+shape = SubResource("CapsuleShape3D_2aprj")
+disabled = true
