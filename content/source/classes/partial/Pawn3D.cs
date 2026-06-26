@@ -9,7 +9,7 @@ public partial class Pawn3D : CharacterBody3D
 {
     [ExportGroup("References Nodes")]
     [Export] public SpringArm3D SpringArm  { get; set; }
-    [Export] public Node3D      RotateModel { get; set; }
+    [Export] public RotateDirection3D      RotateModel { get; set; }
 
     [ExportGroup("Identity")]
     [Export] public EntityFaction Faction { get; set; } = EntityFaction.NPC;
@@ -34,7 +34,6 @@ public partial class Pawn3D : CharacterBody3D
 
     public Vector2 Motion { get; private set; }
     public bool    IsCrouching { get; private set; }
-    public bool    MovementEnabled { get; private set; } = true;
 
     private Vector3 _lungeDir   = Vector3.Zero;
     private float   _lungeForce = 0f;
@@ -94,14 +93,15 @@ public partial class Pawn3D : CharacterBody3D
     private void HandleJump(ref Vector3 velocity)
     {
         if (State?.IsDead == true) return;
-        if (IsOnFloor() && ReadJump())
+        if (IsOnFloor() && ReadJump() && State.CanJump)
             velocity.Y = Stats?.JumpForce ?? 5f;
     }
 
     private void HandleMovement(ref Vector3 velocity, float dt)
     {
-        // Morto = não anda (a fricção desacelera).
-        Vector3 moveDir = State?.IsDead == true ? Vector3.Zero : ReadMoveDirection();
+        // Sem permissão de mover (State.CanMove) → moveDir zero; a fricção abaixo para suave (não desliza).
+        // IsDead não é checado aqui: o _PhysicsProcess já retorna cedo quando morto.
+        Vector3 moveDir = State?.CanMove == false ? Vector3.Zero : ReadMoveDirection();
 
         float speed = Stats?.Speed ?? 5f;
         if (IsCrouching) speed *= CrouchSpeedMultiplier;
@@ -130,10 +130,8 @@ public partial class Pawn3D : CharacterBody3D
     // Direção de movimento desejada em world-space (horizontal). Vector3.Zero = parado.
     protected virtual Vector3 ReadMoveDirection()
     {
-        // Movimento desabilitado (ex: durante heavy combo) → sem input, a fricção desacelera.
-        Vector2 inputDir = MovementEnabled
-            ? Input.GetVector("move_left", "move_right", "move_forward", "move_back")
-            : Vector2.Zero;
+        // O gate de "pode mover" fica no HandleMovement (State.CanMove); aqui só lê o input.
+        Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
         Motion = inputDir;
 
         if (SpringArm == null || inputDir == Vector2.Zero)
@@ -153,8 +151,11 @@ public partial class Pawn3D : CharacterBody3D
     public bool IsAttacking() => State?.CurrentAction == PawnState.Action.Attacking;
 
     // API — chamada por Call Method Track na timeline do AnimationPlayer.
-    // Liga/desliga os inputs de movimento (ex: travar locomoção durante o heavy combo).
-    public void SetMovementEnabled(bool enabled) => MovementEnabled = enabled;
+    // Liga/desliga o movimento (ex: travar locomoção durante o heavy combo). Escreve no blackboard.
+    public void SetMovementEnabled(bool enabled)
+    {
+        if (State != null) State.CanMove = enabled;
+    }
 
     // API de força — chamada por Call Method Track na timeline do AnimationPlayer.
     // Inicia um lunge fluido na direção que o RotateModel encara (forward = -Z, plano horizontal).
@@ -193,8 +194,15 @@ public partial class Pawn3D : CharacterBody3D
 
     private void UpdateCrouch(float dt)
     {
-        // Hold: agacha só no chão. Solta = levanta.
-        IsCrouching = IsOnFloor() && ReadCrouch();
+        // Hold: agacha só no chão e se tiver permissão. Solta = levanta.
+        IsCrouching =
+        IsOnFloor()
+        &&
+        State?.CanCrouch != false
+        &&
+        ReadCrouch()
+        &&
+        State.CurrentAction != PawnState.Action.Attacking;
 
         if (_capsule == null) return;
 
