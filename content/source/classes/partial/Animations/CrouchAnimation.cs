@@ -1,4 +1,5 @@
 using Godot;
+using RPGFramework.Resources;
 
 namespace RPGFramework.Core;
 
