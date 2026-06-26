@@ -26,7 +26,6 @@ public partial class PawnAI3D : Pawn3D
     // ===== Intenção (sobrescreve a fonte de input do Pawn3D) =====
     protected override Vector3 ReadMoveDirection()
     {
-        if (!MovementEnabled) return Vector3.Zero;
         Vector3 dir = _moveDir;
         dir.Y = 0f;
         return dir.LengthSquared() > 1f ? dir.Normalized() : dir;
