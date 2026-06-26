@@ -6,7 +6,7 @@ namespace RPGFramework.Core;
 public partial class RotateDirection3D : Node3D
 {
     [Export] public SpringArm3D SpringArm { get; set; }
-    [Export] public float RotationSpeed { get; set; } = 10f;
+    [Export] public float Speed { get; set; } = 10f;
 
     public bool RotationEnabled { get; private set; } = true;
 
@@ -30,7 +30,7 @@ public partial class RotateDirection3D : Node3D
 
         float targetYawDeg = Mathf.RadToDeg(Mathf.Atan2(moveDir.X, moveDir.Z));
         float angleDelta   = Mathf.Wrap(targetYawDeg - RotationDegrees.Y, -180f, 180f);
-        float t            = 1f - Mathf.Exp(-RotationSpeed * (float)delta);
+        float t            = 1f - Mathf.Exp(-Speed * (float)delta);
 
         Vector3 rot = RotationDegrees;
         rot.Y += angleDelta * t;
