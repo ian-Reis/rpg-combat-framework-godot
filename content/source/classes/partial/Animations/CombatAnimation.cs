@@ -34,6 +34,10 @@ public partial class AnimationController
                 if (Parameters.OneShotRequest.TryGetValue("combat", out var combatOSPath))
                     AnimTree.Set(combatOSPath, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
                 Pawn.State?.SetAction(PawnState.Action.None); // combate terminou
+                Pawn.State.CanMove = true;
+                Pawn.State.CanJump = true;
+                Pawn.RotateModel.Speed = 10f;
+
             });
 
         // Rede de segurança: se o heavy combo terminar (mesmo interrompido), garante que
@@ -73,9 +77,10 @@ public partial class AnimationController
         if (_heavyAttackJustPressed)
         {
             _heavyAttackJustPressed = false;
-            // AnimTree.Set(HeavyOneShotParam, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            if (Pawn.State?.CanAttack == false) return; // sem permissão de atacar
             if (Parameters.OneShotRequest.TryGetValue("heavy", out var heavyOSPath))
                 AnimTree.Set(heavyOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
+            
         }
     }
 
@@ -83,6 +88,7 @@ public partial class AnimationController
     {
         if (!_attackJustPressed) return;
         _attackJustPressed = false;
+        if (Pawn.State?.CanAttack == false) return; // sem permissão de atacar
 
         StringName current = _combatPB.GetCurrentNode();
 
@@ -102,6 +108,10 @@ public partial class AnimationController
                 AnimTree.Set(combatOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
             Pawn.State?.SetAction(PawnState.Action.Attacking); // entrou em combate
         }
+
+        Pawn.State.CanMove = false;
+        Pawn.State.CanJump = false;
+        Pawn.RotateModel.Speed = 0.5f;
     }
     // Liga o hitbox enquanto a CombatSM está num golpe ativo (A/B/C), desliga no resto.
     // Só age na MUDANÇA de estado: ao entrar num golpe novo, `Enabled = true` reseta o dedup
