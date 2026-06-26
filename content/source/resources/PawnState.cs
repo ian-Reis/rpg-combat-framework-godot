@@ -12,8 +12,16 @@ public partial class PawnState : Resource
     [Signal] public delegate void StateChangedEventHandler();
 
     // Armado com QUALQUER arma. A identidade real da arma é o WeaponResource (WeaponComponent).
-    [Export] public bool IsArmed { get; set; }
     [Export] public Action CurrentAction { get; set; } = Action.None;
+    
+    [ExportGroup("Can Do?")]
+    [Export] public bool CanMove { get; set; } = true;
+    [Export] public bool CanJump { get; set; } = true;
+    [Export] public bool CanAttack { get; set; } = true;
+    [Export] public bool CanCrouch { get; set; } = true;
+
+    [ExportGroup("How is Doing?")]
+    [Export] public bool IsArmed { get; set; }
 
     public bool IsBusy => CurrentAction != Action.None;
     public bool IsDead => CurrentAction == Action.Dead;
