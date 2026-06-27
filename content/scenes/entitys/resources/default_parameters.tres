@@ -7,7 +7,8 @@ script = ExtResource("1_atp")
 BlendTo = Dictionary[StringName, String]({
 &"armed": "parameters/DefaultBT/ArmedBlend/blend_amount",
 &"crouch": "parameters/DefaultBT/CrouchBlend/blend_amount",
-&"jump": "parameters/DefaultBT/JumpBlend/blend_amount"
+&"jump": "parameters/DefaultBT/JumpBlend/blend_amount",
+&"pistol": "parameters/DefaultBT/PistolBlend/blend_amount"
 })
 BlendSpace1DPosition = Dictionary[StringName, String]({
 &"crouch": "parameters/DefaultBT/CrouchBS/blend_position",
