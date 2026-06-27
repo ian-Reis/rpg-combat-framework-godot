@@ -14,7 +14,7 @@ public partial class AnimationController
     [Export] public string HeavyComboAnimationName { get; set; } = "Sword_Heavy_Combo";
     [ExportSubgroup("References")]
     [Export] public HitBoxArea3D HitBox { get; set; }
-    [Export] public WeaponComponent Weapon { get; set; } // arma equipada (dano por golpe)
+    
 
     private bool _attackJustPressed = false;
     private bool _heavyAttackJustPressed = false;
