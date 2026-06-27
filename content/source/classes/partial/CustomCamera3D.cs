@@ -1,4 +1,5 @@
 using Godot;
+using RPGFramework.Entitys;
 
 namespace RPGFramework.Core;
 
@@ -17,6 +18,7 @@ public partial class CustomCamera3D : Camera3D
     [Export] public float           MaxFovBoost  { get; set; } = 15f;
     [Export] public float           MaxSpeed     { get; set; } = 10f;
     [Export] public float           FovSmoothing { get; set; } = 8f;
+    [Export] public float           AimedFov     { get; set; } = 40f;
 
     [ExportGroup("Strafe Tilt")]
     [Export] public float MaxTilt       { get; set; } = 3f;
@@ -24,6 +26,7 @@ public partial class CustomCamera3D : Camera3D
 
     private float _trauma;
     private float _tiltCurrent;
+    private float _fovAmount;
 
     /// <summary> Adicione trauma de 0 a 1; acumula até o máximo de 1. </summary>
     public void AddTrauma(float amount) =>
@@ -54,8 +57,22 @@ public partial class CustomCamera3D : Camera3D
         // FOV dinâmico por velocidade
         if (Character == null) return;
 
-        float speedRatio = Mathf.Clamp(Character.Velocity.Length() / MaxSpeed, 0f, 1f);
-        float fovT       = 1f - Mathf.Exp(-FovSmoothing * dt);
-        Fov = Mathf.Lerp(Fov, BaseFov + MaxFovBoost * speedRatio, fovT);
+        // float speedRatio = Mathf.Clamp(Character.Velocity.Length() / MaxSpeed, 0f, 1f);
+        // float speedRatioFovT       = 1f - Mathf.Exp(-FovSmoothing * dt);
+        
+// 1. Calcula o FOV base desejado (Muda para AimedFov se estiver mirando, senão usa o BaseFov)
+        Pawn3D pawn = (Pawn3D)Character;
+        float targetFov = pawn.State.IsAimed ? AimedFov : BaseFov;
+
+        // 2. Adiciona o boost de velocidade apenas se NÃO estiver mirando (opcional, ajuste conforme seu design)
+        if (!pawn.State.IsAimed)
+        {
+            float speedRatio = Mathf.Clamp(Character.Velocity.Length() / MaxSpeed, 0f, 1f);
+            targetFov += MaxFovBoost * speedRatio;
+        }
+
+        // 3. Suavização correta e independente da taxa de quadros (Framerate Independent Lerp)
+        float fovT = 1f - Mathf.Exp(-FovSmoothing * dt);
+        Fov = Mathf.Lerp(Fov, targetFov, fovT);
     }
 }
