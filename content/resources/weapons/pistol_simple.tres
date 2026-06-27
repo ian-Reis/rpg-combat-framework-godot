@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WeaponResource" format=3 uid="uid://cmhi7i34sawe"]
+
+[ext_resource type="PackedScene" uid="uid://cphqfosi6fbbm" path="res://content/scenes/prefabs/weapons/pistol_prefab.tscn" id="1_2xs74"]
+[ext_resource type="Script" uid="uid://dfw5q5wph3ht1" path="res://content/source/resources/WeaponResource.cs" id="1_v2p5y"]
+
+[resource]
+script = ExtResource("1_v2p5y")
+DisplayName = "Pistol"
+CurrentMode = 1
+Prefab = ExtResource("1_2xs74")
+metadata/_custom_type_script = "uid://dfw5q5wph3ht1"
