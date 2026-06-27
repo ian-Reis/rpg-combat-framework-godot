@@ -16,6 +16,7 @@ public partial class AnimationController : Node
     [Export] public AnimationTree AnimTree { get; set; }
     [ExportSubgroup("Opcionals")]
     [Export] public HealthComponent Health { get; set; } // opcional: dispara a morte ao zerar
+    [Export] public WeaponComponent Weapon { get; set; } // arma equipada (dano por golpe)
 
     [ExportGroup("Animation Tree")]
     [Export] public AnimationTreeParameters Parameters { get; set; }
@@ -29,6 +30,7 @@ public partial class AnimationController : Node
     [Export] public float JumpBlendSpeed   { get; set; } = 10f;  // suavidade do blend locomotion↔Jump
     [Export] public float CrouchBlendSpeed { get; set; } = 10f;  // suavidade do blend em pé↔agachado
     [Export] public float ArmedBlendSpeed  { get; set; } = 8f;   // suavidade do blend desarmado↔armado
+    [Export] public float PistolBlendSpeed  { get; set; } = 8f;   // suavidade do blend desarmado↔armado
 
     private AnimationNodeStateMachinePlayback _movementPB;
     private AnimationNodeStateMachinePlayback _combatPB;
@@ -55,6 +57,7 @@ public partial class AnimationController : Node
         UpdateCrouch(dt, horizontalSpeed);
         UpdateJump(dt);
         UpdateCombat();
+        UpdatePistol(dt);
     }
 
     public void Setup()
