@@ -21,7 +21,8 @@ public partial class PawnState : Resource
     [Export] public bool CanCrouch { get; set; } = true;
 
     [ExportGroup("How is Doing?")]
-    [Export] public bool IsArmed { get; set; }
+    [Export] public bool IsArmed { get; set; } = false;
+    [Export] public bool IsAimed { get; set; } = false;
 
     public bool IsBusy => CurrentAction != Action.None;
     public bool IsDead => CurrentAction == Action.Dead;
@@ -31,6 +32,14 @@ public partial class PawnState : Resource
         if (IsArmed == armed) return;
         GD.Print($"[PawnState] armado: {armed}");
         IsArmed = armed;
+        EmitSignal(SignalName.StateChanged);
+    }
+
+    public void SetAimed(bool aimed)
+    {
+        if (IsAimed == aimed) return;
+        GD.Print($"[PawnState] mirado: {aimed}");
+        IsAimed = aimed;
         EmitSignal(SignalName.StateChanged);
     }
 
