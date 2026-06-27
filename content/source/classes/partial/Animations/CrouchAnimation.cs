@@ -5,6 +5,8 @@ namespace RPGFramework.Core;
 
 public partial class AnimationController
 {
+    [ExportGroup("Crouch")]
+    [Export] public float CrouchBlendSpeed { get; set; } = 10f;  // suavidade do blend em pé↔agachado
     private float _crouchBlend = 0f;
 
     private void UpdateCrouch(float dt, float horizontalSpeed)
