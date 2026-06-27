@@ -43,7 +43,7 @@ public partial class BoneLookAt3D : LookAtModifier3D
     protected virtual void HandleAim(float dt)
     {
         // Active = Pawn.State.IsAimed ? true : false;
-        float target = Pawn.State.IsAimed ? 0.5f : 0.0f;
+        float target = Pawn.State.IsAimed ? 1f : 0f;
         _influenceBlend = Mathf.Lerp(_influenceBlend, target, 1f - Mathf.Exp(-InfluenceBlend * dt));
         Influence = _influenceBlend;
     }
@@ -67,7 +67,7 @@ public partial class BoneLookAt3D : LookAtModifier3D
                 closestNode = node;
             }
         }
-        
+
         if (IsInstanceValid(closestNode))
             TargetNode = closestNode.GetPath();
         else
