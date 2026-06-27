@@ -24,11 +24,11 @@ public partial class WeaponComponent : Node
     [Export] public string AnimLibrarySlot { get; set; } = "weapon";
 
     public WeaponResource CurrentWeapon { get; private set; }
-    public bool IsEquipped => CurrentWeapon != null;
-
-    // HitBox vindo da prefab da arma equipada (o combate usa este).
+    // HitBox vindo da prefab da arma equipada (o colmbate usa este).
     public HitBoxArea3D CurrentHitBox { get; private set; }
 
+
+    public bool IsEquipped => CurrentWeapon != null;
     private int _index = -1;
     private int _lastIndex = 0; // lembra a última arma pra re-sacar
     private Node _spawnedModel;
