@@ -6,8 +6,10 @@ namespace RPGFramework.Resources;
 [GlobalClass]
 public partial class WeaponResource : Resource
 {
-    [Export] public string DisplayName { get; set; } = "Weapon";
+    public enum Mode { None, Pistol, Sword }
 
+    [Export] public string DisplayName { get; set; } = "Weapon";
+    [Export] public Mode CurrentMode { get; set; } = Mode.None;
     // Prefab da arma: cena com modelo + HitBoxArea3D (e futuro: trail, partícula, som) já configurados.
     // Anexada na mão ao equipar; o HitBox dentro dela vira o hitbox ativo.
     [Export] public PackedScene Prefab { get; set; }
@@ -18,6 +20,7 @@ public partial class WeaponResource : Resource
     [Export] public Vector3 GripRotation { get; set; } = Vector3.Zero; // em graus
     [Export] public Vector3 GripScale    { get; set; } = Vector3.One;
 
+    [ExportGroup("Animations")]
     // Clips desta arma, com NOMES PADRONIZADOS (ex: Attack_A, Attack_B, Heavy, poses armadas).
     // Equipar troca esta library no AnimationPlayer; a CombatSM (que referencia esses nomes) não muda.
     [Export] public AnimationLibrary Animations { get; set; }
@@ -27,6 +30,5 @@ public partial class WeaponResource : Resource
     [Export] public AttackData Heavy { get; set; }
 
     // Dano do golpe nº 'index' do combo (0 = A, 1 = B...). Lido pelo combate ao ligar o hitbox.
-    public float DamageForCombo(int index)
-        => (index >= 0 && index < Combo.Length && Combo[index] != null) ? Combo[index].Damage : 0f;
+    public float DamageForCombo(int index) => (index >= 0 && index < Combo.Length && Combo[index] != null) ? Combo[index].Damage : 0f;
 }
