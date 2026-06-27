@@ -22,6 +22,7 @@ metadata/_custom_type_script = "uid://cbp2tuxmd4cx0"
 
 [resource]
 script = ExtResource("3_haalv")
+CurrentMode = 2
 Prefab = ExtResource("2_s8owq")
 GripPosition = Vector3(-0.010752305, 0.07856525, 0.037087988)
 GripRotation = Vector3(-0.9708198, -2.544332, 2.1568205)
