@@ -4,6 +4,8 @@ namespace RPGFramework.Core;
 
 public partial class AnimationController
 {
+    [ExportGroup("Jump")]
+    [Export] public float JumpBlendSpeed   { get; set; } = 10f;  // suavidade do blend locomotion↔Jump
     private float _jumpBlend = 0f;
 
     private void UpdateJump(float dt)
