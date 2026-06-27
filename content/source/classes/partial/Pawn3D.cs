@@ -84,6 +84,12 @@ public partial class Pawn3D : CharacterBody3D
         PushRigidBodies();
     }
 
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        State.IsAimed = ReadAim();
+    }
+
+
     private void ApplyGravity(ref Vector3 velocity, float dt)
     {
         if (!IsOnFloor())
@@ -146,6 +152,7 @@ public partial class Pawn3D : CharacterBody3D
 
     protected virtual bool ReadJump()   => Input.IsActionJustPressed("jump");
     protected virtual bool ReadCrouch() => Input.IsActionPressed("crouch");
+    protected virtual bool ReadAim()    => Input.IsActionPressed("aim");
 
     // True enquanto o pawn está num golpe (lido pela IA pra esperar a animação terminar).
     public bool IsAttacking() => State?.CurrentAction == PawnState.Action.Attacking;
