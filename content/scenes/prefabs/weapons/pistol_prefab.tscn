@@ -43,17 +43,17 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_r563n")
 
-[node name="PistolPrefab" type="Node3D" unique_id=1690741378]
+[node name="PistolPrefab" type="Node3D" unique_id=457106264]
 
 [node name="Sketchfab_Scene" type="Node3D" parent="." unique_id=13445584]
-transform = Transform3D(0.9997838, -0.020351037, 0.004283077, 0.020301357, 0.9997299, 0.011330903, -0.004512597, -0.011241518, 0.99992675, -0.0036722422, 0.15907437, 0.03785114)
+transform = Transform3D(0.9997838, -0.020350998, 0.00428316, 0.020301355, 0.9997298, 0.011330923, -0.0045125973, -0.011241518, 0.99992675, -0.0036722422, 0.15907437, 0.03785114)
 
 [node name="Sketchfab_model" type="Node3D" parent="Sketchfab_Scene" unique_id=797276038]
-transform = Transform3D(0.056049027, -0.15003668, 0.98709035, 0.030628491, 0.98843735, 0.14850241, -0.99795794, 0.021909652, 0.05999638, 0, 0, 0)
+transform = Transform3D(0.056049008, -0.15003666, 0.98709035, 0.03062849, 0.9884373, 0.14850232, -0.99795794, 0.021909676, 0.059996355, 0, 0, 0)
 
 [node name="81903d706ab34f7f98de6c00ceddfde5_obj_cleaner_materialmerger_gles" type="Node3D" parent="Sketchfab_Scene/Sketchfab_model" unique_id=1614179276]
 transform = Transform3D(0.066, 1.5400599e-18, -2.1827867e-10, 0, 0.066, 4.6566118e-10, 2.1827871e-10, -4.656613e-10, 0.065999985, 0.0005264878, 0.010574758, -0.00040233135)
 
 [node name="Object_2" type="MeshInstance3D" parent="Sketchfab_Scene/Sketchfab_model/81903d706ab34f7f98de6c00ceddfde5_obj_cleaner_materialmerger_gles" unique_id=1744283242]
-transform = Transform3D(-0.9980119, -0.0490539, 0.039570052, 0.051851492, -0.99597716, 0.07308161, 0.035825934, 0.07498808, 0.99654055, 0, 0, 0)
+transform = Transform3D(-0.9980118, -0.04905396, 0.039570056, 0.051851545, -0.99597716, 0.0730816, 0.03582593, 0.07498808, 0.9965405, 0, 0, 0)
 mesh = SubResource("ArrayMesh_7ofyd")
