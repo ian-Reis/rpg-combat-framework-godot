@@ -4,6 +4,8 @@ namespace RPGFramework.Core;
 
 public partial class AnimationController
 {
+    [ExportGroup("Armed")]
+    [Export] public float ArmedBlendSpeed  { get; set; } = 8f;   // suavidade do blend desarmado↔armado
     private float _armedBlend = 0f;
 
     // Blend desarmado↔armado: 0 = pose normal, 1 = pose de espada.
