@@ -20,17 +20,6 @@ public partial class AnimationController : Node
 
     [ExportGroup("Animation Tree")]
     [Export] public AnimationTreeParameters Parameters { get; set; }
-    // [Export] public Godot.Collections.Dictionary<StringName, string> BlendTo = new Godot.Collections.Dictionary<StringName, string>();
-    // [Export] public Godot.Collections.Dictionary<StringName, string> BlendSpace1DPosition = new Godot.Collections.Dictionary<StringName, string>();
-    // [Export] public Godot.Collections.Dictionary<StringName, string> Playback = new Godot.Collections.Dictionary<StringName, string>();
-    // [Export] public Godot.Collections.Dictionary<StringName, string> TransitionRequest = new Godot.Collections.Dictionary<StringName, string>();
-    // [Export] public Godot.Collections.Dictionary<StringName, string> OneShotRequest = new Godot.Collections.Dictionary<StringName, string>();
-    
-    [ExportGroup("Settings")]
-    [Export] public float JumpBlendSpeed   { get; set; } = 10f;  // suavidade do blend locomotion↔Jump
-    [Export] public float CrouchBlendSpeed { get; set; } = 10f;  // suavidade do blend em pé↔agachado
-    [Export] public float ArmedBlendSpeed  { get; set; } = 8f;   // suavidade do blend desarmado↔armado
-    [Export] public float PistolBlendSpeed  { get; set; } = 8f;   // suavidade do blend desarmado↔armado
 
     private AnimationNodeStateMachinePlayback _movementPB;
     private AnimationNodeStateMachinePlayback _combatPB;
