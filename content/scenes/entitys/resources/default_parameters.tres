@@ -16,13 +16,15 @@ BlendSpace1DPosition = Dictionary[StringName, String]({
 })
 Playback = Dictionary[StringName, String]({
 &"combat": "parameters/DefaultBT/CombatSM/playback",
-&"movement": "parameters/DefaultBT/MovementSM/playback"
+&"movement": "parameters/DefaultBT/MovementSM/playback",
+&"slide": "parameters/DefaultBT/SlideSM/playback"
 })
 TransitionRequest = Dictionary[StringName, String]({
 &"dead": "parameters/DefaultBT/AliveDead/transition_request"
 })
 OneShotRequest = Dictionary[StringName, String]({
 &"combat": "parameters/DefaultBT/CombatOneShot/request",
-&"heavy": "parameters/DefaultBT/HeavyOneShot/request"
+&"heavy": "parameters/DefaultBT/HeavyOneShot/request",
+&"slide": "parameters/DefaultBT/SlideOneShot/request"
 })
 metadata/_custom_type_script = "uid://bnr12b0rycr6s"
