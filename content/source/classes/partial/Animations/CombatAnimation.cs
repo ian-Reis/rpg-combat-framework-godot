@@ -24,7 +24,7 @@ public partial class AnimationController
     public void RequestAttack()      => _attackJustPressed = true;
     public void RequestHeavyAttack() => _heavyAttackJustPressed = true;
 
-    private void SetupCombatCallbacks()
+    private void CombatCallbacks()
     {
         // Ao terminar o último golpe/recovery, o OneShot faz fadeout de volta para a base.
         foreach (var anim in CombatRecoveryAnimations)
@@ -50,19 +50,19 @@ public partial class AnimationController
     }
 
 
-    // _UnhandledInput é mais confiável que IsActionJustPressed em _PhysicsProcess
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (!ListenToInput) return; // inimigos não reagem ao input do player
-        if (@event.IsActionPressed("attack"))
-            RequestAttack();
-        if (@event.IsActionPressed("heavy_attack"))
-            RequestHeavyAttack();
-        if (@event.IsActionPressed("draw_weapon"))
-            Weapon?.ToggleEquip(); // saca/guarda via WeaponComponent (modelo + library + estado)
-    }
+    // // // _UnhandledInput é mais confiável que IsActionJustPressed em _PhysicsProcess
+    // public override void _UnhandledInput(InputEvent @event)
+    // {
+    //     if (!ListenToInput) return; // inimigos não reagem ao input do player
+    //     if (@event.IsActionPressed("attack"))
+    //         RequestAttack();
+    //     if (@event.IsActionPressed("heavy_attack"))
+    //         RequestHeavyAttack();
+    //     if (@event.IsActionPressed("draw_weapon"))
+    //         Weapon?.ToggleEquip(); // saca/guarda via WeaponComponent (modelo + library + estado)
+    // }
 
-    private void UpdateCombat()
+    private void UpdateCombat(float dt)
     {
         if (_combatPB == null) return;
 
