@@ -19,10 +19,17 @@ public partial class PawnState : Resource
     [Export] public bool CanJump { get; set; } = true;
     [Export] public bool CanAttack { get; set; } = true;
     [Export] public bool CanCrouch { get; set; } = true;
+    [Export] public bool CanSlide { get; set; } = true;
+    [Export] public bool CanRoll { get; set; } = true;
+    [Export] public bool CanCutTree { get; set; } = true;
+    
 
     [ExportGroup("How is Doing?")]
     [Export] public bool IsArmed { get; set; } = false;
     [Export] public bool IsAimed { get; set; } = false;
+    [Export] public bool IsSliding { get; set; } = false;
+    [Export] public bool IsRolling { get; set; } = false;
+    [Export] public bool IsCutting { get; set; } = false;
 
     public bool IsBusy => CurrentAction != Action.None;
     public bool IsDead => CurrentAction == Action.Dead;
