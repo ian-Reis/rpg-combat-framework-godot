@@ -8,7 +8,8 @@ BlendTo = Dictionary[StringName, String]({
 &"armed": "parameters/DefaultBT/ArmedBlend/blend_amount",
 &"crouch": "parameters/DefaultBT/CrouchBlend/blend_amount",
 &"jump": "parameters/DefaultBT/JumpBlend/blend_amount",
-&"pistol": "parameters/DefaultBT/PistolBlend/blend_amount"
+&"pistol": "parameters/DefaultBT/PistolBlend/blend_amount",
+&"tree_chapping": "parameters/DefaultBT/TreeChappingBlend/blend_amount"
 })
 BlendSpace1DPosition = Dictionary[StringName, String]({
 &"crouch": "parameters/DefaultBT/CrouchBS/blend_position",
@@ -25,6 +26,7 @@ TransitionRequest = Dictionary[StringName, String]({
 OneShotRequest = Dictionary[StringName, String]({
 &"combat": "parameters/DefaultBT/CombatOneShot/request",
 &"heavy": "parameters/DefaultBT/HeavyOneShot/request",
+&"roll": "parameters/DefaultBT/RollOneShot/request",
 &"slide": "parameters/DefaultBT/SlideOneShot/request"
 })
 metadata/_custom_type_script = "uid://bnr12b0rycr6s"
