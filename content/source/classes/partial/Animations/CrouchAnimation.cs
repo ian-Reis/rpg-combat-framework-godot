@@ -21,6 +21,6 @@ public partial class AnimationController
         float maxCrouch = (Pawn?.Stats?.Speed ?? 5f) * Pawn.CrouchSpeedMultiplier;
         float move = maxCrouch > 0f ? Mathf.Clamp(horizontalSpeed / maxCrouch, 0f, 1f) : 0f;
         if (Parameters.BlendSpace1DPosition.TryGetValue("crouch", out var crouchBSPath))
-            AnimTree.Set(crouchBSPath, move); 
+            AnimTree.Set(crouchBSPath, move);
     }
 }
