@@ -23,6 +23,7 @@ public partial class AnimationController : Node
 
     private AnimationNodeStateMachinePlayback _movementPB;
     private AnimationNodeStateMachinePlayback _combatPB;
+    private AnimationNodeStateMachinePlayback _slidePB;
     
     private bool _dead;
 
@@ -30,7 +31,19 @@ public partial class AnimationController : Node
 
     public override void _Ready()
     {
-        Setup();
+        if (AnimTree is null || Pawn is null) { GD.PrintErr("[AnimController] AnimTree ou Pawn não atribuído!"); return; }
+        ConnectSignals();
+
+        AnimTree.Active = true;
+        AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
+
+        TryGetPlaybacks();
+
+        PlayInitalAnimation(_movementPB, "Locomotion");
+
+        CombatCallbacks();
+        SlideCallbacks();
+        
     }
 
     public override void _PhysicsProcess(double delta)
@@ -45,27 +58,22 @@ public partial class AnimationController : Node
         UpdateArmed(dt);
         UpdateCrouch(dt, horizontalSpeed);
         UpdateJump(dt);
-        UpdateCombat();
+        UpdateCombat(dt);
         UpdatePistol(dt);
+        UpdateSlide(dt, horizontalSpeed);
+        UpdateTreeChapping(dt);
+        UpdateRoll(dt);
     }
 
-    public void Setup()
+    private void TryGetPlaybacks()
     {
-        if (AnimTree == null) { GD.PrintErr("[AnimController] AnimTree não atribuído!"); return; }
-        if (Pawn == null)     { GD.PrintErr("[AnimController] Pawn não atribuído!");     return; }
-
-        AnimTree.Active = true;
-        AnimTree.CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Physics;
-
         _movementPB = (AnimationNodeStateMachinePlayback)AnimTree.Get(Parameters?.Playback?.GetValueOrDefault("movement"));
         _combatPB   = (AnimationNodeStateMachinePlayback)AnimTree.Get(Parameters?.Playback?.GetValueOrDefault("combat"));
-
-        _movementPB?.Travel("Locomotion");
-
-        SetupCombatCallbacks();
-        ConnectSignals();
+        _slidePB    = (AnimationNodeStateMachinePlayback)AnimTree.Get(Parameters?.Playback?.GetValueOrDefault("slide"));
     }
 
+    private void PlayInitalAnimation(AnimationNodeStateMachinePlayback playback, string animName) => playback?.Travel(animName);
+    
     private void ConnectSignals()
     {
         int succ = 0;
