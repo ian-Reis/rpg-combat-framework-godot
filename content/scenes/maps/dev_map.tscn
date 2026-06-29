@@ -18,6 +18,13 @@ material = SubResource("StandardMaterial3D_8uoi8")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i11yy"]
 
+[sub_resource type="BoxMesh" id="BoxMesh_l3aci"]
+material = SubResource("StandardMaterial3D_8uoi8")
+size = Vector3(1, 1.2773438, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8uoi8"]
+size = Vector3(1, 1.277, 1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_emsoq"]
 albedo_texture = ExtResource("1_l3aci")
 uv1_scale = Vector3(100, 100, 100)
@@ -64,15 +71,15 @@ mesh = SubResource("BoxMesh_i11yy")
 shape = SubResource("BoxShape3D_i11yy")
 
 [node name="CubeRB2" type="RigidBody3D" parent="Props" unique_id=486145904 groups=["enemies"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86261135, 2.087852, -2.465972)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16679698, 0.6449, -1.1299706)
 mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_l3aci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB2" unique_id=868511429]
-mesh = SubResource("BoxMesh_i11yy")
+mesh = SubResource("BoxMesh_l3aci")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/CubeRB2" unique_id=368933343]
-shape = SubResource("BoxShape3D_i11yy")
+shape = SubResource("BoxShape3D_8uoi8")
 
 [node name="CubeRB3" type="RigidBody3D" parent="Props" unique_id=619974377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29099768, 2.087852, -2.465972)
