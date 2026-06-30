@@ -42,7 +42,7 @@ public partial class AnimationController : Node
         PlayInitalAnimation(_movementPB, "Locomotion");
 
         CombatCallbacks();
-        SlideCallbacks();
+        // SlideCallbacks();
         
     }
 
@@ -52,7 +52,7 @@ public partial class AnimationController : Node
             return;
 
         float dt = (float)delta;
-        float horizontalSpeed = GetHorizontalSpeed();
+        float horizontalSpeed = Pawn.GetHorizontalSpeed().Length();
 
         UpdateLocomotion(horizontalSpeed);
         UpdateArmed(dt);
@@ -82,6 +82,4 @@ public partial class AnimationController : Node
     
         GD.Print($"{_logName} ConnectSignals Success {succ}/2");
     }
-
-    private float GetHorizontalSpeed() => new Vector2(Pawn.Velocity.X, Pawn.Velocity.Z).Length();
 }
