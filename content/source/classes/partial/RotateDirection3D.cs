@@ -1,12 +1,10 @@
 using Godot;
-using RPGFramework.Entitys;
 
 namespace RPGFramework.Core;
 
 [GlobalClass]
 public partial class RotateDirection3D : Node3D
 {
-    [Export] public Pawn3D Pawn { get; set; }
     [Export] public SpringArm3D SpringArm { get; set; }
     [Export] public float Speed { get; set; } = 10f;
 
@@ -21,7 +19,7 @@ public partial class RotateDirection3D : Node3D
         if (SpringArm == null || !RotationEnabled)
             return;
 
-        Vector2 inputDir = IsInstanceValid(Pawn) ? Pawn.GetHorizontalSpeed() : Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
         
         if (inputDir == Vector2.Zero)
             return;
