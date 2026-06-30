@@ -30,6 +30,7 @@ public partial class PawnState : Resource
     [Export] public bool IsSliding { get; set; } = false;
     [Export] public bool IsRolling { get; set; } = false;
     [Export] public bool IsCutting { get; set; } = false;
+    [Export] public bool IsCrouching { get; set; } = false;
 
     public bool IsBusy => CurrentAction != Action.None;
     public bool IsDead => CurrentAction == Action.Dead;
