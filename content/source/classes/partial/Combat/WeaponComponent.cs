@@ -1,5 +1,5 @@
 using Godot;
-using RPGFramework.Entitys;
+using RPGFramework.Entities;
 using RPGFramework.Resources;
 
 namespace RPGFramework.Core;
