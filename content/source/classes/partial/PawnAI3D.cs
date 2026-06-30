@@ -2,7 +2,7 @@ using Godot;
 using RPGFramework.Core;
 using RPGFramework.Resources;
 
-namespace RPGFramework.Entitys;
+namespace RPGFramework.Entities;
 
 // Pawn dirigido por IA (NPCs e inimigos). Reaproveita todo o movimento/gravidade/lunge/crouch
 // do Pawn3D, mas troca a fonte de input por comandos da IA (behavior tree, etc).
