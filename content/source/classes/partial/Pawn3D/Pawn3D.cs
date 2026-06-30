@@ -2,7 +2,7 @@ using Godot;
 using RPGFramework.Core;
 using RPGFramework.Resources;
 
-namespace RPGFramework.Entitys;
+namespace RPGFramework.Entities;
 
 [GlobalClass]
 public partial class Pawn3D : CharacterBody3D
