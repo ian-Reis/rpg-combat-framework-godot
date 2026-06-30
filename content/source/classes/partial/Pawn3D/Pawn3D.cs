@@ -33,7 +33,10 @@ public partial class Pawn3D : CharacterBody3D
     [Export] public float CrouchTransitionSpeed      { get; set; } = 12f;    // suavidade do colisor
 
     public Vector2 Motion { get; private set; }
-    public bool    IsCrouching { get; private set; }
+
+    private Vector3 _slideVelocity = Vector3.Zero;
+
+    private Vector3 velocity = Vector3.Zero;
 
     private Vector3 _lungeDir   = Vector3.Zero;
     private float   _lungeForce = 0f;
@@ -71,12 +74,15 @@ public partial class Pawn3D : CharacterBody3D
         if (State?.IsDead == true) return;
 
         float dt = (float)delta;
-        Vector3 velocity = Velocity;
+        velocity = Velocity;
 
-        UpdateCrouch(dt);
         ApplyGravity(ref velocity, dt);
-        HandleJump(ref velocity);
-        HandleMovement(ref velocity, dt);
+        
+        Movement(ref velocity, dt);
+        Jump(ref velocity);
+        Crouch(dt);
+        Slide(ref velocity, dt);
+        
         ApplyLunge(ref velocity, dt);
 
         Velocity = velocity;
@@ -88,49 +94,6 @@ public partial class Pawn3D : CharacterBody3D
     {
         State.IsAimed = ReadAim();
     }
-
-
-    private void ApplyGravity(ref Vector3 velocity, float dt)
-    {
-        if (!IsOnFloor())
-            velocity.Y -= ProjectGravity * (Stats?.GravityScale ?? 1f) * dt;
-    }
-
-    private void HandleJump(ref Vector3 velocity)
-    {
-        if (State?.IsDead == true) return;
-        if (IsOnFloor() && ReadJump() && State.CanJump)
-            velocity.Y = Stats?.JumpForce ?? 5f;
-    }
-
-    private void HandleMovement(ref Vector3 velocity, float dt)
-    {
-        // Sem permissão de mover (State.CanMove) → moveDir zero; a fricção abaixo para suave (não desliza).
-        // IsDead não é checado aqui: o _PhysicsProcess já retorna cedo quando morto.
-        Vector3 moveDir = State?.CanMove == false ? Vector3.Zero : ReadMoveDirection();
-
-        float speed = Stats?.Speed ?? 5f;
-        if (IsCrouching) speed *= CrouchSpeedMultiplier;
-        float accel = Stats?.Acceleration ?? 15f;
-        float fric  = Stats?.Friction ?? 10f;
-
-        float targetX = moveDir.X * speed;
-        float targetZ = moveDir.Z * speed;
-
-        if (moveDir != Vector3.Zero)
-        {
-            float t = 1f - Mathf.Exp(-accel * dt);
-            velocity.X = Mathf.Lerp(velocity.X, targetX, t);
-            velocity.Z = Mathf.Lerp(velocity.Z, targetZ, t);
-        }
-        else
-        {
-            float t = 1f - Mathf.Exp(-fric * dt);
-            velocity.X = Mathf.Lerp(velocity.X, 0f, t);
-            velocity.Z = Mathf.Lerp(velocity.Z, 0f, t);
-        }
-    }
-
     // ===== Fonte de intenção — sobrescrevível por subclasses (ex: PawnAI3D usa IA, não input) =====
 
     // Direção de movimento desejada em world-space (horizontal). Vector3.Zero = parado.
@@ -149,10 +112,10 @@ public partial class Pawn3D : CharacterBody3D
         Vector3 right   = new( Mathf.Cos(yawRad), 0f, -Mathf.Sin(yawRad));
         return (forward * -inputDir.Y + right * inputDir.X).Normalized();
     }
-
     protected virtual bool ReadJump()   => Input.IsActionJustPressed("jump");
     protected virtual bool ReadCrouch() => Input.IsActionPressed("crouch");
     protected virtual bool ReadAim()    => Input.IsActionPressed("aim");
+    protected virtual bool ReadSlide()  => Input.IsActionPressed("slide");
 
     // True enquanto o pawn está num golpe (lido pela IA pra esperar a animação terminar).
     public bool IsAttacking() => State?.CurrentAction == PawnState.Action.Attacking;
@@ -199,38 +162,5 @@ public partial class Pawn3D : CharacterBody3D
             _lunging = false;
     }
 
-    private void UpdateCrouch(float dt)
-    {
-        // Hold: agacha só no chão e se tiver permissão. Solta = levanta.
-        IsCrouching =
-        IsOnFloor()
-        &&
-        State?.CanCrouch != false
-        &&
-        ReadCrouch()
-        &&
-        State.CurrentAction != PawnState.Action.Attacking;
-
-        if (_capsule == null) return;
-
-        // Redimensiona o colisor suavemente mantendo os pés no chão.
-        float target = IsCrouching ? CrouchHeight : _standHeight;
-        _currentHeight = Mathf.Lerp(_currentHeight, target, 1f - Mathf.Exp(-CrouchTransitionSpeed * dt));
-        _capsule.Height = _currentHeight;
-
-        Vector3 p = Collider.Position;
-        p.Y = _colliderBottomY + _currentHeight * 0.5f;
-        Collider.Position = p;
-    }
-
-    private void PushRigidBodies()
-    {
-        float pushForce = Stats?.PushForce ?? 5f;
-        for (int i = 0; i < GetSlideCollisionCount(); i++)
-        {
-            KinematicCollision3D col = GetSlideCollision(i);
-            if (col.GetCollider() is RigidBody3D rb)
-                rb.ApplyImpulse(-col.GetNormal() * pushForce, col.GetPosition() - rb.GlobalPosition);
-        }
-    }
+    public Vector2 GetHorizontalSpeed() => new Vector2(Velocity.X, Velocity.Z);
 }
