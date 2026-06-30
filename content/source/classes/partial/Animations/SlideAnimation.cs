@@ -6,34 +6,15 @@ namespace RPGFramework.Core;
 public partial class AnimationController
 {
     [ExportGroup("Slide")]
-    [Export] public float SlideBlendSpeed { get; set; } = 10f;
-    [Export] public StringName AnimNameEnd { get; set; } = "Slide_Exit";
-
-    private void SlideCallbacks()
-    {
-        OnAnimFinished(AnimNameEnd, () =>
-        {
-            if (Parameters.OneShotRequest.TryGetValue("slide", out var slideOSPath))
-                AnimTree.Set(slideOSPath, (int)AnimationNodeOneShot.OneShotRequest.FadeOut);
-                
-                Pawn.State.IsSliding = false;
-        });
-    }
+    [Export] public float SlideBlendSpeed { get; set; } = 10f;  // suavidade do blend em pé↔agachado
+    private float _slideBlend = 0f;
 
     private void UpdateSlide(float dt, float horizontalSpeed)
     {
-        float target = Mathf.Clamp(horizontalSpeed, 0, 1);
-        if (target >= 1 && Input.IsActionPressed("slide") && !Pawn.State.IsSliding)
-        {
-            if (Parameters.OneShotRequest.TryGetValue("slide", out var slideOSPath))
-                AnimTree.Set(slideOSPath, (int)AnimationNodeOneShot.OneShotRequest.Fire);
-
-            Pawn.State.IsSliding = true;
-        }
-        else if (!Input.IsActionPressed("slide") && Pawn.State.IsSliding)
-        {
-            
-            _slidePB?.Travel(AnimNameEnd);
-        }
+        // Blend em pé↔agachado: 0 = locomotion, 1 = crouch.
+        float target = Pawn.State.IsSliding ? 1f : 0f;
+        _slideBlend = Mathf.Lerp(_slideBlend, target, 1f - Mathf.Exp(-SlideBlendSpeed * dt));
+        if (Parameters.BlendTo.TryGetValue("slide", out var slideBTPath))
+            AnimTree.Set(slideBTPath, _slideBlend);
     }
 }
