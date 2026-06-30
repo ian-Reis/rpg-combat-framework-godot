@@ -1,7 +1,7 @@
 using Godot;
 using System.Dynamic;
 using System.Collections.Generic;
-using RPGFramework.Entitys;
+using RPGFramework.Entities;
 using RPGFramework.Resources;
 using RPGFramework.Helpers;
 
