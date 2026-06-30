@@ -1,6 +1,6 @@
 using Godot;
 
-namespace RPGFramework.Entitys;
+namespace RPGFramework.Entities;
 
 public partial class Pawn3D
 {
