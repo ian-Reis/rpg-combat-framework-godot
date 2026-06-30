@@ -18,6 +18,7 @@ BlendSpace1DPosition = Dictionary[StringName, String]({
 Playback = Dictionary[StringName, String]({
 &"combat": "parameters/DefaultBT/CombatSM/playback",
 &"movement": "parameters/DefaultBT/MovementSM/playback",
+&"punch": "parameters/DefaultBT/PunchSM/playback",
 &"slide": "parameters/DefaultBT/SlideSM/playback"
 })
 TransitionRequest = Dictionary[StringName, String]({
@@ -26,6 +27,7 @@ TransitionRequest = Dictionary[StringName, String]({
 OneShotRequest = Dictionary[StringName, String]({
 &"combat": "parameters/DefaultBT/CombatOneShot/request",
 &"heavy": "parameters/DefaultBT/HeavyOneShot/request",
+&"punch": "parameters/DefaultBT/PunchOneShot/request",
 &"roll": "parameters/DefaultBT/RollOneShot/request",
 &"slide": "parameters/DefaultBT/SlideOneShot/request"
 })
