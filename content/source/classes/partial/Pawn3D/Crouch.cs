@@ -1,7 +1,7 @@
 using Godot;
 using RPGFramework.Resources;
 
-namespace RPGFramework.Entitys;
+namespace RPGFramework.Entities;
 
 public partial class Pawn3D
 {
