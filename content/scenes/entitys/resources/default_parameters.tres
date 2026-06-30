@@ -9,6 +9,7 @@ BlendTo = Dictionary[StringName, String]({
 &"crouch": "parameters/DefaultBT/CrouchBlend/blend_amount",
 &"jump": "parameters/DefaultBT/JumpBlend/blend_amount",
 &"pistol": "parameters/DefaultBT/PistolBlend/blend_amount",
+&"slide": "parameters/DefaultBT/SlideBlend/blend_amount",
 &"tree_chapping": "parameters/DefaultBT/TreeChappingBlend/blend_amount"
 })
 BlendSpace1DPosition = Dictionary[StringName, String]({
