@@ -12,7 +12,7 @@ public partial class AnimationController
     private void UpdateCrouch(float dt, float horizontalSpeed)
     {
         // Blend em pé↔agachado: 0 = locomotion, 1 = crouch.
-        float target = Pawn.IsCrouching ? 1f : 0f;
+        float target = Pawn.State.IsCrouching ? 1f : 0f;
         _crouchBlend = Mathf.Lerp(_crouchBlend, target, 1f - Mathf.Exp(-CrouchBlendSpeed * dt));
         if (Parameters.BlendTo.TryGetValue("crouch", out var crouchBTPath))
             AnimTree.Set(crouchBTPath, _crouchBlend);
