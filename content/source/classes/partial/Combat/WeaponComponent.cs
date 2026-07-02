@@ -39,6 +39,19 @@ public partial class WeaponComponent : Node
             EquipIndex(StartIndex);
     }
 
+    public override void _UnhandledInput(InputEvent @event)
+    {
+
+        System.Action requestAction = @event switch
+        {
+            _ when @event.IsActionPressed("draw_weapon") => ToggleEquip,
+            _ when Input.IsActionJustPressed("next_weapon") => CycleNext,
+            _ => null // Nenhuma ação correspondente
+        };
+
+        requestAction?.Invoke();
+    }
+
     public void EquipIndex(int index)
     {
         if (index < 0 || index >= Inventory.Length) { Unequip(); return; }
