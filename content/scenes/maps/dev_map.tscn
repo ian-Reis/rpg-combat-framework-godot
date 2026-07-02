@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://crretwwyoggel"]
 
 [ext_resource type="Texture2D" uid="uid://bhck2gycx6duj" path="res://assets/Kenney Textures Prototype/Dark/texture_01.png" id="1_l3aci"]
+[ext_resource type="PackedScene" uid="uid://b86xy83nlfwwr" path="res://content/source/classes/partial/DestructiveObject3D/destructive_object_3d.scn" id="2_8uoi8"]
 [ext_resource type="PackedScene" uid="uid://disw7ryti387q" path="res://content/scenes/entitys/player/player.tscn" id="2_l3aci"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l3aci"]
@@ -24,6 +25,13 @@ size = Vector3(1, 1.2773438, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8uoi8"]
 size = Vector3(1, 1.277, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8uoi8"]
+material = SubResource("StandardMaterial3D_8uoi8")
+size = Vector3(1, 3.206787, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_emsoq"]
+size = Vector3(1, 3.206787, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_emsoq"]
 albedo_texture = ExtResource("1_l3aci")
@@ -91,6 +99,20 @@ mesh = SubResource("BoxMesh_i11yy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/CubeRB3" unique_id=951989033]
 shape = SubResource("BoxShape3D_i11yy")
+
+[node name="CubeRB14" type="RigidBody3D" parent="Props" unique_id=21222459 groups=["trees"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4958568, 2.087852, -2.465972)
+collision_layer = 9
+mass = 180.0
+physics_material_override = SubResource("PhysicsMaterial_l3aci")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Props/CubeRB14" unique_id=2029073432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013056278, -0.49484873, -0.065020084)
+mesh = SubResource("BoxMesh_8uoi8")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Props/CubeRB14" unique_id=1214258371]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013056278, -0.49484873, -0.065020084)
+shape = SubResource("BoxShape3D_emsoq")
 
 [node name="CubeRB4" type="RigidBody3D" parent="Props" unique_id=402594735]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2214942, 0.8581327, -2.465972)
@@ -202,6 +224,9 @@ mesh = SubResource("PlaneMesh_emsoq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/TerrainSB" unique_id=317227056]
 shape = SubResource("ConcavePolygonShape3D_qo67p")
+
+[node name="DestructiveObject3D" parent="Props" unique_id=242660124 instance=ExtResource("2_8uoi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2188895, 0.59375906, -0.7610332)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=784504666]
 environment = SubResource("Environment_i11yy")
