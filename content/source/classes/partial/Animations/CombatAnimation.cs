@@ -76,6 +76,8 @@ public partial class AnimationController
         // Heavy combo (tecla E): OneShot fire-and-forget, toca o clip uma vez e volta sozinho.
         if (_heavyAttackJustPressed)
         {
+            if (Pawn.State?.CanAttack == false) return; // sem permissão de atacar
+
             _heavyAttackJustPressed = false;
             if (Pawn.State?.CanAttack == false) return; // sem permissão de atacar
             if (Parameters.OneShotRequest.TryGetValue("heavy", out var heavyOSPath))
