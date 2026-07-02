@@ -8,7 +8,7 @@ public partial class Pawn3D
     {
         // Sem permissão de mover (State.CanMove) → moveDir zero; a fricção abaixo para suave (não desliza).
         // IsDead não é checado aqui: o _PhysicsProcess já retorna cedo quando morto.
-        Vector3 moveDir = State?.CanMove == false ? Vector3.Zero : ReadMoveDirection();
+        Vector3 moveDir = State?.CanMove is false && State?.IsSliding is false ? Vector3.Zero : ReadMoveDirection();
 
         float speed = Stats?.Speed ?? 5f;
         if (State.IsCrouching) speed *= CrouchSpeedMultiplier;
