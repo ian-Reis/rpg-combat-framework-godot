@@ -14,7 +14,7 @@ public partial class AnimationController
     // // Dirigido pelo estado: PawnState.IsArmed (setado pelo WeaponComponent ao equipar).
     private void UpdateTreeChapping(float dt)
     {
-        float target = Input.IsActionPressed("tree_chapping") ? 1f : 0f;
+        float target = Pawn.State.IsCutting ? 1f : 0f;
         _treeChappingBlend = Mathf.Lerp(_treeChappingBlend, target, 1f - Mathf.Exp(-PistolBlendSpeed * dt));
         if (Parameters.BlendTo.TryGetValue("tree_chapping", out var treeChappingBTPath))
             AnimTree.Set(treeChappingBTPath, _treeChappingBlend);
