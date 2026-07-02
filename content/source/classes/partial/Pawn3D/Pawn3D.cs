@@ -8,8 +8,9 @@ namespace RPGFramework.Entities;
 public partial class Pawn3D : CharacterBody3D
 {
     [ExportGroup("References Nodes")]
-    [Export] public SpringArm3D SpringArm  { get; set; }
-    [Export] public RotateDirection3D      RotateModel { get; set; }
+    [Export] public SpringArm3D       SpringArm   { get; set; }
+    [Export] public RotateDirection3D RotateModel { get; set; }
+    [Export] public WeaponComponent   WeaponComponent { get; set; }
 
     [ExportGroup("Identity")]
     [Export] public EntityFaction Faction { get; set; } = EntityFaction.NPC;
@@ -92,7 +93,11 @@ public partial class Pawn3D : CharacterBody3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        State.IsAimed = ReadAim();
+        State.IsAimed = IsInstanceValid(WeaponComponent) && 
+                WeaponComponent.CurrentWeapon?.CurrentMode is WeaponMode.Pistol && 
+                ReadAim() && 
+                State.IsArmed;
+
     }
     // ===== Fonte de intenção — sobrescrevível por subclasses (ex: PawnAI3D usa IA, não input) =====
 
