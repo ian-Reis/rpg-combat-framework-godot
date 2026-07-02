@@ -12,7 +12,7 @@ public partial class AnimationController
         {
             _ when @event.IsActionPressed("attack") => RequestAttack,
             _ when @event.IsActionPressed("heavy_attack") => RequestHeavyAttack,
-            _ when @event.IsActionPressed("draw_weapon") => () => Weapon?.ToggleEquip(),
+            // _ when @event.IsActionPressed("draw_weapon") => () => Weapon?.ToggleEquip(),
             _ => null // Nenhuma ação correspondente
         };
 
