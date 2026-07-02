@@ -1,4 +1,5 @@
 using Godot;
+using RPGFramework.Entities;
 
 namespace RPGFramework.Resources;
 
@@ -6,13 +7,9 @@ namespace RPGFramework.Resources;
 [GlobalClass]
 public partial class WeaponResource : Resource
 {
-    public enum Mode { None, Pistol, Sword }
-
-    [Export] public string DisplayName { get; set; } = "Weapon";
-    [Export] public Mode CurrentMode { get; set; } = Mode.None;
-    // Prefab da arma: cena com modelo + HitBoxArea3D (e futuro: trail, partícula, som) já configurados.
-    // Anexada na mão ao equipar; o HitBox dentro dela vira o hitbox ativo.
-    [Export] public PackedScene Prefab { get; set; }
+    [Export] public string      DisplayName     { get; set; } = "Weapon";
+    [Export] public WeaponMode  CurrentMode     { get; set; } = WeaponMode.None;
+    [Export] public PackedScene Prefab          { get; set; }
 
     // Ajuste fino de como a prefab encaixa na mão (relativo ao BoneAttachment).
     [ExportGroup("Grip (ajuste na mão)")]
