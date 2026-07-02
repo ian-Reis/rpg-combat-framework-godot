@@ -9,30 +9,11 @@ public partial class HealthComponent : Node
     [Signal] public delegate void DiedEventHandler();
 
     [Export] public float MaxHealth { get; set; } = 100f;
-    // Opcional: se atribuído, auto-conecta no sinal Hurt e aplica o dano sozinho.
-    [Export] public HurtBoxArea3D HurtBox { get; set; }
 
     [Export] public float Current { get; private set; }
     public bool  IsDead => Current <= 0f;
 
-    public override void _Ready()
-    {
-        Current = MaxHealth;
-        if (HurtBox != null)
-        {
-            HurtBox.Hurt += OnHurt;
-            GD.Print($"[Health:{GetParent()?.Name}] pronto: {Current}/{MaxHealth} (conectado em {HurtBox.Name})");
-        }
-        else
-        {
-            GD.Print($"[Health:{GetParent()?.Name}] pronto: {Current}/{MaxHealth} (sem HurtBox atribuído)");
-        }
-    }
-
-    private void OnHurt(HitBoxArea3D hitBox)
-    {
-        TakeDamage(hitBox.Damage, hitBox.Source);
-    }
+    public override void _Ready() => Current = MaxHealth;
 
     public void TakeDamage(float amount, Node3D source = null)
     {
