@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://bavtfosdipr5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a05hw"]
+
+[sub_resource type="Curve" id="Curve_0p28c"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 2.34), 0.0, 0.0, 0, 0, Vector2(0.9933555, 2.42), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ajphg"]
+curve = SubResource("Curve_0p28c")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_404mh"]
+emission_shape = 3
+emission_box_extents = Vector3(100, 0, 100)
+use_rotation_3d = true
+rotation_3d_min = Vector3(-45, -45, -45)
+rotation_3d_max = Vector3(45, 45, 45)
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_max = 1.0
+gravity = Vector3(0, 1, 0)
+use_scale_3d = true
+scale_3d_min = Vector3(-5, -5, -5)
+scale_3d_max = Vector3(10, 5, 10)
+scale_curve = SubResource("CurveTexture_ajphg")
+turbulence_noise_strength = 0.0
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_i11yy"]
+
+[node name="ImpactBlocksGround" type="GPUParticles3D" unique_id=735542760]
+material_override = SubResource("StandardMaterial3D_a05hw")
+amount = 50
+lifetime = 10.0
+explosiveness = 0.99
+use_fixed_seed = true
+seed = 1247381154
+process_material = SubResource("ParticleProcessMaterial_404mh")
+draw_pass_1 = SubResource("BoxMesh_i11yy")
+
+[node name="GPUParticlesCollisionSphere3D" type="GPUParticlesCollisionSphere3D" parent="." unique_id=208025579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.47504, 0)
+radius = 30.0
