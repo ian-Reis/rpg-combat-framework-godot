@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cwbdvv8pb46x3"]
+
+[ext_resource type="Script" uid="uid://bu17vjf0duj7j" path="res://content/source/classes/partial/DestructiveObject3D.cs" id="1_ymtn0"]
+
+[node name="Tree1" type="Node3D" unique_id=1328409467]
+script = ExtResource("1_ymtn0")
+metadata/_custom_type_script = "uid://bu17vjf0duj7j"
