@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Godot;
 
 namespace RPGFramework.Core;
@@ -13,6 +14,7 @@ public partial class HurtBoxArea3D : Area3D
 
     // Entidade dona desta hurtbox (ex: o Pawn). Usado pela hitbox p/ evitar auto-dano.
     [Export] public Node3D Entity { get; set; }
+    [Export] public HealthComponent HealthComponent { get; set; }
 
     public override void _Ready()
     {
@@ -31,5 +33,8 @@ public partial class HurtBoxArea3D : Area3D
     {
         GD.Print($"[HurtBox:{Name}] recebeu hit de {hitBox.Name} (dano={hitBox.Damage}) → emitindo Hurt");
         EmitSignal(SignalName.Hurt, hitBox);
+        
+        if (!IsInstanceValid(HealthComponent)) return;
+        HealthComponent.TakeDamage(hitBox.Damage);
     }
 }
