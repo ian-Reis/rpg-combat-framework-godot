@@ -66,6 +66,7 @@ volumetric_fog_length = 10.25
 [node name="DevMap" type="Node3D" unique_id=1783196751]
 
 [node name="Props" type="Node3D" parent="." unique_id=1192166945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13.527239)
 
 [node name="CubeRB" type="RigidBody3D" parent="Props" unique_id=844985134]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2214942, 0.8581327, -2.465972)
@@ -225,7 +226,7 @@ mesh = SubResource("PlaneMesh_emsoq")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/TerrainSB" unique_id=317227056]
 shape = SubResource("ConcavePolygonShape3D_qo67p")
 
-[node name="DestructiveObject3D" parent="Props" unique_id=242660124 instance=ExtResource("2_8uoi8")]
+[node name="DestructiveObject3D" parent="Props" unique_id=242660124 groups=["enemies"] instance=ExtResource("2_8uoi8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2188895, 0.59375906, -0.7610332)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=784504666]
