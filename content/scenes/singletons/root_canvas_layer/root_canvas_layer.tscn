@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://drdf55eaq2cb2"]
+
+[ext_resource type="Script" uid="uid://x8icykqv2gb1" path="res://content/scenes/singletons/root_canvas_layer/RootCanvasLayer.cs" id="1_1o0x7"]
+[ext_resource type="Script" uid="uid://bu76f6n0sab8w" path="res://content/scenes/singletons/root_canvas_layer/Hud.cs" id="2_kdxl0"]
+
+[sub_resource type="Texture2DRD" id="Texture2DRD_404mh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awtyf"]
+bg_color = Color(0.33475974, 0.6978842, 0.2672851, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="LabelSettings" id="LabelSettings_i11yy"]
+font_size = 31
+
+[node name="RootCanvasLayer" type="CanvasLayer" unique_id=144018277 node_paths=PackedStringArray("Hud")]
+script = ExtResource("1_1o0x7")
+Hud = NodePath("Hud")
+
+[node name="Hud" type="Control" parent="." unique_id=1421172189 node_paths=PackedStringArray("HealthSlider", "StaminaSlider", "AmmunationLabel")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("2_kdxl0")
+HealthSlider = NodePath("VBoxContainer/HealthCenterContainer/HealthHSlider")
+StaminaSlider = NodePath("VBoxContainer/StaminaCenterContainer/StaminaHSlider")
+AmmunationLabel = NodePath("AmmunitionCenterContainer/AmmunitionLabel")
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Hud" unique_id=76989222]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.9382716
+anchor_right = 0.23697917
+anchor_bottom = 1.0
+grow_vertical = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="StaminaCenterContainer" type="CenterContainer" parent="Hud/VBoxContainer" unique_id=829143556]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="StaminaHSlider" type="HSlider" parent="Hud/VBoxContainer/StaminaCenterContainer" unique_id=880299193]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_icons/grabber_disabled = SubResource("Texture2DRD_404mh")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_awtyf")
+editable = false
+scrollable = false
+
+[node name="HealthCenterContainer" type="CenterContainer" parent="Hud/VBoxContainer" unique_id=2019521416]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="HealthHSlider" type="HSlider" parent="Hud/VBoxContainer/HealthCenterContainer" unique_id=1841671495]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_icons/grabber_disabled = SubResource("Texture2DRD_404mh")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_awtyf")
+editable = false
+scrollable = false
+
+[node name="AmmunitionCenterContainer" type="CenterContainer" parent="Hud" unique_id=247059210]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8637153
+anchor_top = 0.75771606
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="AmmunitionLabel" type="Label" parent="Hud/AmmunitionCenterContainer" unique_id=714855787]
+layout_mode = 2
+mouse_filter = 1
+text = "0"
+label_settings = SubResource("LabelSettings_i11yy")
