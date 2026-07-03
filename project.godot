@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 PhantomCameraManager="*uid://duq6jhf6unyis"
+RootCanvasLayer="*uid://drdf55eaq2cb2"
 
 [dotnet]
 
@@ -25,7 +26,7 @@ project/assembly_name="Combat Framework"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/cinematic_director/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/ultimate_placer/plugin.cfg")
+enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/cinematic_director/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/ultimate_placer/plugin.cfg", "res://addons/vfx_animaiton_player/plugin.cfg")
 
 [global_group]
 
