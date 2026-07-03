@@ -4,7 +4,7 @@ using RPGFramework.Helpers;
 namespace RPGFramework.Core;
 
 [GlobalClass]
-public partial class DestructiveObject3D : Node3D
+public partial class DestructiveObject3D : RigidBody3D
 {
     [ExportGroup("References")]
     [Export] public HurtBoxArea3D HurtBoxArea3D;
@@ -16,7 +16,6 @@ public partial class DestructiveObject3D : Node3D
     public override void _Ready()
     {
         RegisterGroup.Add(this, _myGroup);
-
 
         // Connect Signals
         HealthComponent.HealthChanged += Hit;
