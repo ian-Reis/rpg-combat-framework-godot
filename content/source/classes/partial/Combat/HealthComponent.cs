@@ -10,12 +10,12 @@ public partial class HealthComponent : Node
 
     [Export] public float MaxHealth { get; set; } = 100f;
 
-    [Export] public float Current { get; private set; }
+    [Export] public float Current { get; protected set; }
     public bool  IsDead => Current <= 0f;
 
     public override void _Ready() => Current = MaxHealth;
 
-    public void TakeDamage(float amount, Node3D source = null)
+    public virtual void TakeDamage(float amount, Node3D source = null)
     {
         if (IsDead || amount <= 0f) return;
 
@@ -30,7 +30,7 @@ public partial class HealthComponent : Node
         }
     }
 
-    public void Heal(float amount)
+    public virtual void Heal(float amount)
     {
         if (IsDead || amount <= 0f) return;
 
