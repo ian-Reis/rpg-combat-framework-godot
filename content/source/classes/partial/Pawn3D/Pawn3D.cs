@@ -122,15 +122,10 @@ public partial class Pawn3D : CharacterBody3D
     protected virtual bool ReadAim()    => Input.IsActionPressed("aim");
     protected virtual bool ReadSlide()  => Input.IsActionPressed("slide");
 
-    // True enquanto o pawn está num golpe (lido pela IA pra esperar a animação terminar).
     public bool IsAttacking() => State?.CurrentAction == PawnState.Action.Attacking;
-
-    // API — chamada por Call Method Track na timeline do AnimationPlayer.
-    // Liga/desliga o movimento (ex: travar locomoção durante o heavy combo). Escreve no blackboard.
-    public void SetMovementEnabled(bool enabled)
-    {
-        if (State != null) State.CanMove = enabled;
-    }
+    
+    public void SetMovementEnabled(bool enabled) {if (State != null) State.CanMove = enabled;}
+    
 
     // API de força — chamada por Call Method Track na timeline do AnimationPlayer.
     // Inicia um lunge fluido na direção que o RotateModel encara (forward = -Z, plano horizontal).
