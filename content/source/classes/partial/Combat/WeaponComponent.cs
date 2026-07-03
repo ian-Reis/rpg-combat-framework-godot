@@ -67,7 +67,15 @@ public partial class WeaponComponent : Node
 
         SwapPrefab(weapon.Prefab);
         SwapAnimations(weapon.Animations);
+        
         Pawn?.State?.SetArmed(true);
+        Pawn.State.CanAttack = true;
+
+        
+        if (weapon.CurrentMode is WeaponMode.Pistol)
+            Pawn.State.CanAttack = false;
+
+
 
         EmitSignal(SignalName.WeaponChanged, weapon);
     }
